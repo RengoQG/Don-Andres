@@ -1,0 +1,59 @@
+.main__form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #2d6a4f;
+}
+
+form{
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 35%;
+}
+
+form input,label{
+    width: 100%;
+}
+
+form input{
+    border: none;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #2d6a4f;
+}
+
+.register-form > button{
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #2d6a4f;
+    color: #FFF;
+    border: none;
+    font-size: 15px;
+    font-weight: bolder;
+    margin-top: 5px;
+}
+
+.register-form > button:hover {
+    background-color: #52b788;
+    cursor: pointer;
+}
+
+.small-text {
+    font-size: 10px; 
+    color: #888; 
+}
+
+.privacy-link {
+    color: blue; /* Cambia el color del enlace */
+    text-decoration: underline; /* Subraya el enlace */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el enlace */
+  }
+  
+  .privacy-link:hover {
+    color: darkblue; /* Cambia el color cuando el enlace está en hover */
+  }
+  
