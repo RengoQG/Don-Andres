@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+ 
 
 const Header = () => {
   useEffect(() => {
@@ -45,11 +46,17 @@ const Header = () => {
                     </ul>
                   </div>
                   <ul className="rd-navbar-nav">
-                    <li className="rd-nav-item active"><a className="rd-nav-link" href="#home">Inicio</a></li>
+                    <li className="rd-nav-item active"><a className="rd-nav-link" href="/">Inicio</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Quienes somos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#projects">Tienda</a></li>
+                    <li className="rd-nav-item"><a className="rd-nav-link" href="#projects"><select class="form-select form-select-lg mb-3" aria-label="Large select example">
+                      <option selected>Categorias</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select></a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#team">Contactanos</a></li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="#">Inicio de sesión</a></li>
+                    <li className="rd-nav-item"><a className="rd-nav-link" href="/login">Inicio de sesión</a></li>
                   </ul>
                 </div>
               </div>

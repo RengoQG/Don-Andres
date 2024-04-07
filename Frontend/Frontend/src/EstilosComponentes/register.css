@@ -1,8 +1,12 @@
+*{
+    box-sizing: border-box;
+}
 .main__form{
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 83vh;
     color: #2d6a4f;
 }
 
@@ -11,7 +15,7 @@ form{
     padding: 25px;
     border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 35%;
+    width: 50%;
 }
 
 form input,label{
@@ -21,11 +25,11 @@ form input,label{
 form input{
     border: none;
     background-color: #f8f9fa;
-    border-bottom: 1px solid #2d6a4f;
+    border-bottom: 1px solid #52b788;
 }
 
-.register-form > button{
-    width: 100%;
+.button__main > button{
+    width: 45%;
     padding: 10px;
     border-radius: 10px;
     text-align: center;
@@ -37,7 +41,7 @@ form input{
     margin-top: 5px;
 }
 
-.register-form > button:hover {
+.button__main > button:hover {
     background-color: #52b788;
     cursor: pointer;
 }
@@ -56,4 +60,48 @@ form input{
   .privacy-link:hover {
     color: darkblue; /* Cambia el color cuando el enlace está en hover */
   }
+  
+#button__loginR{
+    background-color: rgb(53, 79, 82);
+    margin-left: 15px;
+    width: 50%;
+}
+
+#button__loginR:hover{
+    background-color:#52b788;
+}
+
+/* Anula el estilo de Bootstrap que oculta el texto predeterminado en el select específico */
+.select select{
+    padding: 10px;
+    margin-right: 10px;
+    width: 50%;
+    border-radius: 10px;
+    border: 1px solid #52b788;
+}
+
+.button__main{
+    width: 100%;
+    display: flex;;
+}
+
+.button__main button{
+    width: 50%;
+}
+
+.fecha__main {
+    width: 100%;
+    display: flex;
+}
+
+#fechaExp input{
+    margin-right: 20px; 
+}
+
+.fecha__main div{
+    width: 100%;
+}
+
+  
+
   

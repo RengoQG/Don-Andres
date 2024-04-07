@@ -13,6 +13,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
+  const [fieldsAreNotEmpty, setFieldsAreNotEmpty] = useState(false); // Nuevo estado para controlar si los campos no están vacíos
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -25,8 +26,14 @@ const Login = () => {
       setEmail(decryptedEmail);
       setPassword(decryptedPassword);
       setRememberMe(true);
+      setFieldsAreNotEmpty(true); // Actualizar estado de campos no vacíos
     }
   }, []);
+
+  useEffect(() => {
+    // Actualizar estado de campos no vacíos cada vez que cambien los valores de correo electrónico y contraseña
+    setFieldsAreNotEmpty(email.trim() !== '' && password.trim() !== '');
+  }, [email, password]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -65,16 +72,32 @@ const Login = () => {
   };
 
   const handleRememberMeChange = () => {
-    setRememberMe(!rememberMe);
-    if (!rememberMe) {
-      toast.info('Tus credenciales serán recordadas');
-    } else {
-      const confirmation = window.confirm("¿Seguro que deseas desactivar la opción 'Recordarme'?");
-      if (confirmation) {
-        toast.info('Tus credenciales ya no serán recordadas');
-      } else {
-        setRememberMe(true); // Si el usuario cancela, vuelve a activar la opción 'Recordarme'
+    // Verificar si los campos de correo electrónico y contraseña están vacíos
+    if (!fieldsAreNotEmpty) {
+      alert("No puedes recordar credenciales si los campos de correo electrónico y contraseña están vacíos.");
+      return;
+    }
+
+    // Si los campos no están vacíos, permitir cambiar el estado de "Recordarme"
+    const newRememberMe = !rememberMe;
+    setRememberMe(newRememberMe);
+
+    if (!newRememberMe) {
+      const confirmation = window.confirm("¿Seguro que deseas desactivar la opción 'Recordarme'? Esto eliminará tus credenciales guardadas.");
+      if (!confirmation) {
+        // Si el usuario cancela, vuelve a activar la opción 'Recordarme'
+        setRememberMe(true);
+        return;
       }
+      toast.info('Tus credenciales ya no serán recordadas');
+      localStorage.removeItem('rememberedEmail');
+      localStorage.removeItem('rememberedPassword');
+    } else {
+      toast.info('Tus credenciales serán recordadas');
+      const encryptedEmail = CryptoJS.AES.encrypt(email, 'secret_key').toString();
+      const encryptedPassword = CryptoJS.AES.encrypt(password, 'secret_key').toString();
+      localStorage.setItem('rememberedEmail', encryptedEmail);
+      localStorage.setItem('rememberedPassword', encryptedPassword);
     }
   };
 
@@ -114,23 +137,25 @@ const Login = () => {
             required
           />
         </div>
-        <div className='mb-3'>
+        <div>
           <input
             type="checkbox"
             id="rememberMe"
             checked={rememberMe}
             onChange={handleRememberMeChange}
+            disabled={!fieldsAreNotEmpty} // Deshabilitar la casilla si los campos están vacíos
           />
-          <label htmlFor="rememberMe"> Recordarme</label>
+          <label htmlFor="rememberMe">Recordarme</label>
+          
         </div>
         <div className='mb-3'>
-          <a href="/olvide-mi-contrasena">¿Olvidaste tu contraseña?</a>
+          <a href="/reset">¿Olvidaste tu contraseña?</a>
         </div>
         <div className="button__group">
           <button type="submit" className="button__login" disabled={isSubmitting}>
             {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>
-          <button type="button" className="button__register" onClick={() => navigateTo('/registro')}>Registrarse</button>
+          <button type="button" className="button__register" onClick={() => navigateTo('/register')}>Registrarse</button>
         </div>
       </form>
     </div>

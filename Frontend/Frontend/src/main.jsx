@@ -11,14 +11,18 @@ import AuthGuard from './components/PrivateRoute.jsx';
 import Register from './components/register.jsx';
 import Reset from './components/resetPassword.jsx';
 import UpdatePassword from './components/updatePassword.jsx';
+import Wsp from './components/wspComponent.jsx';
+import Search from './components/search.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
 const MainContent = () => (
   <div>
+    <Search />
     <App />
     <Slider />
     <Services />
+    <Wsp />
   </div>
 );
 

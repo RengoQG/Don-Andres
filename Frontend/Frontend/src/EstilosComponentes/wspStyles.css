@@ -1,0 +1,28 @@
+/* WhatsAppButton.css */
+.whatsapp-button {
+    position: fixed;
+    top: calc(100vh - 140px); /* Ajusta la posición desde la parte superior de la ventana del navegador */
+    right: 20px;
+    background-color: #25D366; /* Color de fondo del botón */
+    color: #fff; /* Color del texto */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 9999; /* Número alto para que esté por encima de otros elementos */
+  }
+  
+  .whatsapp-button:hover {
+    background-color: #128C7E; /* Cambia el color de fondo al pasar el cursor */
+    transform: translateY(-2px); /* Efecto de elevación */
+  }
+  
+  .whatsapp-icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }

@@ -20260,7 +20260,6 @@ disabled look for disabled choices in the results dropdown
   .login__main input:not([type="checkbox"]) {
 	width: 100%;
 	color: #2d6a4f;
-	margin-bottom: 35px;
   }
 
   .login__main label{
@@ -20359,6 +20358,9 @@ input[type="checkbox"] {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega sombra en la parte inferior */
 }
   
+
+/* Anula el estilo de Bootstrap que oculta el texto predeterminado en los selects */
+
 
 
 
