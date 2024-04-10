@@ -1,7 +1,14 @@
-import React, { useEffect } from "react";
- 
+import React, { useState, useEffect } from "react";
+import CategoriasComponent from "./components/Categories.jsx";  
 
 const Header = () => {
+  const [categorias, setCategorias] = useState([]);
+  const [mostrarCategorias, setMostrarCategorias] = useState(false);
+
+  const toggleCategorias = () => {
+    setMostrarCategorias(!mostrarCategorias);
+  };
+
   useEffect(() => {
     // Cargar los archivos JavaScript necesarios
     const loadScripts = () => {
@@ -15,6 +22,12 @@ const Header = () => {
       script2.async = true;
       document.body.appendChild(script2);
     };
+
+    // Función para manejar cambios en la selección de categorías
+    const handleCategoriaChange = (event) => {
+      console.log("Categoría seleccionada:", event.target.value);
+    };
+
     // <!-- <div id="root"></div> -->
     loadScripts();
 
@@ -49,12 +62,18 @@ const Header = () => {
                     <li className="rd-nav-item active"><a className="rd-nav-link" href="/">Inicio</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Quienes somos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#projects">Tienda</a></li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="#projects"><select class="form-select form-select-lg mb-3" aria-label="Large select example">
-                      <option selected>Categorias</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select></a></li>
+                    <li className="rd-nav-item">
+                      {/* Pasa el método toggleCategorias como onChange */}
+                      <CategoriasComponent onChange={toggleCategorias} />
+                      {mostrarCategorias && (
+                        <ul>
+                          {/* Reemplazar las opciones fijas con las categorías obtenidas */}
+                          {categorias.map((categoria) => (
+                            <li key={categoria.category_id}><a href="#">{categoria.name}</a></li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#team">Contactanos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="/login">Inicio de sesión</a></li>
                   </ul>

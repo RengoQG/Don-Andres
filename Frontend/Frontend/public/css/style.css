@@ -2347,6 +2347,7 @@ img {
 }
 
 .icon::before {
+	color: #40ad7c;
 	position: relative;
 	display: inline-block;
 	font-weight: 400;
@@ -6225,9 +6226,15 @@ textarea.textarea-lg {
 	margin-left: auto;
 	margin-right: auto;
 	padding-top: 10px;
-	background-image: url(../images/quote-jean.png);
+	/* background-image: url(../images/quote-jean.png); */
 	background-repeat: no-repeat;
 	background-position: 50% 0;
+	color: #2d6a4f;
+	font-size: 20px;
+	border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Sombra */
+    background-color: #fff; /* Color de fondo blanco */
+    padding: 10px; /* Espaciado interno */
 }
 
 * + .quote-jean {
@@ -6306,7 +6313,7 @@ textarea.textarea-lg {
 	min-width: 230px;
 	transform: translate3d(-50%, 0, 0);
 	background: #ffffff;
-	pointer-events: none;
+	/* pointer-events: none; */ /*Permitir el cursor pointer*/
 	transition: all .3s ease;
 }
 
@@ -20358,13 +20365,41 @@ input[type="checkbox"] {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega sombra en la parte inferior */
 }
   
-
+.opt{
+	padding: 10px;
+	border-radius: 5px;
+	border:none;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	font-size: 15px;
+	color: #2d6a4f;
+}
 /* Anula el estilo de Bootstrap que oculta el texto predeterminado en los selects */
+.button__meInteresa{
+	background-color: #40ad7c;
+	color: #FFF;
+	width:90%;
+	position:absolute;
+	bottom: 0;
+	left:50%;
+	transform: translateX(-50%);
+	cursor: pointer;
+}
 
-
-
-
-
+@media (max-width: 768px) { 
+	.button__meInteresa {
+		transform: translate3d(-50%, -35px, 0); /* Mueve el botón 35px hacia arriba y lo centra horizontalmente */
+		font-size: 14px; /* Tamaño de fuente más pequeño */
+		padding: 5px 10px; /* Menor padding */
+		text-align: center; /* Centra el texto */
+		content: '';
+		left: 50%;
+		bottom: 0;
+		padding: 10px 15px;
+		min-width: 230px;
+		background: #2d6a4f;
+		cursor: pointer;
+	}
+  }
 
 
 
