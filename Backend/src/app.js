@@ -4,6 +4,8 @@ const userRoutes = require('./Controllers/routes/userRuts.js');
 const resetPassword = require('./Controllers/routes/resetPassword.js');
 const validateToken = require('./Controllers/routes/validateToken.js');
 const auth = require('./Controllers/routes/authRoutes.js');
+const categoria = require('./Controllers/routes/categories.js');
+const producto = require('./Controllers/routes/productsRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
 const helmet = require('helmet');
@@ -56,6 +58,10 @@ app.get('/profile', authMiddleware, (req, res) => {
   // Puedes acceder a la información del usuario a través de req.user
   res.json({ message: '¡Bienvenido a tu perfil!' });
 });
+//ObtenerCategorias
+app.use('/categoria', categoria);
+//ObtenerProductos
+app.use('/producto', producto);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 6001;
