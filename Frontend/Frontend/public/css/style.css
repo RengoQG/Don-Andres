@@ -14575,7 +14575,7 @@ html.rd-navbar-fixed-linked .page-header {
 
 .rd-navbar-classic.rd-navbar-static .rd-navbar-nav {
 	order: -1;
-	margin-right: 46px;
+	margin-right: 10px;
 }
 
 .rd-navbar-classic.rd-navbar-static .rd-navbar-brand img {
@@ -20372,6 +20372,7 @@ input[type="checkbox"] {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	font-size: 15px;
 	color: #2d6a4f;
+	width: 125px;
 }
 /* Anula el estilo de Bootstrap que oculta el texto predeterminado en los selects */
 .button__meInteresa{
@@ -20383,6 +20384,10 @@ input[type="checkbox"] {
 	left:50%;
 	transform: translateX(-50%);
 	cursor: pointer;
+}
+
+.serachMobil{
+	display: none;
 }
 
 @media (max-width: 768px) { 
@@ -20401,7 +20406,13 @@ input[type="checkbox"] {
 	}
   }
 
-
+  @media (max-width: 992px) {
+	.rd-navbar-nav {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+  }
 
 
 

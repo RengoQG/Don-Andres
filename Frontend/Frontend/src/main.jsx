@@ -6,7 +6,6 @@ import Slider from './pages/Slider.jsx';
 import Services from './pages/Services.jsx';
 import Login from './components/Login.jsx';
 import Cta from './pages/Cta.jsx';
-import Productos from './pages/Productos.jsx';
 import Inicio from './components/sesionIniciada.jsx';
 import AuthGuard from './components/PrivateRoute.jsx';
 import Register from './components/register.jsx';
@@ -15,16 +14,18 @@ import UpdatePassword from './components/updatePassword.jsx';
 import Wsp from './components/wspComponent.jsx';
 import Search from './components/search.jsx';
 import Categories from './components/Categories.jsx';
+import Productos from './pages/Productos.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
 const MainContent = () => (
   <div>
-    <Search />
+    {/* <Search /> */}
     <App />
     <Slider />
-    <Services />
+    {/* <Services /> */}
     <Wsp />
+    <Productos />
   </div>
 );
 
@@ -53,7 +54,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/reset" element={<Reset />} />
           <Route path="/reset-password" element={<UpdatePassword />} />
           <Route path="/categories" element={<Categories />} />
-          <Route path="/products" element={<Productos />} />
         </Routes>
       </Router>
   </React.StrictMode>

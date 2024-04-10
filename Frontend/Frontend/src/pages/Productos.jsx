@@ -1,35 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+
 const ProjectsSection = () => {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
 
   useEffect(() => {
-    // Verificar si los scripts ya están cargados
     const isScriptsLoaded = () => {
       return !!document.querySelector("script[src^='js']");
     };
 
-    // Función para inicializar la funcionalidad una vez que los scripts están cargados
     const initializeFunctionality = () => {
       const wow = new window.WOW();
       wow.init();
-      setScriptsLoaded(true); // Marcar los scripts como cargados
+      setScriptsLoaded(true);
     };
 
-    // Si los scripts ya están cargados, inicializar la funcionalidad
     if (isScriptsLoaded()) {
       initializeFunctionality();
     } else {
-      // Si los scripts no están cargados, cargarlos y luego inicializar la funcionalidad
       const script1 = document.createElement("script");
-      script1.src = "/public/js/script.js";
+      script1.src = "js/script.js";
       script1.async = true;
       script1.onload = () => {
         const script2 = document.createElement("script");
-        script2.src = "/public/js/core.min.js";
+        script2.src = "/js/core.min.js";
         script2.async = true;
         script2.onload = initializeFunctionality;
         document.body.appendChild(script2);
@@ -37,7 +34,6 @@ const ProjectsSection = () => {
       document.body.appendChild(script1);
     }
 
-    // Limpiar los scripts cuando el componente se desmonta
     return () => {
       if (scriptsLoaded) {
         const scripts = document.querySelectorAll("script[src^='js']");
@@ -47,32 +43,28 @@ const ProjectsSection = () => {
   }, [scriptsLoaded]);
 
   useEffect(() => {
-    const fetchCategorias = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:6001/categoria/categorias');
-        setCategorias(response.data);
+        const [categoriasResponse, productosResponse] = await Promise.all([
+          axios.get('http://localhost:6001/categoria/categorias'),
+          axios.get('http://localhost:6001/producto/products')
+        ]);
+
+        setCategorias(categoriasResponse.data);
+        setProductos(productosResponse.data);
       } catch (error) {
-        console.error('Error al obtener las categorías:', error);
+        console.error('Error al obtener los datos:', error);
       }
     };
 
-    fetchCategorias();
-  }, []);
+    fetchData();
 
-  useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const response = await axios.get('http://localhost:6001/producto/products');
-        setProductos(response.data);
-      } catch (error) {
-        console.error('Error al obtener los productos:', error);
-      }
+    return () => {
+      // Limpiar los scripts al desmontar el componente
+      const scripts = document.querySelectorAll("script[data-custom-toggle], script[src^='js']");
+      scripts.forEach(script => script.parentNode.removeChild(script));
     };
-
-    fetchProductos();
   }, []);
-
-
 
   return (
     <section className="section section-sm section-fluid bg-default text-center" id="projects">
@@ -91,9 +83,9 @@ const ProjectsSection = () => {
         </div>
         <div className="row row-30 isotope" data-isotope-layout="fitRows" data-isotope-group="gallery" data-lightgallery="group">
           {productos.map((producto) => (
-            <div className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInRight" data-filter={`Type ${producto.category_id}`}>
+            <div className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInRight" data-filter={`Type ${producto.category_id}`} key={producto.product_id}>
               <article className="thumbnail thumbnail-classic thumbnail-md">
-                <div className="thumbnail-classic-figure"><img src="images/fullwidth-gallery-1-420x350.jpg" alt="" width="420" height="350" /></div>
+                <div className="thumbnail-classic-figure"><img src={`images/A01.png`} alt="" width="420" height="350" /></div>
                 <div className="thumbnail-classic-caption">
                   <div className="thumbnail-classic-title-wrap"><a className="icon fl-bigmug-line-zoom60" href="images/grid-gallery-1-1200x800-original.jpg" data-lightgallery="item"><img src="images/fullwidth-gallery-1-420x350.jpg" alt="" width="420" height="350" /></a>
                   </div>

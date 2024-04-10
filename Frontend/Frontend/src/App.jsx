@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import CategoriasComponent from "./components/Categories.jsx";  
+import CategoriasComponent from "./components/Categories.jsx";
+import Search from "./components/search.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   const [categorias, setCategorias] = useState([]);
@@ -46,36 +49,40 @@ const Header = () => {
             <div className="rd-navbar-main">
               <div className="rd-navbar-panel">
                 <button className="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
-                <div className="rd-navbar-brand"><a className="brand" href="index.html"><img src="images/logo-default-223x50.png" alt="" width="223" height="50"/></a></div>
+                <div className="rd-navbar-brand"><a className="brand" href="index.html"><img src="images/logo-default-223x50.png" alt="" width="223" height="50" /></a></div>
               </div>
+              <div><Search /></div>
               <div className="rd-navbar-main-element">
                 <div className="rd-navbar-nav-wrap">
-                  <div className="rd-navbar-share fl-bigmug-line-share27" data-rd-navbar-toggle=".rd-navbar-share-list">
+                  {/* <div className="rd-navbar-share fl-bigmug-line-share27" data-rd-navbar-toggle=".rd-navbar-share-list">
                     <ul className="list-inline rd-navbar-share-list">
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-facebook" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-twitter" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-google-plus" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-instagram" href="#"></a></li>
                     </ul>
-                  </div>
+                  </div> */}
                   <ul className="rd-navbar-nav">
+                    <li className="serachMobil"><Search /></li>
                     <li className="rd-nav-item active"><a className="rd-nav-link" href="/">Inicio</a></li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Quienes somos</a></li>
+                    <li className="rd-nav-item"><a className="rd-nav-link" href="/">Nosotros</a></li>
+                    <li className="rd-nav-item">
+                      <a className="rd-nav-link" href="/inicio">
+                        <FontAwesomeIcon icon={faSignInAlt} />Iniciar sesión
+                      </a>
+                    </li>
+                    <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Contactanos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#projects">Tienda</a></li>
                     <li className="rd-nav-item">
-                      {/* Pasa el método toggleCategorias como onChange */}
                       <CategoriasComponent onChange={toggleCategorias} />
                       {mostrarCategorias && (
-                        <ul>
-                          {/* Reemplazar las opciones fijas con las categorías obtenidas */}
+                        <ul className="rd-navbar-nav">
                           {categorias.map((categoria) => (
-                            <li key={categoria.category_id}><a href="#">{categoria.name}</a></li>
+                            <li className="rd-nav-item" key={categoria.category_id}><a className="rd-nav-link" href="#">{categoria.name}</a></li>
                           ))}
                         </ul>
                       )}
                     </li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="#team">Contactanos</a></li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="/login">Inicio de sesión</a></li>
                   </ul>
                 </div>
               </div>

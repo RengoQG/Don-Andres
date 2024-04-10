@@ -22,11 +22,9 @@ const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <div className='search__main'>
-            <div className='buscador'>
-                <input type="text" placeholder="Buscar productos..." className="search-input" onChange={handleInputChange} />
-                <button type="button" className="search-button" onClick={handleSubmit}><FaSearch /></button>
-            </div>
+        <div className='SearchMain'>
+            <input type="text" placeholder="Buscar productos..." className='SearchInput' onChange={handleInputChange} />
+            <button type="button" className="search-button" onClick={handleSubmit}><FaSearch /></button>
         </div>
     );
 };
