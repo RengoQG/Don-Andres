@@ -1,20 +1,189 @@
-.SearchMain{
+.product-cards-container {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .product-card {
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .product-details {
+    padding: 10px 0;
+  }
+  
+  .product-details h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .product-details p {
+    margin: 10px 0;
+  }
+  
+  .product-details span {
+    font-weight: bold;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .page-item {
+    margin: 0 5px; /* Espacio entre los números de página */
+  }
+  
+  .page-link {
+    padding: 10px 15px; /* Espacio interior de los números de página */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .page-link:hover {
+    background-color: #f0f0f0; /* Cambio de color al pasar el ratón */
+  }
+  
+  .btn-consultar {
+
+  }
+  
+  .btn-consultar:hover {
+    background-color: #128C7E; /* Cambio de color al pasar el ratón */
+  }
+  
+  .whatsapp-icon {
+    width: 20px;
+    margin-right: 10px;
+  }
+  
+  .custom-swal-container {
+    width: 100%; /* Ajusta el ancho de la modal según tus necesidades */
+  }
+  
+  div:where(.swal2-container) div:where(.swal2-popup) {
+    display: none;
+    position: relative;
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 100%);
+    width: 80% !important;
+    max-width: 100%;
+    padding: 0 0 1.25em;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    color: #545454;
+    font-family: inherit;
+    font-size: 1rem;
 }
 
-.search-button{
-    margin-top: 20px;
-    height:50%;
+.btn-consultar {
+    background-color: #25d366; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    display: inline-flex; /* Para que los elementos se muestren en línea */
+    align-items: center; /* Alinea verticalmente los elementos */
+  }
+  
+  .btn-consultar:hover {
+    background-color: #128c7e; /* Color de fondo del botón al pasar el cursor */
+  }
+  
+  .whatsapp-icon {
+    font-size: 25px; /* Tamaño del ícono */
+    margin-right: 10px; /* Margen derecho para separar el ícono del texto */
+  }
+  
+  .product-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .product-card {
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    display: flex; /* Hacer que el contenedor de la tarjeta sea flexible */
+    flex-direction: column; /* Alinear elementos verticalmente */
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .product-details {
+    flex-grow: 1; /* Hacer que este div se expanda para llenar el espacio restante */
+    padding: 10px 0;
+  }
+  
+  .product-details h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .product-details p {
+    margin: 10px 0;
+  }
+  
+  .product-details span {
+    font-weight: bold;
+  }
+  
+  .btn-consultar {
+    background-color: #25d366;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    padding: 10px;
-    background-color: #4bb86c;
-    color: #FFF;
-}
-
-.SearchInput{
-    margin-top: 20px;
-    border: none;
-    padding: 10px;
-    background-color: rgb(238, 237, 237);
-    color: #354f52;
-}
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto; /* Empujar el botón hacia la parte inferior */
+  }
+  
+  .btn-consultar:hover {
+    background-color: #128c7e;
+  }
+  
+  .whatsapp-icon {
+    font-size: 25px;
+    margin-right: 10px;
+  }
+  
+  

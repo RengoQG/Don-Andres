@@ -1,45 +1,64 @@
 import React, { useState, useEffect } from "react";
 import CategoriasComponent from "./components/Categories.jsx";
-import Search from "./components/search.jsx";
+// import Search from "./components/search.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+
 
 const Header = () => {
   const [categorias, setCategorias] = useState([]);
   const [mostrarCategorias, setMostrarCategorias] = useState(false);
+
 
   const toggleCategorias = () => {
     setMostrarCategorias(!mostrarCategorias);
   };
 
   useEffect(() => {
-    // Cargar los archivos JavaScript necesarios
-    const loadScripts = () => {
-      const script1 = document.createElement("script");
-      script1.src = "../public/js/script.js";
-      script1.async = true;
-      document.body.appendChild(script1);
+    const loadScripts = async () => {
+        const scriptUrls = ["public/js/script.js", "public/js/core.min.js"];
 
-      const script2 = document.createElement("script");
-      script2.src = "../public/js/core.min.js";
-      script2.async = true;
-      document.body.appendChild(script2);
+        try {
+            // Verificar si los scripts ya están cargados para evitar duplicados
+            const loadedScripts = Array.from(document.querySelectorAll("script[src^='public/js']")).map(script => script.src);
+            const scriptsToLoad = scriptUrls.filter(url => !loadedScripts.includes(url));
+
+            // Cargar scripts de forma asíncrona
+            await Promise.all(scriptsToLoad.map(async (url) => {
+                try {
+                    const existingScript = document.querySelector(`script[src="${url}"]`);
+                    if (!existingScript) {
+                        const script = document.createElement("script");
+                        script.src = url;
+                        script.async = true;
+                        document.body.appendChild(script);
+                    }
+                } catch (error) {
+                    console.error('Error al cargar el script:', error);
+                    // Notificar al usuario sobre el error de carga del script, si es necesario
+                }
+            }));
+        } catch (error) {
+            console.error('Error al cargar los scripts:', error);
+            // Notificar al usuario sobre el error de carga de scripts, si es necesario
+        }
     };
 
-    // Función para manejar cambios en la selección de categorías
-    const handleCategoriaChange = (event) => {
-      console.log("Categoría seleccionada:", event.target.value);
-    };
-
-    // <!-- <div id="root"></div> -->
     loadScripts();
 
-    // Limpiar los scripts cuando el componente se desmonta
+    // Limpiar los scripts al desmontar el componente
     return () => {
-      const scripts = document.querySelectorAll("script[src^='public/js']");
-      scripts.forEach(script => document.body.removeChild(script));
+        try {
+            const scripts = document.querySelectorAll("script[src^='public/js']");
+            scripts.forEach(script => document.body.removeChild(script));
+        } catch (error) {
+            console.error('Error al limpiar los scripts:', error);
+            // Manejar cualquier error al limpiar los scripts
+        }
     };
-  }, []);
+}, []);
+
+  
 
   return (
     <header className="section page-header">
@@ -51,24 +70,23 @@ const Header = () => {
                 <button className="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <div className="rd-navbar-brand"><a className="brand" href="index.html"><img src="images/logo-default-223x50.png" alt="" width="223" height="50" /></a></div>
               </div>
-              <div><Search /></div>
               <div className="rd-navbar-main-element">
                 <div className="rd-navbar-nav-wrap">
-                  {/* <div className="rd-navbar-share fl-bigmug-line-share27" data-rd-navbar-toggle=".rd-navbar-share-list">
+                  <div className="rd-navbar-share fl-bigmug-line-share27" data-rd-navbar-toggle=".rd-navbar-share-list">
                     <ul className="list-inline rd-navbar-share-list">
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-facebook" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-twitter" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-google-plus" href="#"></a></li>
                       <li className="rd-navbar-share-list-item"><a className="icon fa fa-instagram" href="#"></a></li>
                     </ul>
-                  </div> */}
+                  </div>
                   <ul className="rd-navbar-nav">
-                    <li className="serachMobil"><Search /></li>
+                    {/* <li className="serachMobil"><Search /></li> */}
                     <li className="rd-nav-item active"><a className="rd-nav-link" href="/">Inicio</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="/">Nosotros</a></li>
                     <li className="rd-nav-item">
                       <a className="rd-nav-link" href="/inicio">
-                        <FontAwesomeIcon icon={faSignInAlt} />Iniciar sesión
+                        <FontAwesomeIcon icon={faSignInAlt} />Iniciar
                       </a>
                     </li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Contactanos</a></li>

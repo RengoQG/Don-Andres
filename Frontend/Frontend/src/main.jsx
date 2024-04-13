@@ -12,20 +12,22 @@ import Register from './components/register.jsx';
 import Reset from './components/resetPassword.jsx';
 import UpdatePassword from './components/updatePassword.jsx';
 import Wsp from './components/wspComponent.jsx';
-import Search from './components/search.jsx';
 import Categories from './components/Categories.jsx';
 import Productos from './pages/Productos.jsx';
+import ProductosFetch from './components/Products.jsx';
+import Buscar from './components/search.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
 const MainContent = () => (
   <div>
-    {/* <Search /> */}
     <App />
     <Slider />
-    {/* <Services /> */}
+    <ProductosFetch>
+      <Productos />
+    </ProductosFetch>
     <Wsp />
-    <Productos />
+    <Services />
   </div>
 );
 
@@ -33,6 +35,14 @@ const LoginMain = () => (
   <div>
     <App />
     <Login />
+  </div>
+);
+const Prueba = () => (
+  <div>
+    <ProductosFetch>
+      <Buscar />
+    </ProductosFetch>
+ 
   </div>
 );
 
@@ -54,6 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/reset" element={<Reset />} />
           <Route path="/reset-password" element={<UpdatePassword />} />
           <Route path="/categories" element={<Categories />} />
+          <Route path="/prueba" element={<Prueba />} />
         </Routes>
       </Router>
   </React.StrictMode>

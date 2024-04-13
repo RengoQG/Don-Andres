@@ -21,8 +21,8 @@ const CategoriasComponent = ({ onChange }) => {
   return (
     <div>
       <select onChange={onChange} className="opt">
-        <option value="">Cateorias</option>
-        <option value="*">Totas</option>
+        <option value="">Categorias</option>
+        <option value="*">Todas</option>
         {categorias.map((categoria, index) => (
           <option key={categoria.category_id} value={categoria.category_id}>{categoria.name}</option>
         ))}

@@ -20414,8 +20414,38 @@ input[type="checkbox"] {
 	}
   }
 
+  .isotope {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	z-index: 1;
+	position: relative;
+  }
+  
+  .isotope-item {
+	flex: 0 1 calc(33.333% - 10px);
+	margin-bottom: 20px;
+  }
+  
+  .isotope-item:nth-child(3n) {
+	margin-right: 0;
+  }
+  
+  @media (max-width: 992px) {
+	.isotope-item {
+	  flex: 0 1 calc(50% - 10px); 
+	}
+  }
+  
+  @media (max-width: 576px) {
+	.isotope-item {
+	  flex: 0 1 calc(100% - 10px); 
+	}
+  }
+  
 
-
+  
+  
 
 
 
