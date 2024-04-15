@@ -4,7 +4,7 @@ const connection = require('../db.js');
 exports.obtenerProductos = async (req, res) => {
   try {
     // Consulta SQL para obtener todas los productos
-    const query = 'SELECT * FROM productos LIMIT 3';
+    const query = 'SELECT * FROM productos LIMIT 20';
 
     // Ejecutar la consulta SQL
     const [results] = await connection.execute(query);
