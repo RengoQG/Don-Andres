@@ -2,11 +2,11 @@
     box-sizing: border-box;
 }
 .main__form{
-    margin-top: 30px;
+    margin-top: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 83vh;
+    height: 85vh;
     color: #2d6a4f;
 }
 
@@ -28,22 +28,9 @@ form input{
     border-bottom: 1px solid #52b788;
 }
 
-.button__main > button{
-    width: 45%;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    background-color: #2d6a4f;
-    color: #FFF;
-    border: none;
-    font-size: 15px;
-    font-weight: bolder;
-    margin-top: 5px;
-}
-
-.button__main > button:hover {
-    background-color: #52b788;
-    cursor: pointer;
+.button__main {
+    display: flex;
+    gap: 5px;
 }
 
 .small-text {
@@ -61,28 +48,39 @@ form input{
     color: darkblue; /* Cambia el color cuando el enlace está en hover */
   }
   
-#button__loginR{
+.button__log{
     background-color: rgb(53, 79, 82);
-    margin-left: 15px;
-    width: 50%;
+    color: #FFF;
+    padding: 10px;
+    border: none;
+    border-radius:5px;
 }
 
-#button__loginR:hover{
+.button__log:hover{
     background-color:#52b788;
 }
 
+.button_re{
+    background-color: rgb(40, 150, 89);
+    color: #FFF;
+    padding: 10px;
+    border: none;
+    border-radius:5px;
+}
+
+.button_re:hover{
+    background-color: rgb(70, 109, 87);
+}
 /* Anula el estilo de Bootstrap que oculta el texto predeterminado en el select específico */
 .select select{
     padding: 10px;
-    margin-right: 10px;
-    width: 50%;
+    width: 95%;
     border-radius: 10px;
     border: 1px solid #52b788;
 }
 
-.button__main{
-    width: 100%;
-    display: flex;;
+.input-wrapper input{
+    margin-right: 110px;
 }
 
 .button__main button{
@@ -102,6 +100,38 @@ form input{
     width: 100%;
 }
 
-  
 
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+    .main__form {
+      align-items: flex-start; /* Alinea los elementos al inicio */
+    }
+  
+    .register-form {
+      width: 100%; /* Ajusta el ancho del formulario para pantallas más pequeñas */
+    }
+  
+    .input-container {
+      width: 100%;
+    }
+
+    .input-wrapper input{
+        margin-right: 20px;
+    }
+  
+    .input-container label {
+      margin-bottom: 0px; /* Reduce el espacio entre etiqueta y campo */
+    }
+    
+    .button__main {
+      flex-direction: column; /* Apila los botones verticalmente en dispositivos móviles */
+    }
+  
+    .button__main button {
+      width: 100%; /* Hace que los botones ocupen todo el ancho en dispositivos móviles */
+      margin-bottom: 10px; /* Añade espacio entre los botones */
+    }
+
+
+  }
   

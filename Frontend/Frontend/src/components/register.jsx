@@ -88,7 +88,7 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:6001/users/register', formData);
+      const response = await axios.post('http://192.168.20.238:6001/users/register', formData);
       toast.success(response.data.message);
       setFormData({
         name: '',
@@ -126,13 +126,13 @@ const RegisterForm = () => {
           <div className="input-group">
             <div className="input-wrapper select">
               <label><FaUser /> Tipo de documento</label>
-              <select className="form-select selected w-100" name="document_type" onChange={handleChange} value={formData.document_type}>
+              <select className="form-select selected" name="document_type" onChange={handleChange} value={formData.document_type}>
                 <option defaultValue>Seleccione</option>
                 <option value="CC">Cédula ciudadana</option>
                 <option value="CE">Cédula de extranjero</option>
               </select>
             </div>
-            <div className="input-wrapper ml-5">
+            <div className="input-wrapper">
               <label><FaUser /> Cédula</label>
               <input type="text" name="document" placeholder="Número de Cédula" onChange={handleChange} value={formData.document} />
             </div>
@@ -176,8 +176,8 @@ const RegisterForm = () => {
         </div>
 
         <div className='button__main'>
-          <button type="submit">Registrarse</button>
-          <button id='button__loginR' onClick={() => navigateTo('/login')}>Inicio de sesión</button>
+          <button className='button_re' type="submit">Registrarse</button>
+          <button className='button__log' onClick={() => navigateTo('/login')}>Inicio de sesión</button>
         </div>
       </form>
     </div>

@@ -8,7 +8,7 @@ const CategoriasComponent = ({ onChange }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:6001/categoria/categorias");
+        const response = await axios.get("http://192.168.20.238:6001/categoria/categorias");
         setCategorias(response.data);
       } catch (error) {
         console.error("Error al obtener las categorías:", error);

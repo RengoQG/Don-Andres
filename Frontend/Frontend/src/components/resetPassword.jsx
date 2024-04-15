@@ -12,14 +12,14 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:6001/reset/reset', { email });
+      const response = await axios.post('http://192.168.20.238:6001/reset/reset', { email });
       const token = response.data.token; // Suponiendo que el servidor devuelve el token en la respuesta
 
       // Construye la URL con el token
-      const resetPasswordUrl = `http://localhost:5173/updatePassword?token=${token}`;
+      const resetPasswordUrl = `http://192.168.20.238:5173/updatePassword?token=${token}`;
 
       // Envía la solicitud de restablecimiento de contraseña al servidor
-      await axios.post('http://localhost:6001/reset/reset', { email, resetPasswordUrl });
+      await axios.post('http://192.168.20.238:6001/reset/reset', { email, resetPasswordUrl });
 
       // Muestra un mensaje de éxito
       toast.success('Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña');

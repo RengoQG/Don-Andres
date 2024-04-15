@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from './App.jsx';
 import Slider from './pages/Slider.jsx';
 import Services from './pages/Services.jsx';
+import Dream from './pages/Dream.jsx';
 import Login from './components/Login.jsx';
 import Cta from './pages/Cta.jsx';
 import Inicio from './components/sesionIniciada.jsx';
@@ -28,6 +29,7 @@ const MainContent = () => (
     </ProductosFetch>
     <Wsp />
     <Services />
+    <Dream />
   </div>
 );
 

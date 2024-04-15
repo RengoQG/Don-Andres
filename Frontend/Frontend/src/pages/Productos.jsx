@@ -40,12 +40,12 @@ const ProjectsSection = ({categorias,productos}) => {
   return (
     <section className="section section-sm section-fluid bg-default text-center" id="projects">
       <div className="container-fluid">
-        <h2 className="wow fadeInLeft">Nuestros productos</h2>
+        <h2 className="wow fadeInLeft">Nuestras categorias</h2>
         <div className="isotope-filters isotope-filters-horizontal">
         <button className={botonFiltroClases} onClick={toggleFiltro} data-custom-toggle="#isotope-3" data-custom-toggle-hide-on-blur="true" data-custom-toggle-disable-on-blur="true"><span className="icon fa fa-caret-down"></span>Filter</button>
           <ul className={listaFiltrosClases} id="isotope-3">
             
-            <li><a className="active" href="#" data-isotope-filter="*" data-isotope-group="gallery">Todos</a></li>
+            <li><a className="active" href="#" data-isotope-filter="*" data-isotope-group="gallery">Todas</a></li>
             {categorias.map((categoria) => (
             <li key={categoria.category_id}><a href="#" data-isotope-filter={`Type ${categoria.category_id}`} data-isotope-group="gallery">{categoria.name}</a></li>
           ))}          
