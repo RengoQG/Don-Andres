@@ -4,6 +4,8 @@ const userRoutes = require('./Controllers/routes/userRuts.js');
 const resetPassword = require('./Controllers/routes/resetPassword.js');
 const validateToken = require('./Controllers/routes/validateToken.js');
 const auth = require('./Controllers/routes/authRoutes.js');
+const search = require('./Controllers/routes/serchName.js');
+const sugerencias = require('./Controllers/routes/sugerenacisRoute.js');
 const categoria = require('./Controllers/routes/categories.js');
 const producto = require('./Controllers/routes/productsRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
@@ -30,7 +32,6 @@ app.use(helmet({
       }
     }
   }));
-
 // Ruta para obtener datos desde la base de datos
 app.get('/', async(req, res) => {
     try {
@@ -62,6 +63,10 @@ app.get('/profile', authMiddleware, (req, res) => {
 app.use('/categoria', categoria);
 //ObtenerProductos
 app.use('/producto', producto);
+//Buscar producto por nombre
+app.use('/searchName', search);
+//Sugerencias de productos
+app.use('/sugerencias', sugerencias);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 6001;

@@ -3,8 +3,12 @@ const connection = require('../db.js');
 // Controlador para obtener todas los productos
 exports.obtenerProductos = async (req, res) => {
   try {
-    // Consulta SQL para obtener todas los productos
-    const query = 'SELECT * FROM productos LIMIT 20';
+    // Consulta SQL para obtener todas los productos con el nombre de la categoría
+    const query = `
+      SELECT p.*, c.name AS nombre_categoria
+      FROM productos p
+      JOIN categorias c ON p.category_id = c.category_id
+    `;
 
     // Ejecutar la consulta SQL
     const [results] = await connection.execute(query);
