@@ -11,7 +11,8 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.9s ease;
+    position: relative;
   }
   
   .product-card:hover {
@@ -22,6 +23,7 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
+    transition: filter 0.3s ease;
   }
   
   .product-details {
@@ -137,6 +139,7 @@
     transition: transform 0.3s ease;
     display: flex; /* Hacer que el contenedor de la tarjeta sea flexible */
     flex-direction: column; /* Alinear elementos verticalmente */
+    position: relative; /* Para que el icono de búsqueda esté posicionado correctamente */
   }
   
   .product-card:hover {
@@ -147,6 +150,7 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
+    transition: filter 0.3s ease;
   }
   
   .product-details {
@@ -186,4 +190,103 @@
     margin-right: 10px;
   }
   
-  
+.product-card img:hover {
+    cursor: pointer;
+    filter: brightness(85%);
+}
+
+.product-card:hover .search-icon {
+  opacity: 1; /* Mostrar cuando el ratón está sobre la imagen */
+}
+
+.search-icon {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(-10px); 
+  color: #fff; 
+  font-size: 2.5rem; 
+  opacity: 0; 
+  transition: opacity 0.3s ease, transform 0.3s ease; 
+  cursor: pointer;
+}
+
+.product-card.hover {
+  animation: jump 0.9s ease infinite; /* Reproduce la animación infinitamente */
+}
+
+@keyframes jump {
+  0%, 100% {
+    transform: translateY(-10px); /* La posición inicial y final es ligeramente elevada */
+  }
+}
+
+.product-details-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-image-container {
+  width: 50%;
+  margin-right: 20px;
+}
+
+.product-image {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-info {
+  flex-grow: 1;
+}
+
+.product-name {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.product-description {
+  margin-bottom: 10px;
+}
+
+.product-price {
+  margin-bottom: 20px;
+}
+
+.btn-consultar {
+  background-color: #25d366;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-consultar:hover {
+  background-color: #128c7e;
+}
+
+.whatsapp-icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.search-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-container {
+  position: relative;
+}
+
+

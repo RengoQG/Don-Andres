@@ -1,0 +1,157 @@
+.buscador-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.buscador-form {
+    position: relative;
+    display: block;
+    align-items: center;
+    padding: 3px;
+    margin: 3px;
+    box-shadow: none;
+    background-color: #fff;
+    z-index: 1001;
+  }
+
+  .highlight{
+    color: #52b788;
+  }
+
+  .selected{
+    background-color: #f0f0f0; 
+  }
+
+  .buscador-form.sugerencias-activas {
+    box-shadow: none; /* Elimina la sombra del formulario */
+    position: relative; /* Ajusta la posición del formulario a relativa */
+    border-radius: 10px 10px 0 0; /* Redondea solo las esquinas superiores del formulario */
+    background-color: #fff;
+  }
+  
+  .sugerencias-list {
+    position: absolute; /* Ajusta la posición de la lista de sugerencias a absoluta */
+    top: calc(100% - 5px); /* Ajusta la posición superior para superponer la lista de sugerencias */
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    z-index: 1001;
+  }
+  
+
+  .overlay:not(.buscador-form,.sugerencias-activas,.input-container,.sugerencias-list,.buscador-input) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(145, 143, 143, 0.5); /* Color negro con una opacidad del 50% */
+    z-index: 1000;
+  }
+  
+  .input-container{
+    margin: 5px;
+    position: relative;
+  }
+
+  .buscador-input {
+    flex: 1;
+    padding: 10px 40px 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Ajusta el radio según sea necesario */
+    font-size: 16px;
+    outline: none;
+    background-color: rgb(230, 229, 229);
+    border: none;
+    margin-bottom: 0px ;
+    padding-left: 40px;
+  }
+
+  /*  */
+
+  .sugerencias-list li:not(.sugerencia-seleccionada){
+    padding: 10px;
+    width: 100%;
+    height: 80px;
+    transition: padding 0.2s;
+  }
+
+  .sugerencias-list li:hover:not(.sugerencia-seleccionada){
+    background-color: #ddd;
+    width: 100%;
+    padding: 15px;
+    cursor: pointer;
+  }
+
+  .sugerencia-item {
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .sugerencia-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .sugerencia-imagen {
+    width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: 50px; /* Ajusta el tamaño de la imagen según sea necesario */
+    margin-right: 10px;
+  }
+  
+  .sugerencia-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sugerencia-nombre {
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+  
+  .sugerencia-precio {
+    color: #555; /* Color de texto para el precio */
+  }
+  
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .search-iconSe{
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+  }
+
+  .clear-icon {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .buscador-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    outline: none;
+  }
+  
+  .buscador-button img {
+    width: 20px; /* Ajusta el tamaño del icono según sea necesario */
+    height: 20px; /* Ajusta el tamaño del icono según sea necesario */
+  }
+  

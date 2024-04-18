@@ -16,12 +16,14 @@ import Wsp from './components/wspComponent.jsx';
 import Categories from './components/Categories.jsx';
 import Productos from './pages/Productos.jsx';
 import ProductosFetch from './components/Products.jsx';
+import Prueba2 from './components/prueba.jsx';
 import Buscar from './components/search.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
 const MainContent = () => (
   <div>
+    <Prueba2 />
     <App />
     <Slider />
     <ProductosFetch>
@@ -66,7 +68,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/reset" element={<Reset />} />
           <Route path="/reset-password" element={<UpdatePassword />} />
           <Route path="/categories" element={<Categories />} />
-          <Route path="/prueba" element={<Prueba />} />
+          {/* <Route path="/prueba" element={<Prueba />} /> */}
+          <Route path="/prueba" element={<Prueba2 />} />
         </Routes>
       </Router>
   </React.StrictMode>
