@@ -1,33 +1,84 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import '../EstilosComponentes/pruebaS.css'; // Archivo de estilos CSS para el componente
-import { FaSearch, FaTimes } from 'react-icons/fa'; // Importar el icono de búsqueda de react-icons
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import "../EstilosComponentes/pruebaS.css"; // Archivo de estilos CSS para el componente
+import { FaSearch, FaTimes } from "react-icons/fa"; // Importar el icono de búsqueda de react-icons
 
 const BuscadorProductos = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [productos, setProductos] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [sugerencias, setSugerencias] = useState([]);
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
   const [sugerenciaSeleccionada, setSugerenciaSeleccionada] = useState(null);
+  const [sugerenciaBajoCursor, setSugerenciaBajoCursor] = useState(null);
+  const [totalResultados, setTotalResultados] = useState(0);
+  const [seleccionConFlecha, setSeleccionConFlecha] = useState(false);
+  const [mostrarHistorial, setMostrarHistorial] = useState(false);
+  const [historial, setHistorial] = useState(() => {
+    const storedHistorial = localStorage.getItem("busquedaHistorial");
+    return storedHistorial ? JSON.parse(storedHistorial) : [];
+  });
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "busquedaHistorial",
+      JSON.stringify([...new Set(historial)])
+    );
+  }, [historial]);
+
+  // Dentro del componente BuscadorProductos
+
+  useEffect(() => {
+    // Función para manejar los clics fuera del campo de búsqueda y de las sugerencias
+    const handleClickOutside = (event) => {
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        // Si el clic no proviene del campo de búsqueda o de las sugerencias, ocultar las sugerencias
+        setMostrarSugerencias(false);
+        setTotalResultados(0); // Ocultar el número de resultados al hacer clic fuera del campo de búsqueda
+        // Reiniciar la selección de sugerencias al hacer clic fuera del campo de búsqueda o de las sugerencias
+        setSugerenciaSeleccionada(null);
+      }
+    };
+
+    // Agregar un event listener al documento para detectar clics fuera del campo de búsqueda y de las sugerencias
+    document.addEventListener("click", handleClickOutside);
+
+    // Retornar una función de limpieza para eliminar el event listener cuando el componente se desmonte
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []); // Se ejecuta solo una vez al montar el componente
+
+  // Restablecer la selección de sugerencias cuando se realiza una búsqueda
+  useEffect(() => {
+    if (productos.length > 0) {
+      setSugerenciaSeleccionada(null);
+    }
+  }, [productos]);
 
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
     setQuery(inputValue);
-    setError('');
+    setError("");
 
     if (inputValue.trim().length >= 3) {
       try {
-        const response = await axios.post('http://192.168.20.238:6001/sugerencias/sugerencias', {
-          query: inputValue
-        });
+        const response = await axios.post(
+          "http://192.168.20.238:6001/sugerencias/sugerencias",
+          {
+            query: inputValue,
+          }
+        );
         if (response.data.error) {
           setError(response.data.error);
           setSugerencias([]);
+          setTotalResultados(0);
         } else {
-          setSugerencias(response.data);
+          setSugerencias(response.data.sugerencias || []);
+          setTotalResultados(response.data.totalResults || 0);
           setMostrarSugerencias(true);
+          setMostrarHistorial(false);
         }
       } catch (error) {
         // setError('Error al obtener sugerencias de productos.');
@@ -35,7 +86,36 @@ const BuscadorProductos = () => {
       }
     } else {
       setSugerencias([]);
+      setTotalResultados(0);
       setMostrarSugerencias(false);
+    }
+    setMostrarHistorial(true);
+  };
+
+
+  const handleInputClick = () => {
+    // Mostrar el historial solo cuando se hace clic en el campo de búsqueda
+    setMostrarHistorial(true);
+  };
+
+  const handleMostrarTodosLosProductos = async (inputValue) => {
+    try {
+      const response = await axios.post(
+        "http://192.168.20.238:6001/sugerencias/sugerencias",
+        {
+          query: inputValue,
+        }
+      );
+      if (response.data.error) {
+        setError(response.data.error);
+        setProductos([]); // Utiliza setProductos en lugar de productos
+      } else {
+        setProductos(response.data.productos); // Utiliza setProductos en lugar de productos
+      }
+    } catch (error) {
+      setError("Error al obtener todos los productos.");
+      console.error(error);
+      setProductos([]); // Utiliza setProductos en lugar de productos
     }
   };
 
@@ -44,6 +124,7 @@ const BuscadorProductos = () => {
     if (!query.trim()) {
       setError('Por favor, ingrese un término de búsqueda.');
       setProductos([]);
+      setTotalResultados(0);
       return;
     }
     try {
@@ -53,6 +134,7 @@ const BuscadorProductos = () => {
       if (response.data.error) {
         setError(response.data.error);
         setProductos([]);
+        setTotalResultados(0);
       } else {
         setProductos(response.data);
         setMostrarSugerencias(false);
@@ -62,54 +144,78 @@ const BuscadorProductos = () => {
         } else {
           setError('');
         }
+        setTotalResultados(0);
       }
     } catch (error) {
       setError('Error al buscar productos.');
       console.error(error);
     }
+  };
+  const handleMouseEnter = (index) => {
+    if (!seleccionConFlecha) {
+      setSugerenciaBajoCursor(index);
+    } else {
+      setSeleccionConFlecha(false); // Restablecer la selección con flecha al mover el mouse a una nueva sugerencia
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setSugerenciaBajoCursor(null);
   };
 
   const handleSugerenciaClick = async (sugerencia) => {
     setQuery(sugerencia);
     setMostrarSugerencias(false);
     try {
-      const response = await axios.post('http://192.168.20.238:6001/searchName/search', {
-        query: sugerencia
-      });
+      const response = await axios.post(
+        "http://192.168.20.238:6001/searchName/search",
+        {
+          query: sugerencia,
+        }
+      );
       if (response.data.error) {
         setError(response.data.error);
         setProductos([]);
       } else {
         setProductos(response.data);
-        setQuery('');
+        setQuery("");
         setMostrarSugerencias(false);
         if (response.data.length === 0) {
-          setError('No se encontraron productos relacionados con la búsqueda.');
+          setError("No se encontraron productos relacionados con la búsqueda.");
         } else {
-          setError('');
+          setError("");
+        }
+        setTotalResultados(0);
+        // Verificar si el producto ya existe en el historial
+        const productoExistente = historial.find(item => item.nombre === sugerencia);
+        if (!productoExistente) {
+          // Agregar la búsqueda al historial solo si no existe
+          setHistorial(prevHistorial => [...prevHistorial, { nombre: sugerencia, precio: 300 }]);
         }
       }
     } catch (error) {
-      setError('Error al buscar productos.');
+      setError("Error al buscar productos.");
       console.error(error);
     }
   };
 
-
   const handleClearInput = () => {
-    setQuery('');
+    setQuery("");
     setSugerencias([]);
     setMostrarSugerencias(false);
+    setTotalResultados(0);
   };
 
   const highlightMatches = (sugerencia) => {
-    if (typeof sugerencia === 'string') {
+    if (typeof sugerencia === "string") {
       const matchIndex = sugerencia.toLowerCase().indexOf(query.toLowerCase());
       if (matchIndex !== -1) {
         return (
           <span>
             {sugerencia.substring(0, matchIndex)}
-            <span className="highlight">{sugerencia.substring(matchIndex, matchIndex + query.length)}</span>
+            <span className="highlight">
+              {sugerencia.substring(matchIndex, matchIndex + query.length)}
+            </span>
             {sugerencia.substring(matchIndex + query.length)}
           </span>
         );
@@ -119,22 +225,44 @@ const BuscadorProductos = () => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'ArrowDown') {
+    if (event.key === "ArrowDown") {
       event.preventDefault();
-      if (sugerenciaSeleccionada === null || sugerenciaSeleccionada === sugerencias.length - 1) {
-        setSugerenciaSeleccionada(0);
+      let nextIndex;
+      if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
+        nextIndex =
+          sugerenciaBajoCursor < sugerencias.length - 1
+            ? sugerenciaBajoCursor + 1
+            : 0;
       } else {
-        setSugerenciaSeleccionada((prevIndex) => prevIndex + 1);
+        nextIndex =
+          sugerenciaSeleccionada === null ||
+            sugerenciaSeleccionada === sugerencias.length - 1
+            ? 0
+            : sugerenciaSeleccionada + 1;
       }
-    } else if (event.key === 'ArrowUp') {
+      setSugerenciaSeleccionada(nextIndex);
+      setSeleccionConFlecha(true);
+      setMostrarSugerencias(true); // Asegurar que se muestren las sugerencias al moverse con las flechas
+    } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      if (sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0) {
-        setSugerenciaSeleccionada(sugerencias.length - 1);
+      let nextIndex;
+      if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
+        nextIndex =
+          sugerenciaBajoCursor > 0
+            ? sugerenciaBajoCursor - 1
+            : sugerencias.length - 1;
       } else {
-        setSugerenciaSeleccionada((prevIndex) => prevIndex - 1);
+        nextIndex =
+          sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0
+            ? sugerencias.length - 1
+            : sugerenciaSeleccionada - 1;
       }
-    } else if (event.key === 'Enter' && sugerenciaSeleccionada !== null) {
+      setSugerenciaSeleccionada(nextIndex);
+      setSeleccionConFlecha(true);
+      setMostrarSugerencias(true); // Asegurar que se muestren las sugerencias al moverse con las flechas
+    } else if (event.key === "Enter" && sugerenciaSeleccionada !== null) {
       handleSugerenciaClick(sugerencias[sugerenciaSeleccionada].name);
+      setSeleccionConFlecha(false);
     }
   };
 
@@ -145,9 +273,15 @@ const BuscadorProductos = () => {
   }, [mostrarSugerencias, sugerencias]);
 
   return (
-    <div className={`buscador-container ${mostrarSugerencias ? 'expanded' : ''}`}>
+    <div
+      className={`buscador-container ${mostrarSugerencias ? "expanded" : ""}`}
+    >
       {mostrarSugerencias && <div className="overlay" />}
-      <form onSubmit={handleSubmit} className={`buscador-form ${mostrarSugerencias ? 'sugerencias-activas' : ''}`}>
+      <form
+        onSubmit={handleSubmit}
+        className={`buscador-form ${mostrarSugerencias ? "sugerencias-activas" : ""
+          }`}
+      >
         <div className="input-container">
           <FaSearch className="search-iconSe" />
           <input
@@ -158,6 +292,7 @@ const BuscadorProductos = () => {
             onKeyDown={handleKeyDown}
             ref={inputRef}
             className="buscador-input"
+            onClick={handleInputClick}
             onBlur={() => setTimeout(() => setMostrarSugerencias(false), 100)}
           />
           {mostrarSugerencias && query && (
@@ -170,30 +305,74 @@ const BuscadorProductos = () => {
               sugerencias.map((sugerencia, index) => (
                 <li
                   key={index}
-                  className={`sugerencia-item ${index === sugerenciaSeleccionada ? 'selected' : ''}`}
+                  className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada
+                    ? "selected"
+                    : ""
+                    }`}
                   onClick={() => handleSugerenciaClick(sugerencia.name)}
+                  onMouseEnter={() => handleMouseEnter(index)}
                 >
                   {/* Contenido de la sugerencia */}
-                  <div className={`sugerencia-content ${index === sugerenciaSeleccionada ? 'sugerencia-seleccionada' : ''}`}>
-                    <img src="../../public/images/A01.jpg" alt="Producto" className="sugerencia-imagen" />
+                  <div
+                    className={`sugerencia-content ${seleccionConFlecha && index === sugerenciaSeleccionada
+                      ? "sugerencia-seleccionada"
+                      : ""
+                      }`}
+                  >
+                    <img
+                      src="../../public/images/A01.jpg"
+                      alt="Producto"
+                      className="sugerencia-imagen"
+                    />
                     <div className="sugerencia-info">
-                      <span className="sugerencia-nombre">{highlightMatches(sugerencia.name)}</span>
-                      <span className="sugerencia-precio">${sugerencia.price}</span>
+                      <span className="sugerencia-nombre">
+                        {highlightMatches(sugerencia.name)}
+                      </span>
+                      <span className="sugerencia-precio">
+                        ${sugerencia.price}
+                      </span>
                     </div>
                   </div>
                 </li>
               ))
             ) : (
-              <li className="no-results-message">No se encontraron resultados</li>
+              <li className="no-results-message">
+                No se encontraron resultados
+              </li>
             )}
+            {/* Elemento de la lista para mostrar todos los productos */}
+            <li
+              className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""
+                }`}
+              onClick={() => handleMostrarTodosLosProductos(query)}
+            >
+              Ver todos los productos: {totalResultados}
+            </li>
           </ul>
         )}
       </form>
+      {/* Historial de búsquedas */}
+      {mostrarHistorial && (
+        <div className="sugerencias-list-historial">
+          {historial.map((item, index) => (
+            <li key={index} className="sugerencia-item">
+              {/* Contenido del historial */}
+              <div className="sugerencia-content">
+                <div className="sugerencia-info">
+                  <span className="sugerencia-nombre">{item.nombre}</span>
+                  <span className="sugerencia-precio">${item.precio}</span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </div>
+      )}
+
       {error && <p className="error-message">{error}</p>}
       {productos.length > 0 && (
         <ul className="productos-list">
           {productos.map((producto) => (
-            <li key={producto.id} className="producto-item">
+            <li key={producto.product_id} className="producto-item">
               {producto.name} - {producto.price} - {producto.codigo}
             </li>
           ))}
@@ -201,6 +380,7 @@ const BuscadorProductos = () => {
       )}
     </div>
   );
+
 };
 
 export default BuscadorProductos;
