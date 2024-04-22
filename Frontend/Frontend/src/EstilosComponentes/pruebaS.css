@@ -82,20 +82,7 @@
     transition: padding 0.2s;
   }
 
-  .sugerencias-list-historial{
-    border: 1px solid black;
-    width: 720px;
-  }
-
-  .buscador-form{
-    border: 1px solid black;
-    width: 720px;
-    border-bottom-left-radius: 0; 
-    border-bottom-right-radius: 0;
-    margin-bottom: 0px;
-  }
-
-  .sugerencias-list-historial li:not(.sugerencia-seleccionada){
+  /* .sugerencias-list-historial li:not(.sugerencia-seleccionada){
     padding: 10px;
     width: 100%;
     height: 80px;
@@ -109,7 +96,7 @@
   width: 100%;
   padding: 15px;
   cursor: pointer;
-}
+} */
 
 .sugerencias-list:hover li:hover:not(.sugerencia-seleccionada),
 .sugerencias-list.seleccion-con-flecha li:hover:not(.sugerencia-seleccionada) {

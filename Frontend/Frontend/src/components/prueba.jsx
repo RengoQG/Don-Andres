@@ -27,6 +27,14 @@ const BuscadorProductos = () => {
     );
   }, [historial]);
 
+  const handleClearHistory = () => {
+    localStorage.removeItem("busquedaHistorial");
+    setHistorial([]);
+    setSugerenciaSeleccionada(null); 
+    setSugerenciaBajoCursor(null); 
+    setSeleccionConFlecha(false); 
+  };
+
   // Dentro del componente BuscadorProductos
 
   useEffect(() => {
@@ -35,6 +43,7 @@ const BuscadorProductos = () => {
       if (inputRef.current && !inputRef.current.contains(event.target)) {
         // Si el clic no proviene del campo de búsqueda o de las sugerencias, ocultar las sugerencias
         setMostrarSugerencias(false);
+        setMostrarHistorial(false);
         setTotalResultados(0); // Ocultar el número de resultados al hacer clic fuera del campo de búsqueda
         // Reiniciar la selección de sugerencias al hacer clic fuera del campo de búsqueda o de las sugerencias
         setSugerenciaSeleccionada(null);
@@ -51,11 +60,10 @@ const BuscadorProductos = () => {
   }, []); // Se ejecuta solo una vez al montar el componente
 
   // Restablecer la selección de sugerencias cuando se realiza una búsqueda
-  useEffect(() => {
-    if (productos.length > 0) {
-      setSugerenciaSeleccionada(null);
-    }
-  }, [productos]);
+  // useEffect(() => {
+  //   setSugerenciaSeleccionada(null);
+  // }, [query]);
+
 
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
@@ -89,13 +97,14 @@ const BuscadorProductos = () => {
       setTotalResultados(0);
       setMostrarSugerencias(false);
     }
-    setMostrarHistorial(true);
   };
 
-
   const handleInputClick = () => {
-    // Mostrar el historial solo cuando se hace clic en el campo de búsqueda
-    setMostrarHistorial(true);
+    // Mostrar el historial solo cuando se hace clic en el campo de búsqueda y este esté vacío
+    if (query.trim() === '') {
+      setMostrarHistorial(true);
+      setMostrarSugerencias(false);
+    }
   };
 
   const handleMostrarTodosLosProductos = async (inputValue) => {
@@ -118,7 +127,6 @@ const BuscadorProductos = () => {
       setProductos([]); // Utiliza setProductos en lugar de productos
     }
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!query.trim()) {
@@ -149,6 +157,8 @@ const BuscadorProductos = () => {
     } catch (error) {
       setError('Error al buscar productos.');
       console.error(error);
+    } finally {
+      setSugerenciaSeleccionada(null); // Reiniciar sugerenciaSeleccionada después de realizar la búsqueda
     }
   };
   const handleMouseEnter = (index) => {
@@ -158,11 +168,10 @@ const BuscadorProductos = () => {
       setSeleccionConFlecha(false); // Restablecer la selección con flecha al mover el mouse a una nueva sugerencia
     }
   };
-
   const handleMouseLeave = () => {
-    setSugerenciaBajoCursor(null);
+    // setSugerenciaBajoCursor(null);
+    setSugerenciaSeleccionada(null);
   };
-
   const handleSugerenciaClick = async (sugerencia) => {
     setQuery(sugerencia);
     setMostrarSugerencias(false);
@@ -197,15 +206,17 @@ const BuscadorProductos = () => {
       setError("Error al buscar productos.");
       console.error(error);
     }
+    setSugerenciaSeleccionada(null); 
+    setSugerenciaBajoCursor(null); 
+    setSeleccionConFlecha(false); 
+    alert('a')
   };
-
   const handleClearInput = () => {
     setQuery("");
     setSugerencias([]);
     setMostrarSugerencias(false);
     setTotalResultados(0);
   };
-
   const highlightMatches = (sugerencia) => {
     if (typeof sugerencia === "string") {
       const matchIndex = sugerencia.toLowerCase().indexOf(query.toLowerCase());
@@ -223,49 +234,61 @@ const BuscadorProductos = () => {
     }
     return sugerencia;
   };
-
   const handleKeyDown = (event) => {
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       let nextIndex;
-      if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
+      if (mostrarHistorial) {
+        // Navegación y selección en el historial
         nextIndex =
-          sugerenciaBajoCursor < sugerencias.length - 1
-            ? sugerenciaBajoCursor + 1
-            : 0;
+          sugerenciaSeleccionada === null
+            ? event.key === "ArrowDown"
+              ? 0
+              : historial.length - 1
+            : event.key === "ArrowDown"
+              ? (sugerenciaSeleccionada + 1) % historial.length
+              : sugerenciaSeleccionada === 0
+                ? historial.length - 1
+                : sugerenciaSeleccionada - 1;
+        // No mostrar los mensajes de "No se encontraron resultados" en el historial
+        setError("");
+        setTotalResultados(0);
       } else {
-        nextIndex =
-          sugerenciaSeleccionada === null ||
-            sugerenciaSeleccionada === sugerencias.length - 1
-            ? 0
-            : sugerenciaSeleccionada + 1;
+        // Navegación y selección en las sugerencias
+        if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
+          nextIndex =
+            event.key === "ArrowDown"
+              ? sugerenciaBajoCursor < sugerencias.length - 1
+                ? sugerenciaBajoCursor + 1
+                : 0
+              : sugerenciaBajoCursor > 0
+                ? sugerenciaBajoCursor - 1
+                : sugerencias.length - 1;
+        } else {
+          nextIndex =
+            event.key === "ArrowDown"
+              ? sugerenciaSeleccionada === null || sugerenciaSeleccionada === sugerencias.length - 1
+                ? 0
+                : sugerenciaSeleccionada + 1
+              : sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0
+                ? sugerencias.length - 1
+                : sugerenciaSeleccionada - 1;
+        }
       }
       setSugerenciaSeleccionada(nextIndex);
       setSeleccionConFlecha(true);
-      setMostrarSugerencias(true); // Asegurar que se muestren las sugerencias al moverse con las flechas
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      let nextIndex;
-      if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
-        nextIndex =
-          sugerenciaBajoCursor > 0
-            ? sugerenciaBajoCursor - 1
-            : sugerencias.length - 1;
-      } else {
-        nextIndex =
-          sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0
-            ? sugerencias.length - 1
-            : sugerenciaSeleccionada - 1;
-      }
-      setSugerenciaSeleccionada(nextIndex);
-      setSeleccionConFlecha(true);
-      setMostrarSugerencias(true); // Asegurar que se muestren las sugerencias al moverse con las flechas
+      setMostrarSugerencias(true);
     } else if (event.key === "Enter" && sugerenciaSeleccionada !== null) {
-      handleSugerenciaClick(sugerencias[sugerenciaSeleccionada].name);
+      if (mostrarHistorial) {
+        handleSugerenciaClick(historial[sugerenciaSeleccionada].nombre);
+      } else {
+        handleSugerenciaClick(sugerencias[sugerenciaSeleccionada].name);
+      }
       setSeleccionConFlecha(false);
+      setMostrarHistorial(false);
+      setSugerenciaSeleccionada(null); // Reiniciar sugerenciaSeleccionada después de realizar la búsqueda
     }
   };
-
   useEffect(() => {
     if (mostrarSugerencias && sugerencias.length > 0) {
       inputRef.current.focus();
@@ -273,14 +296,11 @@ const BuscadorProductos = () => {
   }, [mostrarSugerencias, sugerencias]);
 
   return (
-    <div
-      className={`buscador-container ${mostrarSugerencias ? "expanded" : ""}`}
-    >
-      {mostrarSugerencias && <div className="overlay" />}
+    <div className={`buscador-container ${mostrarSugerencias || mostrarHistorial ? "expanded" : ""}`} onMouseLeave={handleMouseLeave}>
+      {(mostrarSugerencias || mostrarHistorial) && <div className="overlay" />}
       <form
         onSubmit={handleSubmit}
-        className={`buscador-form ${mostrarSugerencias ? "sugerencias-activas" : ""
-          }`}
+        className={`buscador-form ${mostrarSugerencias ? "sugerencias-activas" : ""}`}
       >
         <div className="input-container">
           <FaSearch className="search-iconSe" />
@@ -299,26 +319,18 @@ const BuscadorProductos = () => {
             <FaTimes className="clear-icon" onClick={handleClearInput} />
           )}
         </div>
-        {mostrarSugerencias && (
+        {mostrarSugerencias && !mostrarHistorial && (
           <ul className="sugerencias-list">
             {sugerencias.length > 0 ? (
               sugerencias.map((sugerencia, index) => (
                 <li
                   key={index}
-                  className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada
-                    ? "selected"
-                    : ""
-                    }`}
+                  className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada ? "selected" : ""}`}
                   onClick={() => handleSugerenciaClick(sugerencia.name)}
                   onMouseEnter={() => handleMouseEnter(index)}
                 >
                   {/* Contenido de la sugerencia */}
-                  <div
-                    className={`sugerencia-content ${seleccionConFlecha && index === sugerenciaSeleccionada
-                      ? "sugerencia-seleccionada"
-                      : ""
-                      }`}
-                  >
+                  <div className={`sugerencia-content ${seleccionConFlecha && index === sugerenciaSeleccionada ? "sugerencia-seleccionada" : ""}`}>
                     <img
                       src="../../public/images/A01.jpg"
                       alt="Producto"
@@ -341,33 +353,48 @@ const BuscadorProductos = () => {
               </li>
             )}
             {/* Elemento de la lista para mostrar todos los productos */}
-            <li
-              className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""
-                }`}
-              onClick={() => handleMostrarTodosLosProductos(query)}
-            >
+            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() => handleMostrarTodosLosProductos(query)}>
               Ver todos los productos: {totalResultados}
             </li>
           </ul>
         )}
+
+        {/* historial */}
+        {mostrarHistorial && (
+          <div>
+            <h4 className="ml-2">Historial</h4>
+            <ul className="sugerencias-list">
+              {historial.map((item, index) => (
+                <li
+                  key={index}
+                  className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada ? "selected" : ""}`}
+                  onClick={() => handleSugerenciaClick(item.nombre)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                >
+                  {/* Contenido del historial */}
+                  <div className="sugerencia-content">
+                    <img
+                      src="../../public/images/A01.jpg"
+                      alt="Producto"
+                      className="sugerencia-imagen"
+                    />
+                    <div className="sugerencia-info">
+                      <span className="sugerencia-nombre">{item.nombre}</span>
+                      <span className="sugerencia-precio">${item.precio}</span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <span className="ml-2">
+              <a href="#" onClick={handleClearHistory}>Limpiar historial</a>
+            </span>
+          </div>
+        )}
+
+
       </form>
       {/* Historial de búsquedas */}
-      {mostrarHistorial && (
-        <div className="sugerencias-list-historial">
-          {historial.map((item, index) => (
-            <li key={index} className="sugerencia-item">
-              {/* Contenido del historial */}
-              <div className="sugerencia-content">
-                <div className="sugerencia-info">
-                  <span className="sugerencia-nombre">{item.nombre}</span>
-                  <span className="sugerencia-precio">${item.precio}</span>
-                </div>
-              </div>
-            </li>
-          ))}
-        </div>
-      )}
-
       {error && <p className="error-message">{error}</p>}
       {productos.length > 0 && (
         <ul className="productos-list">
@@ -380,6 +407,7 @@ const BuscadorProductos = () => {
       )}
     </div>
   );
+
 
 };
 
