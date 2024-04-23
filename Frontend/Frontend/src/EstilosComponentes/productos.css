@@ -1,0 +1,207 @@
+.producto-container {
+    display: flex;
+    margin-left: 5px;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .producto-imagen {
+    flex: 0.4; /* Reducir el tamaño de la imagen */
+    overflow: hidden; /* Ocultar partes de la imagen que se desbordan */
+    height: 50%;
+  }
+  
+  .producto-imagen img {
+    margin-top: 20px;
+    width: 100%; /* Ajustar el tamaño de la imagen al contenedor */
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.5s ease-in-out; /* Agregar transición suave al efecto de zoom */
+  }
+  
+  .producto-imagen img.zoomed {
+    transform: scale(2.0); /* Aumentar la escala de la imagen cuando se pasa el cursor sobre ella */
+    cursor: pointer;
+  }
+  
+  .producto-info {
+    flex: 0.6; /* Ajustar el tamaño del contenedor de la información */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Espaciar uniformemente los elementos */
+  }
+
+  .producto-nombre-titulo {
+    font-size: 45px;
+    margin-bottom: 1px;
+  }
+  
+  .producto-nombre {
+    font-size: 24px;
+    margin-bottom: 0    px;
+  }
+    
+  .producto-detalles {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: rgb(228, 226, 226);;
+    padding: 10px;
+    height: 100%;
+    border-radius: 10px;    
+  }
+
+  .detalles__infor{
+    width: 50%;
+  }
+
+  .detalles__prod{
+    width: 50%;
+  }
+  
+  .producto-precio {
+    font-weight: bold;
+    font-size: 1.0rem;
+  }
+  
+  .producto-calificacion {
+    font-style: italic;
+  }
+  
+  .contactar-asesor {
+    margin-bottom: 20px;
+    width:25% ;
+  }
+  
+  .contactar-asesor-btn {
+    background-color: #25D366; /* Color de fondo de WhatsApp */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex; /* Mostrar elementos en línea */
+    align-items: center; /* Alinear elementos verticalmente */
+    text-decoration: none; /* Eliminar el subrayado del enlace */
+    font-size: 1.0rem;
+  }
+  
+  .contactar-asesor-btn:hover {
+    background-color: #128C7E; /* Cambiar color de fondo al pasar el mouse */
+    color: #fff;
+  }
+  
+  .icono-whatsapp {
+    margin-right: 5px; /* Agregar espacio entre el icono y el texto */
+    font-size: 1.3rem;
+  }
+  
+  
+  .politica-envio {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .separador {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .info__envio {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sobre-articulo-lista {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sobre-articulo-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .sobre-articulo-icon {
+    margin-right: 10px;
+    color: #0D6FD7;
+    font-size: 1.2rem;
+  }
+  
+  .sobre-articulo-texto {
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .separador {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+  }
+  
+  .producto-detalles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.detalles__infor,
+.detalles__prod {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.detalles-seccion {
+    margin-bottom: 20px;
+}
+
+.detalles-titulo {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.detalles-lista {
+    list-style: none;
+    padding: 0;
+}
+
+.detalles-item {
+    margin-bottom: 10px;
+}
+
+.detalles-tipo {
+    font-weight: bold;
+    color: #555;
+}
+
+.detalles-valor {
+    color: #777;
+}
+
+.acciones {
+    margin-top: 20px;
+}
+
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .producto-detalles {
+        flex-direction: column;
+    }
+    
+    .detalles__infor,
+    .detalles__prod {
+        margin-right: 0;
+    }
+}

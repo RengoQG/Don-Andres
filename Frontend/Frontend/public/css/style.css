@@ -15292,6 +15292,7 @@ html.rd-navbar-fixed-linked .page-header {
 
 .swiper-slider-classic.swiper-container-horizontal {
 	max-height: none;
+	margin-top: 45px;
 }
 
 @media (max-height: 420px) {
@@ -20449,7 +20450,13 @@ input[type="checkbox"] {
 	}
   }
   
-
+  @media screen and (max-width: 768px) {
+	.swpr {
+	  margin-top: 45px !important; /* Ajusta el margen inferior para dar espacio al buscador */
+	}
+  }
+  
+  
   
   
   

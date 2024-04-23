@@ -177,3 +177,25 @@
     cursor: pointer;
     color: #52b788;
   }
+
+  @media screen and (max-width: 768px) {
+    .buscador-form {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      margin-top: 50px; /* Ajusta la distancia desde la parte superior */
+      z-index: 1001; /* Asegura que el input esté por encima de otros elementos */
+      margin-bottom: 30px;
+    }
+  
+    .buscador-input {
+      padding: 8px 20px; /* Ajusta el padding para el input en pantallas pequeñas */
+      text-indent: 10px;
+      font-size: 0.8rem;
+    }  
+    /* Otros ajustes específicos para pantallas más pequeñas */
+  }
+  
+  
+  
+

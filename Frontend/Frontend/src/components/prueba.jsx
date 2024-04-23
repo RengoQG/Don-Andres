@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,useHistory } from "react";
 import axios from "axios";
 import "../EstilosComponentes/pruebaS.css"; // Archivo de estilos CSS para el componente
 import { FaSearch, FaTimes } from "react-icons/fa"; // Importar el icono de búsqueda de react-icons
+import { useNavigate } from 'react-router-dom';
+
 
 const BuscadorProductos = () => {
+  const navigateTo = useNavigate();
   const [query, setQuery] = useState("");
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState("");
@@ -63,8 +66,6 @@ const BuscadorProductos = () => {
   // useEffect(() => {
   //   setSugerenciaSeleccionada(null);
   // }, [query]);
-
-
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
     setQuery(inputValue);
@@ -126,6 +127,7 @@ const BuscadorProductos = () => {
       console.error(error);
       setProductos([]); // Utiliza setProductos en lugar de productos
     }
+    setQuery("");
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -162,12 +164,11 @@ const BuscadorProductos = () => {
     }
   };
   const handleMouseEnter = (index) => {
-    if (!seleccionConFlecha) {
-      setSugerenciaBajoCursor(index);
-    } else {
-      setSeleccionConFlecha(false); // Restablecer la selección con flecha al mover el mouse a una nueva sugerencia
-    }
+    setSugerenciaBajoCursor(index);
+    setSugerenciaSeleccionada(index);
+    setSeleccionConFlecha(true); // Establecer selección con flecha para mantener consistencia
   };
+  
   const handleMouseLeave = () => {
     // setSugerenciaBajoCursor(null);
     setSugerenciaSeleccionada(null);
@@ -187,6 +188,7 @@ const BuscadorProductos = () => {
         setProductos([]);
       } else {
         setProductos(response.data);
+        navigateTo(`/producto/${response.data[0].name}`, { state: { producto: response.data } });
         setQuery("");
         setMostrarSugerencias(false);
         if (response.data.length === 0) {
@@ -209,14 +211,13 @@ const BuscadorProductos = () => {
     setSugerenciaSeleccionada(null); 
     setSugerenciaBajoCursor(null); 
     setSeleccionConFlecha(false); 
-    alert('a')
   };
   const handleClearInput = () => {
     setQuery("");
     setSugerencias([]);
     setMostrarSugerencias(false);
     setTotalResultados(0);
-  };
+  };  
   const highlightMatches = (sugerencia) => {
     if (typeof sugerencia === "string") {
       const matchIndex = sugerencia.toLowerCase().indexOf(query.toLowerCase());
@@ -246,34 +247,23 @@ const BuscadorProductos = () => {
               ? 0
               : historial.length - 1
             : event.key === "ArrowDown"
-              ? (sugerenciaSeleccionada + 1) % historial.length
-              : sugerenciaSeleccionada === 0
-                ? historial.length - 1
-                : sugerenciaSeleccionada - 1;
+            ? (sugerenciaSeleccionada + 1) % historial.length
+            : sugerenciaSeleccionada === 0
+            ? historial.length - 1
+            : sugerenciaSeleccionada - 1;
         // No mostrar los mensajes de "No se encontraron resultados" en el historial
         setError("");
         setTotalResultados(0);
       } else {
         // Navegación y selección en las sugerencias
-        if (sugerenciaBajoCursor !== null && !seleccionConFlecha) {
-          nextIndex =
-            event.key === "ArrowDown"
-              ? sugerenciaBajoCursor < sugerencias.length - 1
-                ? sugerenciaBajoCursor + 1
-                : 0
-              : sugerenciaBajoCursor > 0
-                ? sugerenciaBajoCursor - 1
-                : sugerencias.length - 1;
-        } else {
-          nextIndex =
-            event.key === "ArrowDown"
-              ? sugerenciaSeleccionada === null || sugerenciaSeleccionada === sugerencias.length - 1
-                ? 0
-                : sugerenciaSeleccionada + 1
-              : sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0
-                ? sugerencias.length - 1
-                : sugerenciaSeleccionada - 1;
-        }
+        nextIndex =
+          event.key === "ArrowDown"
+            ? sugerenciaSeleccionada === null || sugerenciaSeleccionada === sugerencias.length - 1
+              ? 0
+              : sugerenciaSeleccionada + 1
+            : sugerenciaSeleccionada === null || sugerenciaSeleccionada === 0
+            ? sugerencias.length - 1
+            : sugerenciaSeleccionada - 1;
       }
       setSugerenciaSeleccionada(nextIndex);
       setSeleccionConFlecha(true);
@@ -289,8 +279,12 @@ const BuscadorProductos = () => {
       setSugerenciaSeleccionada(null); // Reiniciar sugerenciaSeleccionada después de realizar la búsqueda
     }
   };
+  
+  
   useEffect(() => {
     if (mostrarSugerencias && sugerencias.length > 0) {
+      inputRef.current.focus();
+      setSugerenciaSeleccionada(null); // Reiniciar la selección cuando se muestran nuevas sugerencias
       inputRef.current.focus();
     }
   }, [mostrarSugerencias, sugerencias]);
@@ -313,7 +307,7 @@ const BuscadorProductos = () => {
             ref={inputRef}
             className="buscador-input"
             onClick={handleInputClick}
-            onBlur={() => setTimeout(() => setMostrarSugerencias(false), 100)}
+            // onBlur={() => setTimeout(() => setMostrarSugerencias(false), 100)}
           />
           {mostrarSugerencias && query && (
             <FaTimes className="clear-icon" onClick={handleClearInput} />
@@ -353,7 +347,7 @@ const BuscadorProductos = () => {
               </li>
             )}
             {/* Elemento de la lista para mostrar todos los productos */}
-            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() => handleMostrarTodosLosProductos(query)}>
+            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
               Ver todos los productos: {totalResultados}
             </li>
           </ul>

@@ -13,6 +13,7 @@ import Register from './components/register.jsx';
 import Reset from './components/resetPassword.jsx';
 import UpdatePassword from './components/updatePassword.jsx';
 import Wsp from './components/wspComponent.jsx';
+import Producto from './components/Producto.jsx';
 import Categories from './components/Categories.jsx';
 import Productos from './pages/Productos.jsx';
 import ProductosFetch from './components/Products.jsx';
@@ -70,6 +71,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/categories" element={<Categories />} />
           {/* <Route path="/prueba" element={<Prueba />} /> */}
           <Route path="/prueba" element={<Prueba2 />} />
+          <Route path="/producto/:name" element={<Producto />} />
         </Routes>
       </Router>
   </React.StrictMode>
