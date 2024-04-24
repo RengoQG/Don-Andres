@@ -24,7 +24,7 @@ exports.requestReset = async (req, res) => {
     const token = generateToken({ email });
 
     // Construye la URL con el token incrustado
-    const resetUrl = `http://localhost:5173/reset-password?token=${token}`;
+    const resetUrl = `http://192.168.20.238:5173/reset-password?token=${token}`;
 
     // Envía el correo electrónico con la URL de restablecimiento
     await sendEmail(email, resetUrl);

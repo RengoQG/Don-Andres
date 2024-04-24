@@ -7,6 +7,7 @@ const auth = require('./Controllers/routes/authRoutes.js');
 const search = require('./Controllers/routes/serchName.js');
 const sugerencias = require('./Controllers/routes/sugerenacisRoute.js');
 const categoria = require('./Controllers/routes/categories.js');
+const contactenos = require('./Controllers/routes/contactenosRoutes.js');
 const producto = require('./Controllers/routes/productsRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
@@ -67,6 +68,8 @@ app.use('/producto', producto);
 app.use('/searchName', search);
 //Sugerencias de productos
 app.use('/sugerencias', sugerencias);
+//Contactenos
+app.use('/contactenos', contactenos);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 6001;
