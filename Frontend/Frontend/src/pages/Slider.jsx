@@ -5,7 +5,7 @@ const SwiperSlider = () => {
   return (
     <section className="section swiper-container swiper-slider swiper-slider-classic" data-loop="true" data-autoplay="4859" data-simulate-touch="true" data-direction="vertical" data-nav="false">
       <div className="swiper-wrapper text-center" >
-        <div className="swiper-slide" id="FotoPersonalizada" style={{ backgroundImage: 'url(images/pagina/Foto1.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} >
+        <div className="swiper-slide" id="FotoPersonalizada" style={{ backgroundImage: 'url(images/Foto1.png)', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} >
           <div className="swiper-slide-caption section-md">
             <div className="container">
               <h1 className="editH2" data-caption-animate="fadeInLeft" data-caption-delay="0"></h1>

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useLocation } from "react-router-dom";
 import "../EstilosComponentes/productos.css"; // Importar estilos CSS para el componente
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 
 const Producto = () => {
@@ -18,18 +18,47 @@ const Producto = () => {
 
     return (
         <div className="producto-container">
-            <div
-                className="producto-imagen"
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => imageRef.current.classList.add("zoomed")}
-                onMouseLeave={() => imageRef.current.classList.remove("zoomed")}
-            >
-                <img
-                    ref={imageRef}
-                    src="../../public/images/A01hd.png"
-                    alt={producto.name}
-                />
+            <div className="prueba">
+                <div
+                    className="producto-imagen"
+                    onMouseMove={handleMouseMove}
+                    onMouseEnter={() => imageRef.current.classList.add("zoomed")}
+                    onMouseLeave={() => imageRef.current.classList.remove("zoomed")}
+                >
+                    <img
+                        ref={imageRef}
+                        src="../../public/images/A01hd.png"
+                        alt={producto.name}
+                    />
+
+                </div>
+                <div className="ml-3">
+                <div className="related-products-container">
+            <h2 className="related-products-title">Productos Relacionados</h2>
+            <div className="related-products-scroll-container">
+                <div className="related-products-list">
+                    {/* Producto 1 */}
+                    <div className="related-product">
+                        <img src="https://via.placeholder.com/150" alt="Producto 1" />
+                        <h3 className="related-product-title">Producto 1</h3>
+                        <p className="related-product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus accumsan urna at libero ullamcorper, nec tempor lorem ultricies.</p>
+                        <span className="related-product-price">$19.99</span>
+                    </div>
+                    {/* Agrega más productos aquí */}
+                </div>
             </div>
+            <div className="related-products-controls">
+                <button className="related-products-control prev">
+                    <FaChevronLeft />
+                </button>
+                <button className="related-products-control next">
+                    <FaChevronRight />
+                </button>
+            </div>
+        </div>
+                </div>
+            </div>
+
             <div className="producto-info">
                 <h1 className="producto-nombre">{producto.name}</h1>
                 <hr className="separador" />
@@ -96,8 +125,10 @@ const Producto = () => {
                     </div>
                 </div>
                 <hr className="separador" />
+
                 <div className="info__envio">
                     <h4>Sobre este artículo</h4>
+
                     <ul className="sobre-articulo-lista">
                         <li className="sobre-articulo-item">
                             <span className="sobre-articulo-icon">&#10003;</span>

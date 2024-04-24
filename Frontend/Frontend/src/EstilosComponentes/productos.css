@@ -12,6 +12,9 @@
     overflow: hidden; /* Ocultar partes de la imagen que se desbordan */
     height: 50%;
   }
+  .prueba{
+    width: 40%;
+  }
   
   .producto-imagen img {
     margin-top: 20px;
@@ -27,11 +30,12 @@
   }
   
   .producto-info {
-    flex: 0.6; /* Ajustar el tamaño del contenedor de la información */
+    flex: 100; /* Ajustar el tamaño del contenedor de la información */
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Espaciar uniformemente los elementos */
+    width: 100%;
   }
 
   .producto-nombre-titulo {
@@ -41,7 +45,7 @@
   
   .producto-nombre {
     font-size: 24px;
-    margin-bottom: 0    px;
+    margin-bottom: 0px;
   }
     
   .producto-detalles {
@@ -72,7 +76,7 @@
   
   .contactar-asesor {
     margin-bottom: 20px;
-    width:25% ;
+    width:27% ;
   }
   
   .contactar-asesor-btn {
@@ -103,6 +107,10 @@
     font-size: 12px;
     color: #888;
   }
+
+  .main__imagen{
+    flex-direction: column;
+  }
   
   .separador {
     margin-top: 10px;
@@ -116,6 +124,7 @@
     background-color: #f8f8f8;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
   }
   
   .sobre-articulo-lista {
@@ -193,6 +202,128 @@
 .acciones {
     margin-top: 20px;
 }
+
+.related-products-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: inline-block;
+  width: 100%; /* Ancho al 100% del contenedor padre */
+  max-width: 900px; /* Máximo ancho del contenedor de productos */
+  margin: 0 auto; /* Centra horizontalmente */
+  padding: 0 20px; /* Agrega un poco de espacio en los bordes */
+}
+
+.related-product {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-width: 250px; /* Ancho máximo de cada producto */
+}
+
+.related-products-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.related-products-control {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+  margin: 0 10px;
+}
+
+.related-products-control:hover {
+  color: #333;
+}
+
+.related-products-container {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.related-products-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.related-products-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  max-width: 1100px; /* Aumentamos el ancho máximo */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.related-products-list {
+  display: flex; /* Cambiamos a display flex para que los productos se ajusten automáticamente */
+  gap: 20px;
+  justify-content: center; /* Centramos horizontalmente los productos */
+}
+
+.related-product {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  width: 250px; /* Fijamos el ancho de los productos */
+  max-width: 100%; /* Ajustamos el ancho máximo */
+}
+
+.related-product img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.related-product-title {
+  font-size: 18px;
+  margin-top: 10px;
+  overflow: hidden; /* Evita que el texto se desborde */
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos al final del texto si se corta */
+}
+
+.related-product-description {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  max-height: 40px; /* Limitamos la altura máxima del texto */
+  overflow: hidden; /* Evita que el texto se desborde */
+}
+
+.related-product-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+.related-products-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.related-products-control {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+  margin: 0 10px;
+}
+
+.related-products-control:hover {
+  color: #333;
+}
+
 
 /* Estilos para dispositivos móviles */
 @media screen and (max-width: 768px) {
