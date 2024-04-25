@@ -1,47 +1,73 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 
 const ContactSection = () => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessageShown, setErrorMessageShown] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!errorMessageShown && isSubmitting) {
+          setIsSubmitting(false);
+        }
+      }, [errorMessageShown, isSubmitting]);
+
+    const handleSubmit = async (e) => {
+
+        if (isSubmitting || errorMessageShown) {
+            return;
+          }
+
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const response = await fetch('http://192.168.20.238:6001/contactenos/contactenos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                toast.error(errorData.error);
+                setErrorMessageShown(true);
+            } else {
+                toast.success("Mensaje envíado correctamente 😊")
+            }
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
-            {/* Sección de información de contacto */}
-            <section className="section section-sm bg-default">
-                <div className="m-3">
-                    <div className="row row-30 justify-content-center">
-                        <div className="col-sm-8 col-md-6 col-lg-4">
-                            <article className="box-contacts">
-                                <div className="box-contacts-body">
-                                    <div className="box-contacts-icon fl-bigmug-line-cellphone55"></div>
-                                    <div className="box-contacts-decor"></div>
-                                    <p className="box-contacts-link"><a href="tel:#">+1 323-913-4688</a></p>
-                                    <p className="box-contacts-link"><a href="tel:#">+1 323-888-4554</a></p>
-                                </div>
-                            </article>
-                        </div>
-                        <div className="col-sm-8 col-md-6 col-lg-4">
-                            <article className="box-contacts">
-                                <div className="box-contacts-body">
-                                    <div className="box-contacts-icon fl-bigmug-line-up104"></div>
-                                    <div className="box-contacts-decor"></div>
-                                    <p className="box-contacts-link"><a href="#">4730  calle cristal, Los Angeles, CA 90027</a></p>
-                                </div>
-                            </article>
-                        </div>
-                        <div className="col-sm-8 col-md-6 col-lg-4">
-                            <article className="box-contacts">
-                                <div className="box-contacts-body">
-                                    <div className="box-contacts-icon fl-bigmug-line-chat55"></div>
-                                    <div className="box-contacts-decor"></div>
-                                    <p className="box-contacts-link"><a href="mailto:#">johangrisales@gmail.com</a></p>
-                                    <p className="box-contacts-link"><a href="mailto:#">johangrisales@gmail.com2</a></p>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Tu JSX existente */}
 
             <section className="section section-sm section-last bg-default text-left form-contact" id="contacts">
-                <div className="ml-3">
+                <ToastContainer
+                    onClose={() => setErrorMessageShown(false)}
+                    onExited={() => setErrorMessageShown(false)}
+                />                <div className="ml-3">
                     <article className="title-classic">
                         <div className="title-classic-title">
                             <h3>Contactanos</h3>
@@ -50,35 +76,43 @@ const ContactSection = () => {
                             <p></p>
                         </div>
                     </article>
-                    <form className="rd-form rd-form-variant-2 rd-mailform" method="post" >
+                    <form className="rd-form rd-form-variant-2 rd-mailform" onSubmit={handleSubmit}>
+                        {/* Tu formulario existente */}
+                        {/* Agrega el evento onChange a cada input para actualizar el estado */}
                         <div className="row row-14 gutters-14">
+                            {/* Input para nombre */}
                             <div className="col-md-4">
                                 <div className="form-wrap">
-                                    <input className="form-input" id="contact-your-name-2" type="text" name="name" />
+                                    <input className="form-input" id="contact-your-name-2" type="text" name="name" value={formData.name} onChange={handleChange} />
                                     <label className="form-label" htmlFor="contact-your-name-2">Tu nombre</label>
                                 </div>
                             </div>
+                            {/* Input para correo */}
                             <div className="col-md-4">
                                 <div className="form-wrap">
-                                    <input className="form-input" id="contact-email-2" type="email" name="email" />
+                                    <input className="form-input" id="contact-email-2" type="email" name="email" value={formData.email} onChange={handleChange} />
                                     <label className="form-label" htmlFor="contact-email-2">Correo</label>
                                 </div>
                             </div>
+                            {/* Input para celular */}
                             <div className="col-md-4">
                                 <div className="form-wrap">
-                                    <input className="form-input" id="contact-phone-2" type="text" name="phone"  />
+                                    <input className="form-input" id="contact-phone-2" type="text" name="phone" value={formData.phone} onChange={handleChange} />
                                     <label className="form-label" htmlFor="contact-phone-2">Celular</label>
                                 </div>
                             </div>
+                            {/* Textarea para mensaje */}
                             <div className="col-12">
                                 <div className="form-wrap">
                                     <label className="form-label" htmlFor="contact-message-2">Mensaje</label>
-                                    <textarea className="form-input textarea-lg" id="contact-message-2" name="message" ></textarea>
+                                    <textarea className="form-input textarea-lg" id="contact-message-2" name="message" value={formData.message} onChange={handleChange}></textarea>
                                 </div>
                             </div>
                         </div>
-                        {/* <button className="button button-primary button-pipaluk" type="submit">Enviar mensaje</button> */}
-                        <button className='mt-3 btn btn-info'>Enviar</button>
+                        {/* Botón de envío */}
+                        <button className='mt-3 btn-contact btn-info' type="submit" disabled={loading}>
+                            {loading ? <FontAwesomeIcon icon={faSpinner} spin /> : 'Enviar'}
+                        </button>
                     </form>
                 </div>
             </section>

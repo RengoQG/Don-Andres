@@ -6,7 +6,7 @@ const ServicesSection = () => {
       <div className="container">
         <div className="row row-30 justify-content-center">
           <div className="col-md-7 col-lg-5 col-xl-6 text-lg-left wow fadeInUp">
-            <img src="images/Blue.png" alt="" width="415" height="592" />
+            <img src="images/index-1-415x592.png" alt="" width="415" height="592" />
           </div>
           <div className="col-lg-7 col-xl-6">
             <div className="row row-30">

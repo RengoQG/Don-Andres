@@ -8203,7 +8203,7 @@ textarea.textarea-lg {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	gap: 80px;
+	gap: 10px;
 	justify-content: center;
 	text-align: left;
 	font-size: 16px;
@@ -20453,6 +20453,20 @@ input[type="checkbox"] {
 
 .form-contact form{
 	width: 99%;
+}
+
+.btn-contact{
+	padding: 15px;
+	background-color: #2d6a4f;
+	color: #fff;
+	width: 20%;
+	border-radius: 10px;
+	border: none;
+}
+
+.btn-contact:hover{
+	background-color: #40916c;
+	cursor: pointer;
 }
 
 

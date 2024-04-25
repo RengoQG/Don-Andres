@@ -33,29 +33,29 @@ const Producto = () => {
 
                 </div>
                 <div className="ml-3">
-                <div className="related-products-container">
-            <h2 className="related-products-title">Productos Relacionados</h2>
-            <div className="related-products-scroll-container">
-                <div className="related-products-list">
-                    {/* Producto 1 */}
-                    <div className="related-product">
-                        <img src="https://via.placeholder.com/150" alt="Producto 1" />
-                        <h3 className="related-product-title">Producto 1</h3>
-                        <p className="related-product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus accumsan urna at libero ullamcorper, nec tempor lorem ultricies.</p>
-                        <span className="related-product-price">$19.99</span>
+                    <div className="related-products-container">
+                        <h3 className="related-products-title">Productos Relacionados</h3>
+                        <div className="related-products-scroll-container">
+                            <div className="related-products-list">
+                                {/* Producto 1 */}
+                                <div className="related-product">
+                                    <img src="https://via.placeholder.com/150" alt="Producto 1" />
+                                    <h3 className="related-product-title">Producto 1</h3>
+                                    <p className="related-product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus accumsan urna at libero ullamcorper, nec tempor lorem ultricies.</p>
+                                    <span className="related-product-price">$19.99</span>
+                                </div>
+                                {/* Agrega más productos aquí */}
+                            </div>
+                        </div>
+                        <div className="related-products-controls">
+                            <button className="related-products-control prev">
+                                <FaChevronLeft />
+                            </button>
+                            <button className="related-products-control next">
+                                <FaChevronRight />
+                            </button>
+                        </div>
                     </div>
-                    {/* Agrega más productos aquí */}
-                </div>
-            </div>
-            <div className="related-products-controls">
-                <button className="related-products-control prev">
-                    <FaChevronLeft />
-                </button>
-                <button className="related-products-control next">
-                    <FaChevronRight />
-                </button>
-            </div>
-        </div>
                 </div>
             </div>
 
