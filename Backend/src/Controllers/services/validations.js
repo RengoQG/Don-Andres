@@ -1,109 +1,143 @@
-// Función para validar un correo electrónico
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+function isMaliciousWords(message) {
+  const reservedWords = [
+    // Palabras reservadas relacionadas con React
+    'useState', 'useEffect', 'useContext', 'useReducer', 'useCallback',
+    'useMemo', 'useRef', 'useImperativeHandle', 'useLayoutEffect',
+    'useDebugValue', 'Component', 'PureComponent', 'Fragment', 'Suspense',
+    'Lazy', 'memo', 'createContext', 'forwardRef', 'ReactDom', 'ReactDOMServer',
+    'PropTypes', 'defaultProps', 'propTypes', 'children', 'key', 'ref', 'style',
+    // Palabras reservadas relacionadas con Node.js
+    'require', 'module.exports', 'exports', 'global', 'process', '__dirname',
+    '__filename', 'Buffer', 'setImmediate', 'setTimeout', 'setInterval',
+    'clearTimeout', 'clearInterval', 'process.env',
+    // Palabras reservadas relacionadas con SQL
+    'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'FROM', 'WHERE', 'JOIN', 'INNER JOIN',
+    'LEFT JOIN', 'RIGHT JOIN', 'OUTER JOIN', 'ON', 'GROUP BY', 'HAVING', 'ORDER BY',
+    'ASC', 'DESC', 'LIMIT', 'OFFSET', 'CREATE', 'ALTER', 'DROP', 'TABLE', 'INDEX',
+    'VIEW', 'DATABASE', 'TRIGGER', 'CONSTRAINT', 'PRIMARY KEY', 'FOREIGN KEY',
+    'UNIQUE', 'NOT NULL', 'CHECK', 'DEFAULT', 'NULL', 'AS', 'AND', 'OR', 'NOT',
+    'IN', 'BETWEEN', 'LIKE', 'IS NULL', 'IS NOT NULL'
+  ];
 
-// Función para validar y sanitizar un nombre
-function isValidName(name) {
-  return name.trim() !== "" && /^[a-zA-Z\s]+$/.test(name);
-}
+  // Convertir el mensaje a minúsculas para la comparación
+  const lowerCaseMessage = message.toLowerCase();
 
-// Función para validar y sanitizar un número de teléfono
-function isValidPhoneNumber(phone) {
-  // Verificar que el número de teléfono tenga entre 7 y 15 caracteres
-  if (phone.length < 7 || phone.length > 15) {
-    return false;
+  // Verificar si el mensaje contiene alguna palabra maliciosa
+  for (const word of reservedWords) {
+    if (lowerCaseMessage.includes(word.toLowerCase())) {
+      return false; // Palabra maliciosa encontrada
+    }
+  }
+  return true; // No se encontraron palabras maliciosas
+}
+function isValidMessage(message) {
+  // Validación de no vacío
+  if (message.trim() === "") {
+    return "El mensaje no puede estar vacío 😥";
   }
 
-    // Verificar que el número de teléfono contenga solo dígitos y algunos caracteres especiales (sin signo negativo)
-    const regex = /^[0-9+()\s]+$/;
-    if (!regex.test(phone)) {
-        return false;
-    }
+  // Validación de longitud máxima (por ejemplo, 1000 caracteres)
+  if (message.length > 1000) {
+    return "Excediste la longitud de caracteres 😥";
+  }
 
-  return /^\+?\d+$/.test(phone);
+  // Validación de palabras maliciosas
+  if (!isMaliciousWords(message)) {
+    return "Contiene palabras malisiosas 😥";
+  }
+
+  // Otras validaciones opcionales, como sanitización
+
+  return true;
 }
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Función para validar la contraseña
+  // Validación de palabras maliciosas
+  // if (!isMaliciousWords(email)) {
+  //   return "El email contiene palabras malisiosas 😥";
+  // }
+
+  //Validar que el correo no esté vacío
+  if(email.trim() === ""){
+    return "El email no puede estar vacío 😥"
+  };
+  
+  // Validación de expresión regular
+  if (!emailRegex.test(email)) {
+    return "El formato del correo electrónico no es válido 😥";
+  }
+  // Si pasa ambas validaciones, devuelve verdadero
+  return true;
+}
+function isValidName(name) {
+  // Validación de palabras maliciosas
+  if (!isMaliciousWords(name)) {
+    return "El nombre contiene palabras malisiosas 😥";
+  }
+  
+  // Validación de expresión regular
+  if (/^[a-zA-Z\s]*$/.test(name)) {
+    return "El nombre no es válido 😥";
+  }
+
+  if(name.trim() === ""){
+    return "El nombre no puede estar vacío 😥"
+  };
+
+  // Si pasa ambas validaciones, devuelve verdadero
+  return true;
+}
+function isValidPhoneNumber(phone) {
+  // Validación de palabras maliciosas
+  if (!isMaliciousWords(phone)) {
+    return "El telefono contiene palabras malisiosas 😥";
+  }
+
+  // Validación de longitud del número de teléfono
+  if (phone.length < 7 || phone.length > 15) {
+    return "El número de teléfono debe tener entre 7 y 15 caracteres 😒";
+  }
+
+  // Validación del formato del número de teléfono
+  const regex = /^[0-9+()\s]+$/;
+  if (!regex.test(phone) || !/^\+?\d+$/.test(phone)) {
+    return "El número de teléfono no es válido 😒";
+  }
+
+  // Si pasa todas las validaciones, retorna true
+  return true;
+}
 function isValidPassword(password) {
-  // Verificar si la contraseña tiene al menos 8 caracteres
   if (password.length < 8) {
     return false;
   }
-
-  // Verificar si la contraseña contiene al menos un número y una letra mayúscula
   const containsNumber = /\d/.test(password);
   const containsUpperCase = /[A-Z]/.test(password);
-
-  // La contraseña debe contener al menos un número y una letra mayúscula
-  if (!containsNumber || !containsUpperCase) {
-    return false;
-  }
-
-  return true;
+  return containsNumber && containsUpperCase && isMaliciousWords(password);
 }
-
 function isValidDocument(document) {
-  // Verificar que el documento no esté vacío
   if (document.trim() === "") {
     return false;
   }
-
-  // Verificar que el documento contenga solo letras y números
   const regex = /^[a-zA-Z0-9]+$/;
-  if (!regex.test(document)) {
-    return false;
-  }
-
-  // Verificar que el documento tenga una longitud adecuada (por ejemplo, entre 6 y 12 caracteres)
-  if (document.length < 6 || document.length > 12) {
-    return false;
-  }
-
-  return true;
+  return regex.test(document) && document.length >= 6 && document.length <= 12 && isMaliciousWords(document);
 }
-
 function isValidIssuanceDate(issuance_date, fecha_nacimiento) {
-  // Verificar que la fecha de expedición no esté vacía y sea válida (formato de fecha válido)
   if (!issuance_date || isNaN(Date.parse(issuance_date))) {
     return false;
   }
-
-  // Verificar que la fecha de nacimiento no esté vacía y sea válida (formato de fecha válido)
   if (!fecha_nacimiento || isNaN(Date.parse(fecha_nacimiento))) {
     return false;
   }
-
-  // Convertir las fechas a objetos Date para facilitar la comparación
   const expedition = new Date(issuance_date);
   const birth = new Date(fecha_nacimiento);
-
-  // Verificar que la fecha de expedición sea posterior a la fecha de nacimiento
-  if (expedition < birth) {
-    return false;
-  }
-
-  // Verificar que la fecha de expedición no sea en el futuro (no puede haber expediciones en el futuro)
-  if (expedition > new Date()) {
-    return false;
-  }
-
-  // También puedes agregar otras validaciones según sea necesario
-
-  return true;
+  return expedition >= birth && expedition <= new Date() && isMaliciousWords(issuance_date);
 }
-
 function isValidDocumentType(documentType) {
-  // Lista de tipos de documentos válidos en tu sistema
   const validDocumentTypes = ["CC", "CE", "TI", "RC"];
-
-  // Verificar si el tipo de documento proporcionado está en la lista de tipos válidos
-  return validDocumentTypes.includes(documentType.toUpperCase());
+  return validDocumentTypes.includes(documentType.toUpperCase()) && isMaliciousWords(documentType);
 }
-
-
-
 module.exports = {
   isValidEmail,
   isValidName,
@@ -112,4 +146,5 @@ module.exports = {
   isValidDocument,
   isValidIssuanceDate,
   isValidDocumentType,
+  isValidMessage,
 };
