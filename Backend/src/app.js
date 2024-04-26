@@ -5,10 +5,12 @@ const resetPassword = require('./Controllers/routes/resetPassword.js');
 const validateToken = require('./Controllers/routes/validateToken.js');
 const auth = require('./Controllers/routes/authRoutes.js');
 const search = require('./Controllers/routes/serchName.js');
+const relacionados = require('./Controllers/routes/relatedRoute.js');
 const sugerencias = require('./Controllers/routes/sugerenacisRoute.js');
 const categoria = require('./Controllers/routes/categories.js');
 const contactenos = require('./Controllers/routes/contactenosRoutes.js');
 const producto = require('./Controllers/routes/productsRoute.js');
+const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
 const helmet = require('helmet');
@@ -68,9 +70,12 @@ app.use('/producto', producto);
 app.use('/searchName', search);
 //Sugerencias de productos
 app.use('/sugerencias', sugerencias);
+//Productos relacionados
+app.use('/relacionados', relacionados);
 //Contactenos
 app.use('/contactenos', contactenos);
-
+//Productos similares
+app.use('/similares', similares);
 // Iniciar el servidor
 const PORT = process.env.PORT || 6001;
 app.listen(PORT, () => {
