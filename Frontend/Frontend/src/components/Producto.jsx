@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../EstilosComponentes/productos.css"; // Importar estilos CSS para el componente
 import { FaWhatsapp, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -7,6 +7,7 @@ import { FaWhatsapp, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 const Producto = () => {
     const location = useLocation();
     const producto = location.state.producto[0];
+    console.log(producto);
     const imageRef = useRef(null);
 
     const handleMouseMove = (e) => {
@@ -14,6 +15,40 @@ const Producto = () => {
         const x = (e.pageX - left) / width * 100;
         const y = (e.pageY - top) / height * 100;
         imageRef.current.style.transformOrigin = `${x}% ${y}%`;
+    };
+
+    const relatedProducts = [
+        {
+            id: 1,
+            name: "Producto 1",
+            description: "Descripción del producto 1",
+            price: "$19.99",
+            image: "https://via.placeholder.com/150"
+        },
+        {
+            id: 2,
+            name: "Producto 2",
+            description: "Descripción del producto 2",
+            price: "$29.99",
+            image: "https://via.placeholder.com/150"
+        },
+        {
+            id: 3,
+            name: "Producto 3",
+            description: "Descripción del producto 3",
+            price: "$39.99",
+            image: "https://via.placeholder.com/150"
+        }
+    ];
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const nextProduct = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === relatedProducts.length - 1 ? 0 : prevIndex + 1));
+    };
+
+    const prevProduct = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? relatedProducts.length - 1 : prevIndex - 1));
     };
 
     return (
@@ -37,21 +72,29 @@ const Producto = () => {
                         <h3 className="related-products-title">Productos Relacionados</h3>
                         <div className="related-products-scroll-container">
                             <div className="related-products-list">
-                                {/* Producto 1 */}
-                                <div className="related-product">
-                                    <img src="https://via.placeholder.com/150" alt="Producto 1" />
-                                    <h3 className="related-product-title">Producto 1</h3>
-                                    <p className="related-product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus accumsan urna at libero ullamcorper, nec tempor lorem ultricies.</p>
-                                    <span className="related-product-price">$19.99</span>
-                                </div>
-                                {/* Agrega más productos aquí */}
+                                {relatedProducts.map((product, index) => (
+                                    <div
+                                        className={`related-product ${index === currentIndex ? 'active' : ''}`}
+                                        key={product.id}
+                                        style={{
+                                            transform: `translateX(${100 * (1 - currentIndex)}%)`,
+                                            opacity: index === currentIndex ? 1 : 1,
+                                            transition: 'transform 0.5s ease, opacity 0.5s ease'
+                                        }}
+                                    >
+                                        <img src={product.image} alt={product.name} />
+                                        <h3 className="related-product-title">{product.name}</h3>
+                                        <p className="related-product-description">{product.description}</p>
+                                        <span className="related-product-price">{product.price}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="related-products-controls">
-                            <button className="related-products-control prev">
+                            <button className="related-products-control prev" onClick={prevProduct}>
                                 <FaChevronLeft />
                             </button>
-                            <button className="related-products-control next">
+                            <button className="related-products-control next" onClick={nextProduct}>
                                 <FaChevronRight />
                             </button>
                         </div>

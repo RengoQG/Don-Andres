@@ -63,6 +63,15 @@ const RegisterMain = () => (
   <div>
     <App />
     <Register />
+    <Footer />
+  </div>
+);
+const ProductMain = () => (
+  <div>
+    <Prueba2 />
+    <App />
+    <Producto />
+    <Footer />
   </div>
 );
 
@@ -79,7 +88,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/categories" element={<Categories />} />
           {/* <Route path="/prueba" element={<Prueba />} /> */}
           <Route path="/prueba" element={<Prueba2 />} />
-          <Route path="/producto/:name" element={<Producto />} />
+          <Route path="/producto" element={<ProductMain />} />
         </Routes>
       </Router>
   </React.StrictMode>

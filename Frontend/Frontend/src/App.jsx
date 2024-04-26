@@ -91,7 +91,7 @@ const Header = () => {
                     </li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Contactanos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#projects">Tienda</a></li>
-                    <li className="rd-nav-item">
+                    {/* <li className="rd-nav-item">
                       <CategoriasComponent onChange={toggleCategorias} />
                       {mostrarCategorias && (
                         <ul className="rd-navbar-nav">
@@ -100,7 +100,7 @@ const Header = () => {
                           ))}
                         </ul>
                       )}
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </div>

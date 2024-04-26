@@ -188,7 +188,7 @@ const BuscadorProductos = () => {
         setProductos([]);
       } else {
         setProductos(response.data);
-        navigateTo(`/producto/${response.data[0].name}`, { state: { producto: response.data } });
+        navigateTo(`/producto`, { state: { producto: response.data } });
         setQuery("");
         setMostrarSugerencias(false);
         if (response.data.length === 0) {
