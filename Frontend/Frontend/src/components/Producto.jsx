@@ -1,14 +1,35 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../EstilosComponentes/productos.css"; // Importar estilos CSS para el componente
 import { FaWhatsapp, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import axios from "axios";
+
 
 
 const Producto = () => {
     const location = useLocation();
     const producto = location.state.producto[0];
-    console.log(producto);
     const imageRef = useRef(null);
+    const [loading, setLoading] = useState(true);
+    const [detallesProducto, setDetallesProducto] = useState([]);
+
+    useEffect(() => {
+        // Realizar solicitud HTTP para obtener los detalles del producto
+        const fetchDetallesProducto = async () => {
+            try {
+                const response = await axios.post(`http://192.168.20.238:6001/relacionados/products/${producto.product_id}`);
+                setDetallesProducto(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error al obtener los detalles del producto:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchDetallesProducto();
+    }, [producto.product_id]);
+
+    console.log(detallesProducto);
 
     const handleMouseMove = (e) => {
         const { left, top, width, height } = imageRef.current.getBoundingClientRect();
@@ -116,24 +137,19 @@ const Producto = () => {
                                 <span className="detalles-valor">${producto.price}</span>
                             </li>
                             <li className="detalles-item">
-                                <span className="detalles-tipo">Categoría:</span>
-                                <span className="detalles-valor">Teclado</span>
+                                <span className="detalles-tipo">Categoría: {producto.category_id}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Color:</span>
-                                <span className="detalles-valor">Negro</span>
+                                <span className="detalles-valor">{producto.color}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Descripción:</span>
-                                <span className="detalles-valor">Accesible</span>
+                                <span className="detalles-valor">{producto.description}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Usos recomendados:</span>
-                                <span className="detalles-valor">Oficina</span>
-                            </li>
-                            <li className="detalles-item">
-                                <span className="detalles-tipo">Número de teclas:</span>
-                                <span className="detalles-valor">105</span>
+                                <span className="detalles-valor">{producto.usos_recomendados}</span>
                             </li>
                         </ul>
                     </div>
@@ -142,27 +158,23 @@ const Producto = () => {
                         <ul className="detalles-lista">
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Tamaño:</span>
-                                <span className="detalles-valor">25cm</span>
-                            </li>
-                            <li className="detalles-item">
-                                <span className="detalles-tipo">Tipo:</span>
-                                <span className="detalles-valor">Membrana</span>
+                                <span className="detalles-valor">{producto.tamano}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Marca:</span>
-                                <span className="detalles-valor">Lenovo</span>
+                                <span className="detalles-valor">{producto.marca}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Compatibilidad:</span>
-                                <span className="detalles-valor">PC</span>
+                                <span className="detalles-valor">{producto.compatibilidad}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Tecnología:</span>
-                                <span className="detalles-valor">USB</span>
+                                <span className="detalles-valor">{producto.tecnologia}</span>
                             </li>
                             <li className="detalles-item">
                                 <span className="detalles-tipo">Características:</span>
-                                <span className="detalles-valor">Teclado multimedia</span>
+                                <span className="detalles-valor">{producto.caracteristicas}</span>
                             </li>
                         </ul>
                     </div>
@@ -171,25 +183,14 @@ const Producto = () => {
 
                 <div className="info__envio">
                     <h4>Sobre este artículo</h4>
-
-                    <ul className="sobre-articulo-lista">
-                        <li className="sobre-articulo-item">
-                            <span className="sobre-articulo-icon">&#10003;</span>
-                            <span className="sobre-articulo-texto">Las teclas de acceso rápido permiten un fácil acceso a los medios, mi computadora, silencio, reproductor multimedia</span>
-                        </li>
-                        <li className="sobre-articulo-item">
-                            <span className="sobre-articulo-icon">&#10003;</span>
-                            <span className="sobre-articulo-texto">Conexión por cable USB</span>
-                        </li>
-                        <li className="sobre-articulo-item">
-                            <span className="sobre-articulo-icon">&#10003;</span>
-                            <span className="sobre-articulo-texto">Compatible con Windows 2000, XP, Vista, 7, 8 y 10</span>
-                        </li>
-                        <li className="sobre-articulo-item">
-                            <span className="sobre-articulo-icon">&#10003;</span>
-                            <span className="sobre-articulo-texto">Dimensiones del producto: 17.4 x 5 x 1.1 pulgadas (largo x ancho x alto)</span>
-                        </li>
-                    </ul>
+                        <ul className="sobre-articulo-lista">
+                        {detallesProducto.map((detalle) => (
+                            <li key={detalle.detalle_id} className="sobre-articulo-item">
+                                <span className="sobre-articulo-icon">&#10003;</span>
+                                <span className="sobre-articulo-texto">{detalle.detalle_texto}</span>
+                            </li>
+                            ))}
+                        </ul>
                 </div>
                 <div className="contactar-asesor ml-0 mt-3 text-center">
                     <a href="https://wa.me/5555555555" className="contactar-asesor-btn">
