@@ -10,6 +10,7 @@ import Footer from './pages/Footer.jsx';
 import Login from './components/Login.jsx';
 import Cta from './pages/Cta.jsx';
 import Inicio from './components/sesionIniciada.jsx';
+import RegisterCategori from './components/Categorias/registerCategori.jsx';
 import AuthGuard from './components/PrivateRoute.jsx';
 import Register from './components/register.jsx';
 import Reset from './components/resetPassword.jsx';
@@ -83,6 +84,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/login" element={<LoginMain />} />
           <Route path="/register" element={<RegisterMain />} />
           <Route path="/inicio" element={<AuthGuard><Inicio /></AuthGuard>} />
+          <Route path="/registerCategori" element={<AuthGuard><RegisterCategori /></AuthGuard>} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/reset-password" element={<UpdatePassword />} />
           <Route path="/categories" element={<Categories />} />

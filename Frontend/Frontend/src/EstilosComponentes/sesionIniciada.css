@@ -1,0 +1,108 @@
+.dashboard-container {
+    display: flex;
+    height: 100%;
+  }
+
+  .info__usuario{
+    height: 100vh;
+  }
+
+  .container__usuarios{
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #343a40; /* Color de fondo oscuro */
+    color: #adb5bd; /* Color del texto */
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .sidebar ul.components {
+    padding: 20px 0;
+  }
+  
+  .sidebar ul.components li {
+    padding: 10px;
+  }
+  
+  .sidebar ul.components li a {
+    color: #adb5bd; /* Color del texto de los enlaces */
+  }
+  
+  .sidebar ul.components li a:hover {
+    color: white; /* Color del texto de los enlaces al pasar el mouse */
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .sidebar-profile {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Hacer la imagen circular */
+    border: 2px solid white; /* Añadir un borde blanco */
+  }
+
+  .list-unstyled li{
+    padding: 15px;
+  }
+
+  .list-unstyled li:hover{
+    background-color:#686868; /* Color del texto */
+    cursor: pointer;  
+}
+
+.sidebar-profile {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Hacer la imagen circular */
+    border: 2px solid white; /* Añadir un borde blanco */
+  }
+  
+  .search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 0px;
+    background-color: #495057; /* Color de fondo */
+    border-radius: 5px;
+    height: 50px;
+  }
+  
+  .search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: white;
+    padding: 5px;
+    margin-top: 25px;
+  }
+  
+  
+  .search-box input:focus {
+    outline: none;
+  }
+  
+  .search-box svg {
+    color: white;
+    margin-right: 5px;
+  }
+  

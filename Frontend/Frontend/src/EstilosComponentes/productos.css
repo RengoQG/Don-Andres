@@ -206,13 +206,12 @@
 }
 
 .related-products-scroll-container {
-  overflow-x: auto;
-  white-space: nowrap;
-  display: inline-block;
-  width: 100%; /* Ancho al 100% del contenedor padre */
-  max-width: 900px; /* Máximo ancho del contenedor de productos */
-  margin: 0 auto; /* Centra horizontalmente */
-  padding: 0 20px; /* Agrega un poco de espacio en los bordes */
+  overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .related-product {
@@ -225,6 +224,7 @@
   height: 100%;
   max-width: 600px; /* Ancho máximo de cada producto */
   border: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .related-products-controls {
@@ -268,24 +268,15 @@
 
 .related-products-list {
   display: flex; /* Cambiamos a display flex para que los productos se ajusten automáticamente */
-  gap: 20px;
-  justify-content: center; /* Centramos horizontalmente los productos */
-  align-items: center;
-  width: 100%;
-  overflow: hidden;
+  border: 1px solid black;
+  transition: transform 0.5s ease; /* Agregamos una transición suave */
 }
 
 .related-product {
-  flex: 0 0 100%; /* Cada producto ocupa el 100% del ancho */
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  padding: 25px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  width: 100%; /* Fijamos el ancho de los productos */
-  max-width: 350px; /* Ajustamos el ancho máximo */
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  flex: 0 0 auto;
+  margin: 0 1px; /* Espacio entre productos */
+  background-color: rgb(189, 186, 186, 0.8);
+  border-radius: 15px;
 }
 
 .related-product.active {
@@ -295,12 +286,16 @@
 } 
 
 .related-product img {
-  width: 100%;
-  border-radius: 5px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 10px;
 }
 
 .related-product-title {
-  font-size: 18px;
+  font-size: 15px;
+  width: 100%;
+  color: #fff;
   margin-top: 10px;
   overflow: hidden; /* Evita que el texto se desborde */
   white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
@@ -310,6 +305,7 @@
 .related-product-description {
   font-size: 14px;
   color: #666;
+  color: #fff;
   margin-top: 5px;
   max-height: 40px; /* Limitamos la altura máxima del texto */
   overflow: hidden; /* Evita que el texto se desborde */
@@ -318,7 +314,7 @@
 .related-product-price {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #fff;
   margin-top: 10px;
 }
 
@@ -339,6 +335,69 @@
 
 .related-products-control:hover {
   color: #333;
+}
+
+/* Personaliza la apariencia de las flechas de navegación */
+.related-products-container .carousel-root .carousel .control-prev,
+.related-products-container .carousel-root .carousel .control-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    background-color: rgba(189, 186, 186, 0.8); /* Color de fondo */
+    width: 40px; /* Ancho de las flechas */
+    height: 40px; /* Altura de las flechas */
+    border-radius: 50%; /* Hace que las flechas sean redondas */
+    cursor: pointer;
+    opacity: 0.8; /* Opacidad inicial */
+    transition: opacity 0.3s, background-color 0.3s; /* Transiciones suaves */
+}
+
+/* Cuando se pasa el mouse sobre las flechas, aumenta la opacidad */
+.related-products-container .carousel-root .carousel .control-prev:hover,
+.related-products-container .carousel-root .carousel .control-next:hover {
+    opacity: 1;
+    background-color: rgba(150, 146, 146, 0.9); /* Color de fondo al pasar el mouse */
+}
+
+/* Ajusta la posición de la flecha izquierda */
+.related-products-container .carousel-root .carousel .control-prev {
+    left: 10px; /* Distancia desde el borde izquierdo */
+}
+
+/* Ajusta la posición de la flecha derecha */
+.related-products-container .carousel-root .carousel .control-next {
+    right: 10px; /* Distancia desde el borde derecho */
+}
+
+/* Estilo de las flechas */
+.related-products-container .carousel-root .carousel .control-prev::before,
+.related-products-container .carousel-root .carousel .control-next::before {
+    content: ''; /* Agrega contenido al pseudo-elemento */
+    display: inline-block;
+    width: 12px; /* Ancho de la flecha */
+    height: 12px; /* Altura de la flecha */
+    border-style: solid;
+    border-color: #666; /* Color del borde de la flecha */
+    border-width: 2px 2px 0 0; /* Grosor del borde de la flecha */
+    transform: rotate(-135deg); /* Rotación para la flecha izquierda */
+    position: relative;
+    top: 1px; /* Ajuste vertical */
+}
+
+/* Estilo de la flecha derecha */
+.related-products-container .carousel-root .carousel .control-next::before {
+    transform: rotate(45deg); /* Rotación para la flecha derecha */
+}
+
+
+.carousel{
+  border-radius: 15px;
+  padding: 50px;
+  background-color: rgb(238, 238, 238);
 }
 
 /* Estilos para dispositivos móviles */
