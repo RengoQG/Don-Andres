@@ -19,7 +19,7 @@ exports.relatedAll = async (req, res) => {
         if (results.length > 0) {
             return res.status(200).json(results);
         } else {
-            return res.status(404).json({ error: 'No se encontraron detalles del producto' });
+            return res.status(200).json({ error: 'No se encontraron detalles del producto' });
         }
     } catch (error) {
         console.error('Error al obtener los detalles del producto:', error);

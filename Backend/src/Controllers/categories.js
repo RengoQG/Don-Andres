@@ -20,3 +20,27 @@ exports.obtenerCategorias = async (req, res) => {
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+// Función para crear una nueva categoría
+exports.crearCategoria = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const url_imagen = req.file.path; // Ruta donde se almacenó la imagen
+
+    // Consulta SQL para insertar una nueva categoría
+    const query = 'INSERT INTO categorias (name, url_imagen) VALUES (?, ?)';
+    
+    // Ejecutar la consulta SQL
+    await connection.execute(query, [name, url_imagen]);
+
+    res.json({ message: 'Categoría creada exitosamente' });
+  } catch (error) {
+    console.error('Error al crear la categoría:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
+
+
+

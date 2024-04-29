@@ -8,8 +8,11 @@ const search = require('./Controllers/routes/serchName.js');
 const relacionados = require('./Controllers/routes/relatedRoute.js');
 const sugerencias = require('./Controllers/routes/sugerenacisRoute.js');
 const categoria = require('./Controllers/routes/categories.js');
+const agregarCategoria = require('./Controllers/routes/agregarCategoria');
 const contactenos = require('./Controllers/routes/contactenosRoutes.js');
 const producto = require('./Controllers/routes/productsRoute.js');
+const productoId = require('./Controllers/routes/productoIdRoute.js');
+const nuevosProductos = require('./Controllers/routes/nuevosProductosRoute.js');
 const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
@@ -76,6 +79,14 @@ app.use('/relacionados', relacionados);
 app.use('/contactenos', contactenos);
 //Productos similares
 app.use('/similares', similares);
+//Producto por id
+app.use('/producto', productoId);
+//Nuevos productos
+app.use('/nuevosProductos', nuevosProductos);
+//Registrar una categoria
+app.use('/agregarCategoria', agregarCategoria);
+
+
 // Iniciar el servidor
 const PORT = process.env.PORT || 6001;
 app.listen(PORT, () => {

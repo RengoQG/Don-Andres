@@ -15,8 +15,6 @@ exports.SimiAll = async (req, res) => {
             FROM productos 
             WHERE product_id = ?
         `;
-         console.log('a');
-
         // Ejecutar la consulta SQL para obtener la categoría del producto actual
         const [categoryResult] = await connection.execute(categoryQuery, [productId]);
 
@@ -37,7 +35,6 @@ exports.SimiAll = async (req, res) => {
             ORDER BY p.price ASC
             LIMIT 6
         `;
-        console.log('c');
         // Ejecutar la consulta SQL con consulta preparada para obtener productos relacionados
         const [results] = await connection.execute(query, [categoryId, productId]);
 
