@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../EstilosComponentes/sesionIniciada.css'
+import '../EstilosComponentes/sesionIniciada.css';
 import { Card, CardHeader, CardBody } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListAlt, faUsers, faSignOutAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faListAlt, faUsers, faSignOutAlt, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import TablaCategoriasL from './Categorias/tableCategori';
 import RegisterCategories from './Categorias/registerCategori.jsx';
 
-const Dashboard = () => {
+const Dashboard = ({ isUpdateMode }) => {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
-  const [contenidoSeleccionado, setContenidoSeleccionado] = useState('usuario');
-  const [mostrarFormularioRegistro, setMostrarFormularioRegistro] = useState(false); // Nuevo estado para controlar la visibilidad del formulario de registro
+  const [contenidoSeleccionado, setContenidoSeleccionado] = useState('categorias');
+  const [mostrarFormularioRegistro, setMostrarFormularioRegistro] = useState(false);
+  const [mostrarTablaCategorias, setMostrarTablaCategorias] = useState(true);
+  const [textoBoton, setTextoBoton] = useState('Agregar Categoría');
+  const [mostrarForm, setMostrarForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+
 
   useEffect(() => {
     const verificar = localStorage.getItem('Bienvenida');
 
     if (!verificar) {
-      // Establecer el estado para mostrar el mensaje
       setMostrarMensaje(true);
-
-      // Guardar en localStorage
       localStorage.setItem('Bienvenida', 'Bienvenida');
     }
   }, []);
@@ -49,14 +52,35 @@ const Dashboard = () => {
     setContenidoSeleccionado(contenido);
   };
 
-  const mostrarFormularioRegistroCategorias = () => {
-    console.log('hola')
+  const handleUpdateButtonClick = (newText, showFormularioRegistro) => {
+    setTextoBoton(newText);
+    // Si estamos mostrando el formulario de edición, ocultarlo y mostrar la tabla
+    if (!showFormularioRegistro) {
+      setMostrarFormularioRegistro(false);
+      setMostrarTablaCategorias(true);
+    } else {
+      // Si estamos mostrando el formulario de registro, mostrarlo y ocultar la tabla
+      setMostrarFormularioRegistro(true);
+      setMostrarTablaCategorias(false);
+    }
   };
 
-  // Función para mostrar el contenido del usuario al cargar el dashboard
-  useEffect(() => {
-    // Lógica para mostrar el contenido del usuario al cargar el dashboard
-  }, []);
+
+
+  const mostrarFormularioRegistroCategorias = () => {
+    if (mostrarFormularioRegistro) {
+      // Si el formulario está siendo mostrado, cambia para mostrar la tabla de categorías
+      setMostrarFormularioRegistro(false);
+      setMostrarTablaCategorias(true);
+      setTextoBoton('Agregar Categoría');
+    } else {
+      // Si el formulario no está siendo mostrado, cambia para mostrar el formulario de registro
+      setMostrarFormularioRegistro(true);
+      setMostrarTablaCategorias(false);
+      setTextoBoton('Listar Categorías');
+    }
+  };
+
 
   return (
     <div className="dashboard-container">
@@ -95,10 +119,30 @@ const Dashboard = () => {
       </nav>
       <div className="content">
         <ToastContainer />
-        {contenidoSeleccionado === 'categorias' && <TablaCategorias onAgregarCategoria={mostrarFormularioRegistroCategorias} />}
+        {contenidoSeleccionado === 'categorias' && (
+          <>
+            <div className="category-header">
+              <h2>Categorías de Productos</h2>
+              <button onClick={mostrarFormularioRegistroCategorias} className="add-category-btn">
+                <FontAwesomeIcon icon={faPlus} /> {textoBoton}
+              </button>
+            </div>
+            {/* Mostrar el formulario de edición si se cumple la condición */}
+            {showForm && isUpdateMode && (
+              <RegisterCategories
+                categoria={categoriaSeleccionada}
+                isUpdateMode={isUpdateMode}
+                onClose={() => {
+                  setShowForm(false); // Oculta el formulario de edición
+                }}
+              />
+            )}
+            {mostrarTablaCategorias && <TablaCategoriasL onUpdateButtonClick={handleUpdateButtonClick} />}
+            {mostrarFormularioRegistro && !mostrarForm && <RegisterCategories />}
+          </>
+        )}
         {contenidoSeleccionado === 'usuarios' && <TablaUsuarios />}
         {!['categorias', 'usuarios'].includes(contenidoSeleccionado) && <Bienvenida />}
-        {mostrarFormularioRegistro && <RegisterCategories />}
       </div>
     </div>
   );
@@ -113,29 +157,11 @@ const Bienvenida = () => {
   );
 };
 
-const TablaCategorias = () => {
-  return (
-    <div>
-      <h2>Categorías de Productos</h2>
-      <TablaCategoriasL />
-    </div>
-  );
-};
-
 const TablaUsuarios = () => {
   return (
     <div className='container__usuarios'>
       <h2>Usuarios</h2>
       {/* Aquí va la tabla de usuarios */}
-    </div>
-  );
-};
-
-const formularioRegistrarCategorias = () => {
-  return (
-    <div>
-      <h2>Registrar usuarios</h2>
-      <RegisterCategories />
     </div>
   );
 };

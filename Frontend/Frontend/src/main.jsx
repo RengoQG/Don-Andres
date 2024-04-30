@@ -76,6 +76,15 @@ const ProductMain = () => (
   </div>
 );
 
+const SesionMain = () => (
+  <div>
+    <Inicio />
+    <App />
+    <Producto />
+    <Footer />
+  </div>
+);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
       <Router>
