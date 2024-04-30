@@ -8,7 +8,10 @@ const search = require('./Controllers/routes/serchName.js');
 const relacionados = require('./Controllers/routes/relatedRoute.js');
 const sugerencias = require('./Controllers/routes/sugerenacisRoute.js');
 const categoria = require('./Controllers/routes/categories.js');
-const agregarCategoria = require('./Controllers/routes/agregarCategoria');
+const agregarCategoria = require('./Controllers/routes/agregarCategoria.js');
+const editarCategoria = require('./Controllers/routes/editarCategoria.js');
+const eliminarCategoria = require('./Controllers/routes/eliminarCategoria.js');
+const traerCategoria = require('./Controllers/routes/traerCategoria.js');
 const contactenos = require('./Controllers/routes/contactenosRoutes.js');
 const producto = require('./Controllers/routes/productsRoute.js');
 const productoId = require('./Controllers/routes/productoIdRoute.js');
@@ -85,6 +88,12 @@ app.use('/producto', productoId);
 app.use('/nuevosProductos', nuevosProductos);
 //Registrar una categoria
 app.use('/agregarCategoria', agregarCategoria);
+//Editar una categoria
+app.use('/editarCategoria', editarCategoria);
+//Obtener una categoria por id
+app.use('/traerCategoria', traerCategoria);
+//Eliminar una categoria
+app.use('/eliminarCategoria', eliminarCategoria);
 
 
 // Iniciar el servidor

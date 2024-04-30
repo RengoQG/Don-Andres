@@ -1,4 +1,8 @@
+const { Console } = require('console');
 const connection = require('../db.js');
+const fs = require('fs');
+const path = require('path');
+
 
 // Controlador para obtener todas las categorías
 exports.obtenerCategorias = async (req, res) => {
@@ -24,8 +28,13 @@ exports.obtenerCategorias = async (req, res) => {
 // Función para crear una nueva categoría
 exports.crearCategoria = async (req, res) => {
   try {
+    if (req.fileValidationError) {
+      // Si hay un error de validación del archivo, envía un mensaje de error al cliente
+      return res.status(400).json({ error: req.fileValidationError });
+    }
+
     const { name } = req.body;
-    const url_imagen = req.file.path; // Ruta donde se almacenó la imagen
+    const url_imagen = req.file.filename; // Obtén solo el nombre del archivo
 
     // Consulta SQL para insertar una nueva categoría
     const query = 'INSERT INTO categorias (name, url_imagen) VALUES (?, ?)';
@@ -39,6 +48,127 @@ exports.crearCategoria = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+// Función para editar una categoría
+// Función para editar una categoría
+exports.editarCategoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    let url_imagen;
+
+    // Verificar si se proporcionó una nueva imagen
+    if (req.file) {
+      url_imagen = req.file.filename; // Nombre de archivo único
+    }
+
+    // Consulta SQL para obtener la categoría por su ID
+    const querySelect = 'SELECT * FROM categorias WHERE category_id = ?';
+    const [categoria] = await connection.execute(querySelect, [id]);
+
+    if (categoria.length === 0) {
+      return res.status(404).json({ error: 'La categoría no existe' });
+    }
+
+    let queryUpdate;
+    let params;
+    // Verificar si se proporcionó una nueva imagen
+    if (url_imagen) {
+      queryUpdate = 'UPDATE categorias SET name = ?, url_imagen = ? WHERE category_id = ?';
+      params = [name, url_imagen, id];
+    } else {
+      queryUpdate = 'UPDATE categorias SET name = ? WHERE category_id = ?';
+      params = [name, id];
+    }
+
+    // Ejecutar la consulta SQL para actualizar la categoría
+    await connection.execute(queryUpdate, params);
+
+    res.json({ message: 'Categoría actualizada exitosamente' });
+  } catch (error) {
+    console.error('Error al actualizar la categoría:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
+//Trae una categorias por id
+exports.obtenerCategoriaPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Consulta SQL para obtener la categoría por su ID
+    const query = 'SELECT * FROM categorias WHERE category_id = ?';
+    const [categoria] = await connection.execute(query, [id]);
+
+    if (categoria.length === 0) {
+      return res.status(404).json({ error: 'La categoría no existe' });
+    }
+
+    res.json(categoria[0]); // Devuelve la primera categoría encontrada (debería ser solo una)
+  } catch (error) {
+    console.error('Error al obtener la categoría:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+// Función para eliminar una categoría y su imagen asociada
+exports.eliminarCategoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Consultas SQL para verificar si existen productos asociados a la categoría
+    const checkProductsQuery = 'SELECT COUNT(*) AS productCount FROM productos WHERE category_id = ?';
+    const selectQuery = 'SELECT url_imagen FROM categorias WHERE category_id = ?';
+    const deleteQuery = 'DELETE FROM categorias WHERE category_id = ?';
+
+    // Verificar si existen productos asociados a la categoría
+    const [productResult] = await connection.execute(checkProductsQuery, [id]);
+
+    if (productResult[0].productCount > 0) {
+      return res.status(200).json({ error: 'No se puede eliminar la categoría porque tiene productos asociados' });
+    }
+
+    // Si no hay productos asociados, continuar con la eliminación de la categoría
+    const [categoryResult] = await connection.execute(selectQuery, [id]);
+
+    if (categoryResult.length === 0) {
+      return res.status(404).json({ error: 'La categoría no existe' });
+    }
+
+    const imageName = categoryResult[0].url_imagen;
+    const imagePath = path.join(__dirname, '../../../Frontend/Frontend/public/images/CategoriaImagenes', imageName);
+
+    console.log('Ruta de la imagen:', imagePath);
+
+    // Verificar si el archivo existe antes de intentar eliminarlo
+    fs.unlink(imagePath, async (err) => {
+      if (err) {
+        console.error('Error al eliminar la imagen:', err);
+        return res.status(500).json({ error: 'Error interno al eliminar la imagen' });
+      } else {
+        console.log('Imagen eliminada correctamente');
+        try {
+          // Eliminar la categoría de la base de datos
+          await connection.execute(deleteQuery, [id]);
+          console.log('Categoría eliminada correctamente en la base de datos');
+          res.json({ message: 'Categoría y su imagen asociada eliminadas correctamente' });
+        } catch (error) {
+          console.error('Error al eliminar la categoría en la base de datos:', error);
+          res.status(500).json({ error: 'Error interno al eliminar la categoría en la base de datos' });
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al eliminar la categoría:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
+
+
 
 
 

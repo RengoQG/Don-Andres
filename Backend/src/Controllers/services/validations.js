@@ -71,16 +71,7 @@ function isValidEmail(email) {
   return true;
 }
 function isValidName(name) {
-  // Validación de palabras maliciosas
-  if (!isMaliciousWords(name)) {
-    return "El nombre contiene palabras malisiosas 😥";
-  }
-  
-  // Validación de expresión regular
-  if (/^[a-zA-Z\s]*$/.test(name)) {
-    return "El nombre no es válido 😥";
-  }
-
+  // Validación de palabras maliciosas  
   if(name.trim() === ""){
     return "El nombre no puede estar vacío 😥"
   };
