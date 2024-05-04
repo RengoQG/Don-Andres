@@ -82,3 +82,34 @@ exports.obtenerNuevosProductos = async (req, res) => {
   }
 };
 
+
+//CRUD
+// Controlador para obtener todas los productos
+exports.obtenerProducto = async (req, res) => {
+  try {
+    // Consulta SQL para obtener todas los productos con el nombre de la categoría
+    const query = `
+    SELECT p.*, c.name AS nombre_categoria
+    FROM productos p
+    JOIN categorias c ON p.category_id = c.category_id
+    ORDER BY p.product_id ASC;
+    `;
+
+    // Ejecutar la consulta SQL
+    const [results] = await connection.execute(query);
+
+    // Verificar si se encontraron productos
+    if (results.length > 0) {
+      // Si se encontraron productos, devolver la respuesta con el estado 200
+      return res.status(200).json(results);
+    } else {
+      // Si no se encontraron productos, devolver un error 404
+      return res.status(404).json({ error: 'No se encontraron los productos' });
+    }
+  } catch (error) {
+    // Si ocurre un error, devolver un error 500
+    console.error('Error al obtener los productos:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+

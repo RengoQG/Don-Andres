@@ -16,6 +16,7 @@ const contactenos = require('./Controllers/routes/contactenosRoutes.js');
 const producto = require('./Controllers/routes/productsRoute.js');
 const productoId = require('./Controllers/routes/productoIdRoute.js');
 const nuevosProductos = require('./Controllers/routes/nuevosProductosRoute.js');
+const productoList = require('./Controllers/routes/listProduct.js');
 const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
@@ -94,6 +95,9 @@ app.use('/editarCategoria', editarCategoria);
 app.use('/traerCategoria', traerCategoria);
 //Eliminar una categoria
 app.use('/eliminarCategoria', eliminarCategoria);
+//listar producto
+app.use('/obtenerProducto', productoList);
+
 
 
 // Iniciar el servidor
