@@ -7,7 +7,7 @@ const NewProductsSection = () => {
     useEffect(() => {
         const fetchNewProducts = async () => {
             try {
-                const response = await axios.get('http://192.168.20.238:6001/nuevosProductos/nuevosProductos');
+                const response = await axios.get('http://localhost:6001/nuevosProductos/nuevosProductos');
                 setNewProducts(response.data);
             } catch (error) {
                 console.error('Error al obtener los productos nuevos:', error);

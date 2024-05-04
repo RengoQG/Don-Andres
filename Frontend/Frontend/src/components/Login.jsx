@@ -44,7 +44,7 @@ const Login = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post('http://192.168.20.238:6001/users/login', {
+      const response = await axios.post('http://localhost:6001/users/login', {
         email,
         password
       });

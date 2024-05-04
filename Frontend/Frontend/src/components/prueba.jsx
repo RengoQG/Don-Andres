@@ -74,7 +74,7 @@ const BuscadorProductos = () => {
     if (inputValue.trim().length >= 3) {
       try {
         const response = await axios.post(
-          "http://192.168.20.238:6001/sugerencias/sugerencias",
+          "http://localhost:6001/sugerencias/sugerencias",
           {
             query: inputValue,
           }
@@ -111,7 +111,7 @@ const BuscadorProductos = () => {
   const handleMostrarTodosLosProductos = async (inputValue) => {
     try {
       const response = await axios.post(
-        "http://192.168.20.238:6001/sugerencias/sugerencias",
+        "http://localhost:6001/sugerencias/sugerencias",
         {
           query: inputValue,
         }
@@ -138,7 +138,7 @@ const BuscadorProductos = () => {
       return;
     }
     try {
-      const response = await axios.post('http://192.168.20.238:6001/searchName/search', {
+      const response = await axios.post('http://localhost:6001/searchName/search', {
         query: query
       });
       if (response.data.error) {
@@ -178,7 +178,7 @@ const BuscadorProductos = () => {
     setMostrarSugerencias(false);
     try {
       const response = await axios.post(
-        "http://192.168.20.238:6001/searchName/search",
+        "http://localhost:6001/searchName/search",
         {
           query: sugerencia,
         }

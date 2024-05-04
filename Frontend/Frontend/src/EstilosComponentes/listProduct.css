@@ -1,0 +1,13 @@
+.title__product{
+    font-size: 40px;
+}
+
+.table__main_pro{
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ddd;
+}
+
+.table__main_pro thead,tbody{
+    padding: 200px;
+}

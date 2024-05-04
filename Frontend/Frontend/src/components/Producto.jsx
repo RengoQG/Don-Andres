@@ -24,7 +24,7 @@ const Producto = () => {
         // Realizar solicitud HTTP para obtener los detalles del producto
         const fetchDetallesProducto = async () => {
             try {
-                const response = await axios.post(`http://192.168.20.238:6001/relacionados/products/${productoInicial.product_id}`);
+                const response = await axios.post(`http://localhost:6001/relacionados/products/${productoInicial.product_id}`);
                 setDetallesProducto(response.data);
                 setLoading(false);
             } catch (error) {
@@ -40,7 +40,7 @@ const Producto = () => {
         // Realizar solicitud HTTP para obtener los productos similares
         const fetchDetallesProducto = async () => {
             try {
-                const response = await axios.post(`http://192.168.20.238:6001/similares/similares/${productoInicial.product_id}`);
+                const response = await axios.post(`http://localhost:6001/similares/similares/${productoInicial.product_id}`);
                 setRelatedProducts(response.data);
                 setLoading(false);
             } catch (error) {
@@ -55,7 +55,7 @@ const Producto = () => {
     const handleClickProductoRelacionado = async (productoRelacionado) => {
         try {
             // Realizar la solicitud al endpoint que obtiene un producto por su ID
-            const response = await axios.get(`http://192.168.20.238:6001/producto/producto/${productoRelacionado.product_id}`);
+            const response = await axios.get(`http://localhost:6001/producto/producto/${productoRelacionado.product_id}`);
 
             // Verificar si la solicitud fue exitosa
             if (response.status === 200) {

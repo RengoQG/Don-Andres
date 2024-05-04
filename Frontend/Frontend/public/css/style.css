@@ -20574,7 +20574,28 @@ input[type="checkbox"] {
 	border-bottom-right-radius: 20px;
   }
   
-  
+  .btn-agregarCategoria {
+    background-color: #2d6a4f;
+    color: #FFF;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    font-size: 13px;
+    padding: 10px;
+    width: 20%;
+    transition: transform 0.3s; /* Agregar transición para suavizar el efecto */
+}
+
+.btn-agregarCategoria:hover {
+    background-color: #52b788;
+    cursor: pointer;
+    transform: scale(1.1); /* Aplicar un aumento de escala al botón al pasar el mouse */
+}
+
+.btn-agregarCategoria.listarCategorias {
+    background-color: #343a40; /* Cambia el color a tu preferencia */
+    /* Otros estilos si es necesario */
+}
+
 
 
   @media (max-width: 992px) {

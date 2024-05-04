@@ -34,7 +34,7 @@ const ResetPassword = () => {
     setIsLoading(true);
 
     try {
-      await axios.post('http://192.168.20.238:6001/validate/validate', { token, newPassword });
+      await axios.post('http://localhost:6001/validate/validate', { token, newPassword });
       toast.success('Contraseña restablecida exitosamente');
       setTimeout(() => {
         navigate('/login');

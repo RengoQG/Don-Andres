@@ -71,6 +71,7 @@
     border: none;
     margin-bottom: 0px ;
     padding-left: 40px;
+    text-indent: 20px;
   }
 
   /*  */
@@ -152,6 +153,12 @@
     font-size: 1.2rem;
   }
 
+  .buscador-input::placeholder {
+    /* Ajusta el valor de margin-left según tu preferencia */
+    margin-left: 150px;
+}
+
+
   .clear-icon {
     position: absolute;
     right: 15px;
@@ -190,7 +197,7 @@
   
     .buscador-input {
       padding: 8px 20px; /* Ajusta el padding para el input en pantallas pequeñas */
-      text-indent: 10px;
+      text-indent: 15px;
       font-size: 0.8rem;
     }  
     /* Otros ajustes específicos para pantallas más pequeñas */

@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import UpdateCategori from './updateCategori.jsx';
+import RegisterCategori from './registerCategori.jsx';
 import { Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ToastContainer, toast } from 'react-toastify';
-import RegisterCategories from './registerCategori.jsx';
-import SesionIniciada from '../sesionIniciada.jsx';
 
-const TablaCategorias = ({ onAgregarCategoria, onUpdateButtonClick }) => {
+const TablaCategorias = () => {
     const [categorias, setCategorias] = useState([]);
     const [showTabla, setShowTabla] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
     const [isUpdateMode, setIsUpdateMode] = useState(false);
     const [mensajeEliminacion, setMensajeEliminacion] = useState('');
+    const [botonTexto, setBotonTexto] = useState('Agregar categoría');
 
     const tableRef = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.20.238:6001/categoria/categorias");
+                const response = await axios.get("http://localhost:6001/categoria/categorias");
                 setCategorias(response.data);
             } catch (error) {
                 console.error("Error al obtener las categorías:", error);
@@ -30,25 +31,44 @@ const TablaCategorias = ({ onAgregarCategoria, onUpdateButtonClick }) => {
         fetchData();
     }, []);
 
+    const actualizarCategorias = async () => {
+        try {
+            const response = await axios.get("http://localhost:6001/categoria/categorias");
+            setCategorias(response.data);
+        } catch (error) {
+            console.error("Error al obtener las categorías:", error);
+        }
+    };
+
     const handleEditarCategoria = (categoria) => {
-        setShowForm(true);
-        setShowTabla(false);
         setCategoriaSeleccionada(categoria);
         setIsUpdateMode(true);
-        onUpdateButtonClick('Listar Categorías', false);
+        setShowTabla(false);
+        setShowForm(true);
+        setBotonTexto('Listar categorías');
+    };
+
+    const handleBotonClick = () => {
+        if (botonTexto === 'Listar categorías') {
+            setShowTabla(true);
+            setShowForm(false);
+            setIsUpdateMode(false);
+            setBotonTexto('Agregar categoría');
+        } else {
+            setBotonTexto('Listar categorías');
+            setShowTabla(false);
+            setShowForm(true);
+        }
     };
 
     const handleEliminarCategoria = async (categoriaId) => {
         try {
-            const response = await axios.delete(`http://192.168.20.238:6001/eliminarCategoria/eliminarCategoria/${categoriaId}`);
+            const response = await axios.delete(`http://localhost:6001/eliminarCategoria/eliminarCategoria/${categoriaId}`);
             if (response.data.error) {
-               return toast.error(response.data.error);
+                return toast.error(response.data.error);
             } else {
-                // Si la eliminación fue exitosa, mostrar mensaje de éxito en la consola
-                // toast.info(response.data.message);
-                toast.success('prueba')
+                toast.success('Categoría eliminada exitosamente');
             }
-            // Actualizar la lista de categorías después de eliminar
             const updatedCategorias = categorias.filter(categoria => categoria.category_id !== categoriaId);
             setCategorias(updatedCategorias);
         } catch (error) {
@@ -56,13 +76,10 @@ const TablaCategorias = ({ onAgregarCategoria, onUpdateButtonClick }) => {
         }
     };
 
-
     return (
         <div>
-            <ToastContainer
-                onClose={() => setErrorMessageShown(false)}
-                onExited={() => setErrorMessageShown(false)}
-            />
+            <button className={`btn btn-agregarCategoria ${botonTexto === 'Listar categorías' ? 'listarCategorias' : ''}`} onClick={handleBotonClick}>{botonTexto}</button>
+            <ToastContainer />
             {mensajeEliminacion && <div className="mensaje-eliminacion">{mensajeEliminacion}</div>}
             {showTabla && (
                 <div className="my-custom-datatable">
@@ -98,19 +115,31 @@ const TablaCategorias = ({ onAgregarCategoria, onUpdateButtonClick }) => {
                                 </tr>
                             ))}
                         </tbody>
-                        <tfoot>
-                        </tfoot>
                     </Table>
                 </div>
             )}
 
-            {showForm && isUpdateMode && (
-                <RegisterCategories
+{showForm && isUpdateMode && (
+                <UpdateCategori
                     categoria={categoriaSeleccionada}
                     isUpdateMode={isUpdateMode}
+                    onClose={() => {
+                        setShowForm(false);
+                        setShowTabla(true);
+                    }}
+                    onCategoriaActualizada={actualizarCategorias} // Pasar la función para actualizar las categorías al componente de edición
                 />
             )}
 
+            {showForm && !isUpdateMode && (
+                <RegisterCategori
+                    onClose={() => {
+                        setShowForm(false);
+                        setShowTabla(true);
+                    }}
+                    onCategoriaAgregada={actualizarCategorias} // Pasar la función actualizarCategorias como prop
+                />
+            )}
         </div>
     );
 };

@@ -6,6 +6,7 @@ import { Card, CardHeader, CardBody } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListAlt, faUsers, faSignOutAlt, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import TablaCategoriasL from './Categorias/tableCategori';
+import TablaProductos from './Productos/TableProduct.jsx';
 import RegisterCategories from './Categorias/registerCategori.jsx';
 
 const Dashboard = ({ isUpdateMode }) => {
@@ -14,6 +15,7 @@ const Dashboard = ({ isUpdateMode }) => {
   const [contenidoSeleccionado, setContenidoSeleccionado] = useState('categorias');
   const [mostrarFormularioRegistro, setMostrarFormularioRegistro] = useState(false);
   const [mostrarTablaCategorias, setMostrarTablaCategorias] = useState(true);
+  const [mostrarTablaProductos, setMostrarTablaProductos] = useState(true);
   const [textoBoton, setTextoBoton] = useState('Agregar Categoría');
   const [mostrarForm, setMostrarForm] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -65,23 +67,6 @@ const Dashboard = ({ isUpdateMode }) => {
     }
   };
 
-
-
-  const mostrarFormularioRegistroCategorias = () => {
-    if (mostrarFormularioRegistro) {
-      // Si el formulario está siendo mostrado, cambia para mostrar la tabla de categorías
-      setMostrarFormularioRegistro(false);
-      setMostrarTablaCategorias(true);
-      setTextoBoton('Agregar Categoría');
-    } else {
-      // Si el formulario no está siendo mostrado, cambia para mostrar el formulario de registro
-      setMostrarFormularioRegistro(true);
-      setMostrarTablaCategorias(false);
-      setTextoBoton('Listar Categorías');
-    }
-  };
-
-
   return (
     <div className="dashboard-container">
       <nav className="sidebar">
@@ -106,8 +91,8 @@ const Dashboard = ({ isUpdateMode }) => {
             </a>
           </li>
           <li>
-            <a href="#usuarios" onClick={() => mostrarContenido('usuarios')}>
-              <FontAwesomeIcon icon={faUsers} /> Usuarios
+            <a href="#productos" onClick={() => mostrarContenido('productos')}>
+              <FontAwesomeIcon icon={faUsers} /> Productos
             </a>
           </li>
           <li>
@@ -123,9 +108,7 @@ const Dashboard = ({ isUpdateMode }) => {
           <>
             <div className="category-header">
               <h2>Categorías de Productos</h2>
-              <button onClick={mostrarFormularioRegistroCategorias} className="add-category-btn">
-                <FontAwesomeIcon icon={faPlus} /> {textoBoton}
-              </button>
+
             </div>
             {/* Mostrar el formulario de edición si se cumple la condición */}
             {showForm && isUpdateMode && (
@@ -141,8 +124,15 @@ const Dashboard = ({ isUpdateMode }) => {
             {mostrarFormularioRegistro && !mostrarForm && <RegisterCategories />}
           </>
         )}
-        {contenidoSeleccionado === 'usuarios' && <TablaUsuarios />}
-        {!['categorias', 'usuarios'].includes(contenidoSeleccionado) && <Bienvenida />}
+        {contenidoSeleccionado === 'productos' && (
+          <>
+            {/* Mostrar el formulario de edición si se cumple la condición */}
+            {mostrarTablaProductos && <TablaProductos onUpdateButtonClick={handleUpdateButtonClick} />}
+            {/* {mostrarFormularioRegistro && !mostrarForm && <RegisterCategories />} */}
+          </>
+        )}
+        {contenidoSeleccionado === 'productos' && <Productos />}
+        {!['categorias', 'productos'].includes(contenidoSeleccionado) && <Bienvenida />}
       </div>
     </div>
   );
@@ -157,11 +147,10 @@ const Bienvenida = () => {
   );
 };
 
-const TablaUsuarios = () => {
+const Productos = () => {
   return (
-    <div className='container__usuarios'>
-      <h2>Usuarios</h2>
-      {/* Aquí va la tabla de usuarios */}
+    <div>
+     
     </div>
   );
 };

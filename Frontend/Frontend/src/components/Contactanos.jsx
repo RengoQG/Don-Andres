@@ -37,7 +37,7 @@ const ContactSection = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await fetch('http://192.168.20.238:6001/contactenos/contactenos', {
+            const response = await fetch('http://localhost:6001/contactenos/contactenos', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
