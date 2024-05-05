@@ -1,13 +1,121 @@
+
 .title__product{
-    font-size: 40px;
+    margin-top: 15px;
+    font-size: 35px;
 }
 
-.table__main_pro{
+#dt-search-0{
+    width: 300px;
+    margin-right: 10px;
+}
+
+.inputBuscador {
+   width: 300px;
+   margin-top: 10px !important;
+  }
+
+.inputBuscador input{
+    padding: 20px;
+    height: 15px;
+    margin-top: 0px;
+    border: none;
+}
+
+.paginatorProduct{
+    display: flex;
+    align-self: flex-start;
+}
+
+.inputBuscador label{
+    margin-top: -2px;
+}
+
+.btn-agregar-p{
+    background-color: #2d6a4f;
+    border: none;
+    color: #FFF;
+    margin-bottom: 5px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.css-1ex1afd-MuiTableCell-root {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    font-size: 15px !important;
+    line-height: 1.43;
+    letter-spacing: 0.01071em;
+    display: table-cell;
+    vertical-align: auto !important;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    text-align: left;
+    padding: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    text-align: center;
+}
+
+.css-1ygcj2i-MuiTableCell-root {
+    background-color: #2d6a4f;
+    text-align: center !important;
+    color: #fff !important;
+    width: 1000px !important;
+    padding: 20px !important;
+}
+
+
+.container__table{
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #ddd;
+}
+.container__btn{
+    width: 1000px !important;
 }
 
-.table__main_pro thead,tbody{
-    padding: 200px;
+.icon__containerP {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Esto distribuye los elementos horizontalmente */
+}
+
+.iconEditP,
+.iconTrashP,
+.iconPlus,
+.iconPlusP {
+    margin-right: 1px; /* Ajusta el margen entre los botones */
+    font-size: 10px;
+}
+
+
+.iconEditP{
+    margin-left: 5px;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFF;
+    background-color: #1d2d44;
+}
+
+.iconEditP:hover{
+    cursor: pointer;
+    background-color: #121f31;
+}
+
+.iconTrashP{
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFF;
+    background-color: red;
+}
+.iconPlus{
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFF;
+    background-color: rgb(0, 102, 255);
+}
+
+.iconTrashP:hover{
+    cursor: pointer;
+    background-color: rgb(219, 20, 20);
 }

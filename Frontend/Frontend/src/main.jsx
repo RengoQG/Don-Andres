@@ -21,6 +21,7 @@ import Categories from './components/Categories.jsx';
 import Productos from './pages/Productos.jsx';
 import ProductosFetch from './components/Products.jsx';
 import Prueba2 from './components/prueba.jsx';
+import Prueba3 from './components/Productos/agregarProducto.jsx';
 import Buscar from './components/search.jsx';
 import NewProduct from './components/ProductosNuevos.jsx';
 import Contact from './components/Contactanos.jsx';
@@ -99,6 +100,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/categories" element={<Categories />} />
           {/* <Route path="/prueba" element={<Prueba />} /> */}
           <Route path="/prueba" element={<Prueba2 />} />
+          <Route path="/prueba2" element={<Prueba3 />} />
           <Route path="/producto" element={<ProductMain />} />
         </Routes>
       </Router>

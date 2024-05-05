@@ -1,6 +1,6 @@
 .dashboard-container {
     display: flex;
-    height: 120vh;
+    height: 100%;
   }
 
   .info__usuario{
