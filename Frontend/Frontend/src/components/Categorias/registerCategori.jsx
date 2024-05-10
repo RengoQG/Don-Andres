@@ -37,19 +37,24 @@ const RegisterCategori = ({ onClose, onCategoriaAgregada }) => {
       toast.success('Categoría agregada correctamente');
 
       // Si se proporciona la función onCategoriaAgregada, llámala para notificar al componente padre que se ha agregado una nueva categoría
-      if (onCategoriaAgregada) {
-        onCategoriaAgregada();
+      setTimeout(() => {
+        if (onCategoriaAgregada) {
+          onCategoriaAgregada();
+        }
+
+        // Cerrar el formulario
+      if (onClose) {
+        onClose();
       }
+      }, 2000);
+     
 
       // Resetear el formulario y el estado del componente
       formularioRef.current.reset();
       setNombreCategoria('');
       setImagenCategoria(null);
 
-      // Cerrar el formulario
-      if (onClose) {
-        onClose();
-      }
+      
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
       toast.error('Hubo un error al procesar la solicitud.');

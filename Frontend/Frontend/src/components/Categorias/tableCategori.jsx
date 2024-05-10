@@ -48,11 +48,14 @@ const TablaCategorias = () => {
         setBotonTexto('Listar categorías');
     };
 
+    const cambiarTextoBoton = () => {
+        setBotonTexto('Agregar categoría');
+      };      
+
     const handleBotonClick = () => {
         if (botonTexto === 'Listar categorías') {
             setShowTabla(true);
             setShowForm(false);
-            setIsUpdateMode(false);
             setBotonTexto('Agregar categoría');
         } else {
             setBotonTexto('Listar categorías');
@@ -64,24 +67,23 @@ const TablaCategorias = () => {
     const handleEliminarCategoria = async (categoriaId) => {
         try {
             const response = await axios.delete(`http://localhost:6001/eliminarCategoria/eliminarCategoria/${categoriaId}`);
-            if (response.data.error) {
-                return toast.error(response.data.error);
-            } else {
+            if (response.status === 200) {
                 toast.success('Categoría eliminada exitosamente');
-            }
-            const updatedCategorias = categorias.filter(categoria => categoria.category_id !== categoriaId);
-            setCategorias(updatedCategorias);
+                const updatedCategorias = categorias.filter(categoria => categoria.category_id !== categoriaId);
+                setCategorias(updatedCategorias);
+            } 
         } catch (error) {
-            console.error("Error al eliminar la categoría:", error);
+            toast.error(error.response.data.error);
         }
     };
 
     return (
         <div>
             <button className={`btn btn-agregarCategoria ${botonTexto === 'Listar categorías' ? 'listarCategorias' : ''}`} onClick={handleBotonClick}>{botonTexto}</button>
-            <ToastContainer />
             {mensajeEliminacion && <div className="mensaje-eliminacion">{mensajeEliminacion}</div>}
             {showTabla && (
+                <>
+                <ToastContainer />
                 <div className="my-custom-datatable">
                     <Table className='pruebaTabla' innerRef={tableRef}>
                         <thead>
@@ -117,25 +119,31 @@ const TablaCategorias = () => {
                         </tbody>
                     </Table>
                 </div>
+                </>
             )}
 
-{showForm && isUpdateMode && (
-                <UpdateCategori
-                    categoria={categoriaSeleccionada}
-                    isUpdateMode={isUpdateMode}
-                    onClose={() => {
-                        setShowForm(false);
-                        setShowTabla(true);
-                    }}
-                    onCategoriaActualizada={actualizarCategorias} // Pasar la función para actualizar las categorías al componente de edición
-                />
-            )}
+                {showForm && isUpdateMode && (
+    <>
+        <ToastContainer /> {/* Aquí está el ToastContainer */}
+        <UpdateCategori
+            categoria={categoriaSeleccionada}
+            isUpdateMode={isUpdateMode}
+            onClose={() => {
+                setShowForm(false);
+                setShowTabla(true);
+                cambiarTextoBoton(); 
+            }}
+            onCategoriaActualizada={actualizarCategorias}
+        />
+    </>
+)}
 
             {showForm && !isUpdateMode && (
                 <RegisterCategori
                     onClose={() => {
                         setShowForm(false);
                         setShowTabla(true);
+                        cambiarTextoBoton(); 
                     }}
                     onCategoriaAgregada={actualizarCategorias} // Pasar la función actualizarCategorias como prop
                 />

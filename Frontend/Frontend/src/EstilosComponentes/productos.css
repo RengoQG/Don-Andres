@@ -435,14 +435,13 @@
       height: 50%;
   }
 
-  .producto-imagen{
-    margin-top: 500px;
-    height: 50%;
+  .producto-nombre{
+    margin-top: 50px;
   }
+
   .producto-imagen{
-    margin-top: 500px;
+    margin-top: 1000px;
     height: 50%;
-    margin-bottom: 0px;
   }
 
   .related-products-controls{

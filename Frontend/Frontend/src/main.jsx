@@ -38,7 +38,7 @@ const MainContent = () => (
     </ProductosFetch>
     <Wsp />
     <Services />
-    <Dream />
+    {/* <Dream /> */}
     <People />
     <NewProduct />
     <Contact />
@@ -65,7 +65,7 @@ const RegisterMain = () => (
   <div>
     <App />
     <Register />
-    <Footer />
+    {/* <Footer /> */}
   </div>
 );
 const ProductMain = () => (

@@ -67,7 +67,9 @@ const EditarCategoriaForm = ({ categoria, onCategoriaActualizada, onClose }) => 
       setImagenCategoria(null);
 
       // Mostrar la tabla nuevamente
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
       toast.error('Hubo un error al procesar la solicitud.');

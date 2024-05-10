@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef,useHistory } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../EstilosComponentes/pruebaS.css"; // Archivo de estilos CSS para el componente
 import { FaSearch, FaTimes } from "react-icons/fa"; // Importar el icono de búsqueda de react-icons
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from "react-router-dom";
 
 
 const BuscadorProductos = () => {
   const navigateTo = useNavigate();
+  const location = useLocation();
   const [query, setQuery] = useState("");
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState("");
@@ -30,12 +31,29 @@ const BuscadorProductos = () => {
     );
   }, [historial]);
 
+  useEffect(() => {
+    const storedHistorial = localStorage.getItem("busquedaHistorial");
+    if (storedHistorial) {
+      setHistorial(JSON.parse(storedHistorial));
+    }
+  }, []);
+
+    // Escuchar cambios de navegación para actualizar historial
+    useEffect(() => {
+      // Actualizar el historial cuando cambie la ubicación (navegación)
+      const storedHistorial = localStorage.getItem("busquedaHistorial");
+      if (storedHistorial) {
+        setHistorial(JSON.parse(storedHistorial));
+      }
+    }, [location.pathname]);
+
+
   const handleClearHistory = () => {
     localStorage.removeItem("busquedaHistorial");
     setHistorial([]);
-    setSugerenciaSeleccionada(null); 
-    setSugerenciaBajoCursor(null); 
-    setSeleccionConFlecha(false); 
+    setSugerenciaSeleccionada(null);
+    setSugerenciaBajoCursor(null);
+    setSeleccionConFlecha(false);
   };
 
   // Dentro del componente BuscadorProductos
@@ -155,12 +173,16 @@ const BuscadorProductos = () => {
           setError('');
         }
         setTotalResultados(0);
+        // Add search to history
+        // setHistorial(prevHistorial => [...prevHistorial, query]); // Save the query instead of item.nombre
+        // Redirect user after adding to history
+        navigateTo(`/producto`, { state: { producto: response.data } });
       }
     } catch (error) {
       setError('Error al buscar productos.');
       console.error(error);
     } finally {
-      setSugerenciaSeleccionada(null); // Reiniciar sugerenciaSeleccionada después de realizar la búsqueda
+      setSugerenciaSeleccionada(null); // Reset suggestion after search
     }
   };
   const handleMouseEnter = (index) => {
@@ -173,6 +195,7 @@ const BuscadorProductos = () => {
     // setSugerenciaBajoCursor(null);
     setSugerenciaSeleccionada(null);
   };
+
   const handleSugerenciaClick = async (sugerencia) => {
     setQuery(sugerencia);
     setMostrarSugerencias(false);
@@ -188,21 +211,28 @@ const BuscadorProductos = () => {
         setProductos([]);
       } else {
         setProductos(response.data);
-        navigateTo(`/producto`, { state: { producto: response.data } });
-        setQuery("");
-        setMostrarSugerencias(false);
         if (response.data.length === 0) {
           setError("No se encontraron productos relacionados con la búsqueda.");
         } else {
           setError("");
         }
         setTotalResultados(0);
-        // Verificar si el producto ya existe en el historial
-        const productoExistente = historial.find(item => item.nombre === sugerencia);
-        if (!productoExistente) {
-          // Agregar la búsqueda al historial solo si no existe
-          setHistorial(prevHistorial => [...prevHistorial, { nombre: sugerencia, precio: 300 }]);
-        }
+        // Filtrar elementos repetidos antes de agregar al historial
+        const productosEnHistorial = response.data.map(producto => ({
+          id: producto.product_id, // Usar el id como identificador único
+          nombre: producto.name,
+          precio: producto.price,
+          codigo: producto.codigo
+        }));
+        const historialIds = historial.map(producto => producto.id);
+        const productosNuevos = productosEnHistorial.filter(producto => !historialIds.includes(producto.id));
+        setHistorial(prevHistorial => [...prevHistorial, ...productosNuevos]);
+        // Redireccionar al usuario después de agregar al historial
+        setTimeout(() => {
+          navigateTo(`/producto`, { state: { producto: response.data } });
+        }, 1); // Retraso de 1 segundo (1000 milisegundos)
+        setQuery("");
+        setMostrarSugerencias(false);
       }
     } catch (error) {
       setError("Error al buscar productos.");
@@ -212,6 +242,10 @@ const BuscadorProductos = () => {
     setSugerenciaBajoCursor(null); 
     setSeleccionConFlecha(false); 
   };
+  
+  
+  
+  
   const handleClearInput = () => {
     setQuery("");
     setSugerencias([]);
@@ -294,7 +328,7 @@ const BuscadorProductos = () => {
       {(mostrarSugerencias || mostrarHistorial) && <div className="overlay" />}
       <form
         onSubmit={handleSubmit}
-        className={`buscador-form ${mostrarSugerencias ? "sugerencias-activas" : ""}`}
+        className={`buscador-formSearch ${mostrarSugerencias ? "sugerencias-activas" : ""}`}
       >
         <div className="input-container">
           <FaSearch className="search-iconSe" />
@@ -356,49 +390,40 @@ const BuscadorProductos = () => {
         {/* historial */}
         {mostrarHistorial && (
           <div>
-            <h4 className="ml-2">Historial</h4>
-            <ul className="sugerencias-list">
-              {historial.map((item, index) => (
-                <li
-                  key={index}
-                  className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada ? "selected" : ""}`}
-                  onClick={() => handleSugerenciaClick(item.nombre)}
-                  onMouseEnter={() => handleMouseEnter(index)}
-                >
-                  {/* Contenido del historial */}
-                  <div className="sugerencia-content">
-                    <img
-                      src="../../public/images/A01.jpg"
-                      alt="Producto"
-                      className="sugerencia-imagen"
-                    />
-                    <div className="sugerencia-info">
-                      <span className="sugerencia-nombre">{item.nombre}</span>
-                      <span className="sugerencia-precio">${item.precio}</span>
-                    </div>
+          <h4 className="ml-2">Historial</h4>
+          <ul className="sugerencias-list">
+            {historial.map((item, index) => (
+              <li
+                key={index}
+                className={`sugerencia-item ${seleccionConFlecha && index === sugerenciaSeleccionada ? "selected" : ""}`}
+                onClick={() => handleSugerenciaClick(item.nombre)}
+                onMouseEnter={() => handleMouseEnter(index)}
+              >
+                {/* Contenido del historial */}
+                <div className="sugerencia-content">
+                  <img
+                    src="../../public/images/A01.jpg"
+                    alt="Producto"
+                    className="sugerencia-imagen"
+                  />
+                  <div className="sugerencia-info">
+                    <span className="sugerencia-nombre">{item.nombre}</span>
+                    <span className="sugerencia-precio">${item.precio}</span>
                   </div>
-                </li>
-              ))}
-            </ul>
-            <span className="ml-2">
-              <a href="#" onClick={handleClearHistory}>Limpiar historial</a>
-            </span>
-          </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <span className="ml-2">
+            <a className ="btn-limpiarHistorial" onClick={handleClearHistory}>Limpiar historial</a>
+          </span>
+        </div>
         )}
 
 
       </form>
       {/* Historial de búsquedas */}
       {error && <p className="error-message">{error}</p>}
-      {productos.length > 0 && (
-        <ul className="productos-list">
-          {productos.map((producto) => (
-            <li key={producto.product_id} className="producto-item">
-              {producto.name} - {producto.price} - {producto.codigo}
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 

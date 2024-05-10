@@ -4,16 +4,23 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AgregarProducto from './agregarProducto.jsx';
+import Editar from './editarProducto.jsx';
 import Swal from 'sweetalert2';
 import '../../EstilosComponentes/listProduct.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [showTable, setShowTable] = useState(true); // Estado para controlar la visualización de la tabla
     const [showAgregarProducto, setShowAgregarProducto] = useState(false); // Estado para controlar la visualización del componente AgregarProducto
+    const [showEditarProducto, setShowEditarProducto] = useState(false); // Estado para controlar la visualización del componente EditarProducto
     const [searchTerm, setSearchTerm] = useState(''); // Estado para almacenar el término de búsqueda
     const [page, setPage] = useState(0); // Estado para manejar la página actual del paginador
     const [rowsPerPage, setRowsPerPage] = useState(3); // Cantidad de filas por página
+    const [productoId, setProductoId] = useState(null);
+    const [botonTexto, setBotonTexto] = useState("Agregar producto");
+
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -27,6 +34,39 @@ const ProductList = () => {
         fetchProducts();
     }, []);
 
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get('http://localhost:6001/obtenerProducto/listarProductos');
+            setProducts(response.data);
+        } catch (error) {
+            console.error('Error al obtener productos:', error);
+        }
+    };
+
+    const handleEliminarProductoClick = async (productId) => {
+        try {
+            const response = await axios.delete(`http://localhost:6001/eliminarProducto/eliminarProducto/${productId}`);
+            if (response.data.error) {
+                return toast.error(response.data.error);
+            } else {
+                toast.success('producto eliminada exitosamente');
+                // Actualizar la lista de productos después de eliminar el producto
+                await fetchProducts();
+                // Establecer la página actual en 0 para mostrar desde el primer registro
+                setPage(0);
+            }
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error);
+        }
+    };
+
+    const handleEditarProductoClick = (productId) => {
+        setShowEditarProducto(!showEditarProducto);
+        setShowTable(!showTable);
+        setProductoId(productId);
+        setBotonTexto('Listar productos');
+    };
+    
     const handleAgregarDetalleProductoClick = async (productId) => {
         // Mostrar el cuadro de diálogo de SweetAlert
         const { value: detalle_texto } = await Swal.fire({
@@ -74,17 +114,16 @@ const ProductList = () => {
         }
     };
 
-
     // Función auxiliar para mostrar el valor o el guion
     const renderCellValue = (value) => {
         return value || '-';
     };
 
-    const handleAgregarProductoClick = () => {
-        setShowAgregarProducto(!showAgregarProducto); // Mostrar o ocultar el componente AgregarProducto
-        setShowTable(!showTable); // Ocultar o mostrar la tabla
-    };
-
+    // const handleAgregarProductoClick = () => {
+    //     setShowAgregarProducto(!showAgregarProducto);
+    //     setShowTable(!showTable);
+    //     setBotonTexto(showAgregarProducto ? 'Agregar productjjo' : 'Listar producto');
+    // };
     // Filtrar productos basados en el término de búsqueda
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -100,11 +139,27 @@ const ProductList = () => {
         setPage(0);
     };
 
+    const handleBotonClick = () => {
+        if (botonTexto === 'Listar productos') {
+            setShowAgregarProducto(false);
+            setShowEditarProducto(false);
+            setShowTable(true);
+            setBotonTexto('Agregar producto');
+        } else if (botonTexto === 'Agregar producto') {
+            setShowAgregarProducto(true); // Ocultar el formulario de agregado si está abierto
+            setShowTable(false); // Mostrar la tabla de productos
+            setBotonTexto('Listar productos');
+        }
+    };
+    
+
     return (
         <div>
-            <Button variant="contained" className='btn-agregar-p' onClick={handleAgregarProductoClick}>
-                {showAgregarProducto ? 'Listar productos' : 'Agregar producto'}
-            </Button>
+            <ToastContainer />
+            {/* <Button variant="contained" className='btn-agregar-p' onClick={handleAgregarProductoClick}>
+                {botonTexto}
+            </Button> */}
+            <button className={`btn-agrgar-p ${botonTexto === 'Listar categorías' ? 'listarCategorias' : ''}`} onClick={handleBotonClick}>{botonTexto}</button>
             {showTable && (
                 <div>
                     <TextField
@@ -202,10 +257,10 @@ const ProductList = () => {
                                         {/* Agrega más celdas aquí según tus necesidades */}
                                         {/* Agrega más celdas aquí según tus necesidades */}
                                         <TableCell className='icon__containerP'>
-                                            <button className='iconEditP' >
+                                            <button className='iconEditP' onClick={() => handleEditarProductoClick(product.product_id)}>
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </button>
-                                            <button className='iconTrashP'>
+                                            <button className='iconTrashP' onClick={() => handleEliminarProductoClick(product.product_id)}>
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
                                             <button className='iconPlus' onClick={() => handleAgregarDetalleProductoClick(product.product_id)}>
@@ -230,7 +285,8 @@ const ProductList = () => {
                 </div>
             )}
 
-            {showAgregarProducto && <AgregarProducto setShowTable={setShowTable} />}
+            {showEditarProducto && <Editar setShowTable={setShowTable} productId={productoId} actualizarProductos={fetchProducts} />}
+            {showAgregarProducto && <AgregarProducto setShowTable={setShowTable} actualizarProductos={fetchProducts}/>}
         </div>
     );
 };

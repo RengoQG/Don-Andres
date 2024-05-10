@@ -20596,6 +20596,16 @@ input[type="checkbox"] {
     /* Otros estilos si es necesario */
 }
 
+.logoHorizon{
+width: 110px !important;
+height: 110px !important;
+}
+
+.btn-limpiarHistorial{
+	color: #2d6a4f !important;
+	cursor: pointer;
+}
+
 
 
   @media (max-width: 992px) {

@@ -10,19 +10,20 @@
     color: #2d6a4f;
 }
 
-form{
+.register-form{
     background-color: #f8f9fa;
     padding: 25px;
     border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 50%;
+    width: 100%;
+    margin-top: 300px;
 }
 
-form input,label{
+.register-form input,label{
     width: 100%;
 }
 
-form input{
+.register-form input{
     border: none;
     background-color: #f8f9fa;
     border-bottom: 1px solid #52b788;

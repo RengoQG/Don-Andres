@@ -20,7 +20,11 @@ const Dashboard = ({ isUpdateMode }) => {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
-
+  const UserProfileIcon = () => {
+    return (
+      <FontAwesomeIcon icon={faUser} className="profile-icon" />
+    );
+  };
 
   useEffect(() => {
     const verificar = localStorage.getItem('Bienvenida');
@@ -72,17 +76,8 @@ const Dashboard = ({ isUpdateMode }) => {
       <nav className="sidebar">
         <div className="sidebar-header">
           <div className="sidebar-profile">
-            <img
-              src="ruta/a/tu/imagen.jpg"
-              alt="Foto de perfil"
-              className="profile-img"
-            />
-            <div className="search-box">
-              <input type="text" placeholder="Buscar" />
-              <FontAwesomeIcon icon={faSearch} />
-            </div>
           </div>
-          <h3>Dashboard</h3>
+          <h2 className='tilte__admin'>Administrador</h2>
         </div>
         <ul className="list-unstyled components">
           <li>

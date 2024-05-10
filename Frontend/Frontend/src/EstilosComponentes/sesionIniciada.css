@@ -10,6 +10,10 @@
   .container__usuarios{
     height: 100vh;
   }
+
+  .tilte__admin{
+    color: #adb5bd;
+  }
   
   .sidebar {
     width: 250px;

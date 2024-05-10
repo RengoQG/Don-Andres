@@ -8,7 +8,7 @@
     margin-top: 5px;
 }
 
-.buscador-form {
+.buscador-formSearch {
     position: relative;
     display: block;
     align-items: center;
@@ -17,6 +17,7 @@
     box-shadow: none;
     background-color: #fff;
     z-index: 1001;
+    width: 50%;
   }
 
   .highlight{
@@ -186,7 +187,7 @@
   }
 
   @media screen and (max-width: 768px) {
-    .buscador-form {
+    .buscador-formSearch {
       position: fixed;
       top: 0;
       width: 100%;

@@ -68,7 +68,7 @@ const Header = () => {
             <div className="rd-navbar-main">
               <div className="rd-navbar-panel">
                 <button className="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
-                <div className="rd-navbar-brand"><a className="brand" href="index.html"><img src="images/logo-default-223x50.png" alt="" width="223" height="50" /></a></div>
+                <div className="rd-navbar-brand"><a className="brand" href="index.html"><img src="../public/images/logoHorizon.ico" className="logoHorizon" alt="" width="223" height="10px" /></a></div>
               </div>
               <div className="rd-navbar-main-element">
                 <div className="rd-navbar-nav-wrap">
