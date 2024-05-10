@@ -19,6 +19,9 @@ const nuevosProductos = require('./Controllers/routes/nuevosProductosRoute.js');
 const productoList = require('./Controllers/routes/listProduct.js');
 const agregarProducto = require('./Controllers/routes/agregarProducto.js');
 const agregarDestalleProducto = require('./Controllers/routes/agregarDestalleProducto.js');
+const actualizarProducto = require('./Controllers/routes/actualizarProducto.js');
+const obtenerProducto = require('./Controllers/routes/obtenerProducto.js');
+const eliminarProducto = require('./Controllers/routes/eliminarProducto.js');
 const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
@@ -103,9 +106,12 @@ app.use('/obtenerProducto', productoList);
 app.use('/agregarProducto', agregarProducto);
 //Agregar detalles del producto
 app.use('/agregarDestalleProducto', agregarDestalleProducto);
-
-
-
+//Actualizar producto
+app.use('/actualizarProducto', actualizarProducto);
+//obtener producto por id
+app.use('/obtenerProductoId', obtenerProducto);
+//Eliminar producto
+app.use('/eliminarProducto', eliminarProducto);
 
 
 // Iniciar el servidor

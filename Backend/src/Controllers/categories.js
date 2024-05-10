@@ -34,7 +34,19 @@ exports.crearCategoria = async (req, res) => {
     }
 
     const { name } = req.body;
+
+    // Verificar si se ha enviado un archivo en la solicitud
+    if (!req.file) {
+      // Si no se ha enviado ningún archivo, devolver un error 400 con un mensaje específico
+      return res.status(400).json({ error: 'No se ha proporcionado una imagen de categoría' });
+    }
+
     const url_imagen = req.file.filename; // Obtén solo el nombre del archivo
+
+    // Validación de campos vacíos
+    if (!name || !url_imagen) {
+      return res.status(400).json({ error: 'Los campos nombre y url_imagen son requeridos' });
+    }
 
     // Consulta SQL para insertar una nueva categoría
     const query = 'INSERT INTO categorias (name, url_imagen) VALUES (?, ?)';
@@ -49,7 +61,8 @@ exports.crearCategoria = async (req, res) => {
   }
 };
 
-// Función para editar una categoría
+
+
 // Función para editar una categoría
 exports.editarCategoria = async (req, res) => {
   try {
@@ -126,7 +139,7 @@ exports.eliminarCategoria = async (req, res) => {
     const [productResult] = await connection.execute(checkProductsQuery, [id]);
 
     if (productResult[0].productCount > 0) {
-      return res.status(200).json({ error: 'No se puede eliminar la categoría porque tiene productos asociados' });
+      return res.status(404).json({ error: 'No se puede eliminar la categoría porque tiene productos asociados' });
     }
 
     // Si no hay productos asociados, continuar con la eliminación de la categoría
@@ -136,36 +149,33 @@ exports.eliminarCategoria = async (req, res) => {
       return res.status(404).json({ error: 'La categoría no existe' });
     }
 
-    const imageName = categoryResult[0].url_imagen;
-    const imagePath = path.join(__dirname, '../../../Frontend/Frontend/public/images/CategoriaImagenes', imageName);
+    const imageName = categoryResult[0]?.url_imagen; // Uso de operador opcional "?." para evitar errores si categoryResult[0] es undefined
 
-    console.log('Ruta de la imagen:', imagePath);
-
-    // Verificar si el archivo existe antes de intentar eliminarlo
-    fs.unlink(imagePath, async (err) => {
-      if (err) {
-        console.error('Error al eliminar la imagen:', err);
-        return res.status(500).json({ error: 'Error interno al eliminar la imagen' });
-      } else {
-        console.log('Imagen eliminada correctamente');
-        try {
-          // Eliminar la categoría de la base de datos
-          await connection.execute(deleteQuery, [id]);
-          console.log('Categoría eliminada correctamente en la base de datos');
-          res.json({ message: 'Categoría y su imagen asociada eliminadas correctamente' });
-        } catch (error) {
-          console.error('Error al eliminar la categoría en la base de datos:', error);
-          res.status(500).json({ error: 'Error interno al eliminar la categoría en la base de datos' });
+    if (!imageName) {
+      console.log('La imagen de la categoría no se encontró en la ruta especificada.');
+    } else {
+      const imagePath = path.join(__dirname, '../../../Frontend/Frontend/public/images/CategoriaImagenes', imageName);
+      
+      // Verificar si el archivo existe antes de intentar eliminarlo
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error('Error al eliminar la imagen:', err);
+        } else {
+          console.log('Imagen eliminada correctamente:', imagePath);
         }
-      }
-    });
+      });
+    }
+
+    // Eliminar la categoría de la base de datos
+    await connection.execute(deleteQuery, [id]);
+    console.log('Categoría eliminada correctamente en la base de datos');
+    res.json({ message: 'Categoría eliminada correctamente' });
 
   } catch (error) {
     console.error('Error al eliminar la categoría:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
 
 
 
