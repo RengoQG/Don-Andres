@@ -1,0 +1,11 @@
+.editIcono{
+    background-color: #8ecae6;
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.editIcono:hover{
+    transition: 0.3s;
+    font-size: 20px;
+}

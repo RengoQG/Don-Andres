@@ -21,7 +21,7 @@ const TablaCategorias = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:6001/categoria/categorias");
+                const response = await axios.get("http://localhost:3000/categoria/categorias");
                 setCategorias(response.data);
             } catch (error) {
                 console.error("Error al obtener las categorías:", error);
@@ -33,7 +33,7 @@ const TablaCategorias = () => {
 
     const actualizarCategorias = async () => {
         try {
-            const response = await axios.get("http://localhost:6001/categoria/categorias");
+            const response = await axios.get("http://localhost:3000/categoria/categorias");
             setCategorias(response.data);
         } catch (error) {
             console.error("Error al obtener las categorías:", error);
@@ -66,7 +66,7 @@ const TablaCategorias = () => {
 
     const handleEliminarCategoria = async (categoriaId) => {
         try {
-            const response = await axios.delete(`http://localhost:6001/eliminarCategoria/eliminarCategoria/${categoriaId}`);
+            const response = await axios.delete(`http://localhost:3000/eliminarCategoria/eliminarCategoria/${categoriaId}`);
             if (response.status === 200) {
                 toast.success('Categoría eliminada exitosamente');
                 const updatedCategorias = categorias.filter(categoria => categoria.category_id !== categoriaId);

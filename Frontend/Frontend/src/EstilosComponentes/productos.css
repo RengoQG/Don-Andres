@@ -416,16 +416,16 @@
 @media (max-width: 768px) {
   .producto-container {
       flex-direction: column;
+      margin-top: -100px;
   }
 
   .producto-imagen {
-      margin-right: 0;
-      margin-bottom: 20px;
+      margin: 10px;
   }
 
   .prueba{
    width: 100%;
-   margin-top: 30px;
+   margin-top: -300px;
    flex-direction: column;
 }
 

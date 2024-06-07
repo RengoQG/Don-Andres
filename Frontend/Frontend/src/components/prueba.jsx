@@ -92,7 +92,7 @@ const BuscadorProductos = () => {
     if (inputValue.trim().length >= 3) {
       try {
         const response = await axios.post(
-          "http://localhost:6001/sugerencias/sugerencias",
+          "http://localhost:3000/sugerencias/sugerencias",
           {
             query: inputValue,
           }
@@ -129,7 +129,7 @@ const BuscadorProductos = () => {
   const handleMostrarTodosLosProductos = async (inputValue) => {
     try {
       const response = await axios.post(
-        "http://localhost:6001/sugerencias/sugerencias",
+        "http://localhost:3000/sugerencias/sugerencias",
         {
           query: inputValue,
         }
@@ -156,7 +156,7 @@ const BuscadorProductos = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:6001/searchName/search', {
+      const response = await axios.post('http://localhost:3000/searchName/search', {
         query: query
       });
       if (response.data.error) {
@@ -201,7 +201,7 @@ const BuscadorProductos = () => {
     setMostrarSugerencias(false);
     try {
       const response = await axios.post(
-        "http://localhost:6001/searchName/search",
+        "http://localhost:3000/searchName/search",
         {
           query: sugerencia,
         }
@@ -217,6 +217,7 @@ const BuscadorProductos = () => {
           setError("");
         }
         setTotalResultados(0);
+  
         // Filtrar elementos repetidos antes de agregar al historial
         const productosEnHistorial = response.data.map(producto => ({
           id: producto.product_id, // Usar el id como identificador único
@@ -224,9 +225,24 @@ const BuscadorProductos = () => {
           precio: producto.price,
           codigo: producto.codigo
         }));
-        const historialIds = historial.map(producto => producto.id);
-        const productosNuevos = productosEnHistorial.filter(producto => !historialIds.includes(producto.id));
+  
+        // Filtrar productos duplicados en la lista de sugerencias
+        const productosUnicos = [];
+        const idsVistos = new Set();
+        const nombresVistos = new Set();
+  
+        productosEnHistorial.forEach(producto => {
+          if (!idsVistos.has(producto.id) && !nombresVistos.has(producto.nombre)) {
+            idsVistos.add(producto.id);
+            nombresVistos.add(producto.nombre);
+            productosUnicos.push(producto);
+          }
+        });
+  
+        const historialNombres = historial.map(producto => producto.nombre);
+        const productosNuevos = productosUnicos.filter(producto => !historialNombres.includes(producto.nombre));
         setHistorial(prevHistorial => [...prevHistorial, ...productosNuevos]);
+  
         // Redireccionar al usuario después de agregar al historial
         setTimeout(() => {
           navigateTo(`/producto`, { state: { producto: response.data } });
@@ -238,12 +254,10 @@ const BuscadorProductos = () => {
       setError("Error al buscar productos.");
       console.error(error);
     }
-    setSugerenciaSeleccionada(null); 
-    setSugerenciaBajoCursor(null); 
-    setSeleccionConFlecha(false); 
+    setSugerenciaSeleccionada(null);
+    setSugerenciaBajoCursor(null);
+    setSeleccionConFlecha(false);
   };
-  
-  
   
   
   const handleClearInput = () => {
@@ -381,9 +395,9 @@ const BuscadorProductos = () => {
               </li>
             )}
             {/* Elemento de la lista para mostrar todos los productos */}
-            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
+            {/* <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
               Ver todos los productos: {totalResultados}
-            </li>
+            </li> */}
           </ul>
         )}
 

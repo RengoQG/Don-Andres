@@ -1,19 +1,50 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthGuard = ({ children }) => {
-  const isAuthenticated = () => {
-    // Verifica si el usuario está autenticado utilizando el token almacenado en el almacenamiento local
-    return localStorage.getItem('token') !== null;
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigateTo = useNavigate();
 
-  return isAuthenticated() ? (
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setIsAuthenticated(false);
+          navigateTo('/login');
+          return;
+        }
+
+        const response = await fetch('http://localhost:3000/profile', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          navigateTo('/login');
+        }
+      } catch (error) {
+        console.error('Error al verificar autenticación:', error);
+        setIsAuthenticated(false);
+        navigateTo('/login');
+      }
+    };
+
+    checkAuth();
+  }, [navigateTo]);
+
+  return isAuthenticated ? (
     <>
       {children}
     </>
-  ) : (
-    <Navigate to="/login" />
-  );
+  ) : null;
 };
 
 export default AuthGuard;

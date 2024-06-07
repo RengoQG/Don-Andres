@@ -8,7 +8,7 @@ const CategoriasComponent = ({ onChange }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:6001/categoria/categorias");
+        const response = await axios.get("http://localhost:3000/categoria/categorias");
         setCategorias(response.data);
       } catch (error) {
         console.error("Error al obtener las categorías:", error);
@@ -22,7 +22,7 @@ const CategoriasComponent = ({ onChange }) => {
     <div>
       <select onChange={onChange} className="opt">
         <option value="">Categorias</option>
-        <option value="*">Todas</option>
+        <option value="*">Todasll</option>
         {categorias.map((categoria, index) => (
           <option key={categoria.category_id} value={categoria.category_id}>{categoria.nameoll}</option>
         ))}

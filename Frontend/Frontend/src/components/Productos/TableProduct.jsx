@@ -25,7 +25,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:6001/obtenerProducto/listarProductos');
+                const response = await axios.get('http://localhost:3000/obtenerProducto/listarProductos');
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -36,7 +36,7 @@ const ProductList = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:6001/obtenerProducto/listarProductos');
+            const response = await axios.get('http://localhost:3000/obtenerProducto/listarProductos');
             setProducts(response.data);
         } catch (error) {
             console.error('Error al obtener productos:', error);
@@ -45,20 +45,23 @@ const ProductList = () => {
 
     const handleEliminarProductoClick = async (productId) => {
         try {
-            const response = await axios.delete(`http://localhost:6001/eliminarProducto/eliminarProducto/${productId}`);
-            if (response.data.error) {
-                return toast.error(response.data.error);
-            } else {
-                toast.success('producto eliminada exitosamente');
-                // Actualizar la lista de productos después de eliminar el producto
-                await fetchProducts();
-                // Establecer la página actual en 0 para mostrar desde el primer registro
-                setPage(0);
-            }
+          console.log(productId);
+          const response = await axios.delete(`http://localhost:3000/eliminarProducto/eliminarProducto/${productId}`);
+          if (response.data.error) {
+            return toast.error(response.data.error);
+          } else {
+            toast.success('Producto eliminado exitosamente');
+            // Actualizar la lista de productos después de eliminar el producto
+            await fetchProducts();
+            // Establecer la página actual en 0 para mostrar desde el primer registro
+            setPage(0);
+            fetchProducts();
+          }
         } catch (error) {
-            console.error("Error al eliminar el producto:", error);
+          console.error("Error al eliminar el producto:", error);
         }
-    };
+      };
+      
 
     const handleEditarProductoClick = (productId) => {
         setShowEditarProducto(!showEditarProducto);
@@ -66,54 +69,117 @@ const ProductList = () => {
         setProductoId(productId);
         setBotonTexto('Listar productos');
     };
-    
+
     const handleAgregarDetalleProductoClick = async (productId) => {
-        // Mostrar el cuadro de diálogo de SweetAlert
-        const { value: detalle_texto } = await Swal.fire({
+        const { value: option } = await Swal.fire({
             title: 'Agregar detalle de producto',
-            input: 'text',
-            inputLabel: 'Escribe el detalle:',
-            inputPlaceholder: 'Ingresa el detalle aquí',
+            input: 'select',
+            inputLabel: 'Selecciona una opción',
+            inputOptions: {
+                detalle: 'Detalle',
+                info: 'Información del producto',
+            },
             showCancelButton: true,
-            confirmButtonText: 'Agregar',
+            confirmButtonText: 'Seleccionar',
             cancelButtonText: 'Cancelar',
             inputValidator: (value) => {
                 if (!value) {
-                    return 'Debes ingresar un detalle';
+                    return 'Debes seleccionar una opción';
                 }
             }
         });
-
-        // Si se ingresó un detalle, enviarlo al servidor para agregarlo al producto
-        if (detalle_texto) {
-            try {
-                // Realizar la solicitud al servidor para agregar el detalle
-                const response = await axios.post('http://localhost:6001/agregarDestalleProducto/agregarDetalleProducto', {
-                    product_id: productId,
-                    detalle_texto
-                });
-
-                // Mostrar un mensaje de éxito si se agregó correctamente
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Detalle agregado correctamente',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-
-                // Actualizar la lista de productos después de agregar el detalle
-                // (puedes implementarlo según sea necesario)
-            } catch (error) {
-                // Mostrar un mensaje de error si ocurrió un problema al agregar el detalle
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error al agregar el detalle',
-                    text: error.message
-                });
+    
+        if (option === 'detalle') {
+            const { value: detalle_texto } = await Swal.fire({
+                title: 'Agregar detalle de producto',
+                input: 'text',
+                inputLabel: 'Escribe el detalle:',
+                inputPlaceholder: 'Ingresa el detalle aquí',
+                showCancelButton: true,
+                confirmButtonText: 'Agregar',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Debes ingresar un detalle';
+                    }
+                }
+            });
+    
+            if (detalle_texto) {
+                try {
+                    // Realizar la solicitud al servidor para agregar el detalle
+                    const response = await axios.post('http://localhost:3000/agregarDestalleProducto/agregarDetalleProducto', {
+                        product_id: productId,
+                        detalle_texto
+                    });
+    
+                    // Mostrar un mensaje de éxito si se agregó correctamente
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Detalle agregado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+    
+                    // Actualizar la lista de productos después de agregar el detalle
+                    fetchProducts();
+    
+                } catch (error) {
+                    // Mostrar un mensaje de error si ocurrió un problema al agregar el detalle
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al agregar el detalle',
+                        text: error.message
+                    });
+                }
+            }
+        } else if (option === 'info') {
+            const { value: { atributo_nombre, atributo_valor } } = await Swal.fire({
+                title: 'Agregar información del producto',
+                html:
+                    '<input id="swal-input1" class="swal2-input" placeholder="Nombre del atributo">' +
+                    '<input id="swal-input2" class="swal2-input" placeholder="Valor del atributo">',
+                focusConfirm: false,
+                preConfirm: () => {
+                    return {
+                        atributo_nombre: document.getElementById('swal-input1').value,
+                        atributo_valor: document.getElementById('swal-input2').value
+                    };
+                }
+            });
+    
+            if (atributo_nombre && atributo_valor) {
+                try {
+                    // Realizar la solicitud al servidor para agregar la información del producto
+                    const response = await axios.post('http://localhost:3000/agregarInfoProducto/agregarInfoProducto', {
+                        product_id: productId,
+                        atributo_nombre,
+                        atributo_valor
+                    });
+    
+                    // Mostrar un mensaje de éxito si se agregó correctamente
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Información del producto agregada correctamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+    
+                    // Actualizar la lista de productos después de agregar la información del producto
+                    fetchProducts();
+    
+                } catch (error) {
+                    // Mostrar un mensaje de error si ocurrió un problema al agregar la información del producto
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al agregar la información del producto',
+                        text: error.message
+                    });
+                }
             }
         }
     };
-
+    
     // Función auxiliar para mostrar el valor o el guion
     const renderCellValue = (value) => {
         return value || '-';
@@ -139,6 +205,11 @@ const ProductList = () => {
         setPage(0);
     };
 
+    // Iterar sobre los productos y mostrar los detalles de cada uno en la consola
+    products.forEach(product => {
+        console.log('Detalles del producto:', product.detalles);
+    });
+
     const handleBotonClick = () => {
         if (botonTexto === 'Listar productos') {
             setShowAgregarProducto(false);
@@ -151,15 +222,12 @@ const ProductList = () => {
             setBotonTexto('Listar productos');
         }
     };
-    
+
 
     return (
         <div>
             <ToastContainer />
-            {/* <Button variant="contained" className='btn-agregar-p' onClick={handleAgregarProductoClick}>
-                {botonTexto}
-            </Button> */}
-            <button className={`btn-agrgar-p ${botonTexto === 'Listar categorías' ? 'listarCategorias' : ''}`} onClick={handleBotonClick}>{botonTexto}</button>
+            <button className={`btn btn-info ${botonTexto === 'Listar categorías' ? 'listarCategorias' : ''}`} onClick={handleBotonClick}>{botonTexto}</button>
             {showTable && (
                 <div>
                     <TextField
@@ -179,39 +247,13 @@ const ProductList = () => {
                                     <TableCell>Nombre</TableCell>
                                     <TableCell>Descripción</TableCell>
                                     <TableCell>Precio</TableCell>
+                                    <TableCell>stock</TableCell>
                                     <TableCell>ID de Categoría</TableCell>
                                     <TableCell>URL de Imagen</TableCell>
                                     <TableCell>Código</TableCell>
-                                    <TableCell>Unidad</TableCell>
-                                    <TableCell>Cantidad</TableCell>
-                                    <TableCell>Infinito</TableCell>
-                                    <TableCell>Precio de Compra</TableCell>
-                                    <TableCell>Compra por Cantidad</TableCell>
-                                    <TableCell>Precio de Venta</TableCell>
-                                    <TableCell>Venta por Cantidad</TableCell>
-                                    <TableCell>Descuento</TableCell>
-                                    <TableCell>Impuesto1</TableCell>
-                                    <TableCell>Impuesto2</TableCell>
-                                    <TableCell>Impuesto3</TableCell>
-                                    <TableCell>Proveedor</TableCell>
-                                    <TableCell>Estante</TableCell>
-                                    <TableCell>Referencia</TableCell>
-                                    <TableCell>Personalizado1</TableCell>
-                                    <TableCell>Personalizado2</TableCell>
-                                    <TableCell>Usuario</TableCell>
-                                    <TableCell>Creado</TableCell>
-                                    <TableCell>Mínimo de Stock</TableCell>
-                                    <TableCell>Fecha de Vencimiento</TableCell>
-                                    <TableCell>Color</TableCell>
-                                    <TableCell>Usos Recomendados</TableCell>
-                                    <TableCell>Número de Teclas</TableCell>
-                                    <TableCell>Tamaño</TableCell>
-                                    <TableCell>Marca</TableCell>
-                                    <TableCell>Compatibilidad</TableCell>
-                                    <TableCell>Tecnología</TableCell>
-                                    <TableCell>Características</TableCell>
                                     <TableCell>Nombre de Categoría</TableCell>
-                                    {/* Agrega más encabezados aquí según tus necesidades */}
+                                    <TableCell>Atributos</TableCell>
+                                    <TableCell>Detalles</TableCell>
                                     <TableCell className='container__btn'>Acciones</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -220,42 +262,44 @@ const ProductList = () => {
                                     <TableRow key={product.product_id}>
                                         <TableCell>{product.product_id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
-                                        <TableCell>{renderCellValue(product.description)}</TableCell>
+                                        <TableCell>{product.descripcion}</TableCell>
                                         <TableCell>{product.price}</TableCell>
+                                        <TableCell>{product.stock}</TableCell>
                                         <TableCell>{product.category_id}</TableCell>
-                                        <TableCell>{product.image_url}</TableCell>
+                                        <TableCell>
+                                            <img
+                                                src={'../../../public/images/Productos/' + product.image_url}
+                                                alt="Imagen del producto"
+                                                style={{ maxWidth: '100px', maxHeight: '100px' }}
+                                            />
+                                        </TableCell>
                                         <TableCell>{product.codigo}</TableCell>
-                                        <TableCell>{product.unidad}</TableCell>
-                                        <TableCell>{renderCellValue(product.cantidad)}</TableCell>
-                                        <TableCell>{renderCellValue(product.infinito)}</TableCell>
-                                        <TableCell>{renderCellValue(product.precio_compra)}</TableCell>
-                                        <TableCell>{renderCellValue(product.compra_x_cantidad)}</TableCell>
-                                        <TableCell>{renderCellValue(product.precio_venta)}</TableCell>
-                                        <TableCell>{renderCellValue(product.venta_x_cantidad)}</TableCell>
-                                        <TableCell>{renderCellValue(product.descuento)}</TableCell>
-                                        <TableCell>{renderCellValue(product.impuesto1)}</TableCell>
-                                        <TableCell>{renderCellValue(product.impuesto2)}</TableCell>
-                                        <TableCell>{renderCellValue(product.impuesto3)}</TableCell>
-                                        <TableCell>{renderCellValue(product.proveedor)}</TableCell>
-                                        <TableCell>{renderCellValue(product.estante)}</TableCell>
-                                        <TableCell>{renderCellValue(product.referencia)}</TableCell>
-                                        <TableCell>{renderCellValue(product.personalizado1)}</TableCell>
-                                        <TableCell>{renderCellValue(product.personalizado2)}</TableCell>
-                                        <TableCell>{renderCellValue(product.usuario)}</TableCell>
-                                        <TableCell>{product.creado}</TableCell>
-                                        <TableCell>{product.minimo_stock}</TableCell>
-                                        <TableCell>{renderCellValue(product.fecha_vencimiento)}</TableCell>
-                                        <TableCell>{renderCellValue(product.color)}</TableCell>
-                                        <TableCell>{renderCellValue(product.usos_recomendados)}</TableCell>
-                                        <TableCell>{renderCellValue(product.numero_teclas)}</TableCell>
-                                        <TableCell>{renderCellValue(product.tamano)}</TableCell>
-                                        <TableCell>{renderCellValue(product.marca)}</TableCell>
-                                        <TableCell>{renderCellValue(product.compatibilidad)}</TableCell>
-                                        <TableCell>{renderCellValue(product.tecnologia)}</TableCell>
-                                        <TableCell>{renderCellValue(product.caracteristicas)}</TableCell>
-                                        <TableCell>{renderCellValue(product.nombre_categoria)}</TableCell>
-                                        {/* Agrega más celdas aquí según tus necesidades */}
-                                        {/* Agrega más celdas aquí según tus necesidades */}
+                                        <TableCell>{product.nombre_categoria}</TableCell>
+                                        <TableCell>
+                                            {/* Renderizar atributos */}
+                                            {product.atributos && product.atributos.length > 0 ? (
+                                                product.atributos.map((atributo, index) => (
+                                                    <div key={index}>
+                                                        <strong>{atributo.nombre}: </strong>
+                                                        {atributo.valor}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div>No hay atributos disponibles</div>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* Renderizar detalles */}
+                                            {product.detalles ? (
+                                                product.detalles.map((detalle, index) => (
+                                                    <div key={index}>
+                                                        {detalle}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div>No hay detalles disponibles</div>
+                                            )}
+                                        </TableCell>
                                         <TableCell className='icon__containerP'>
                                             <button className='iconEditP' onClick={() => handleEditarProductoClick(product.product_id)}>
                                                 <FontAwesomeIcon icon={faEdit} />
@@ -285,10 +329,12 @@ const ProductList = () => {
                 </div>
             )}
 
-            {showEditarProducto && <Editar setShowTable={setShowTable} productId={productoId} actualizarProductos={fetchProducts} />}
-            {showAgregarProducto && <AgregarProducto setShowTable={setShowTable} actualizarProductos={fetchProducts}/>}
+            {showEditarProducto && <Editar setShowTable={setShowTable} showEditarProducto={showEditarProducto} productId={productoId} actualizarProductos={fetchProducts} />}
+            {showAgregarProducto && <AgregarProducto setShowTable={setShowTable} setBotonTexto={setBotonTexto} setShowAgregarProducto={setShowAgregarProducto} actualizarProductos={fetchProducts} />}
         </div>
     );
+
+
 };
 
 export default ProductList;

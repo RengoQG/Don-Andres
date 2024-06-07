@@ -1,0 +1,169 @@
+.product-list {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.product-list-container {
+  display: flex;
+}
+
+.category-panel {
+  width: 250px; /* Ancho del panel de categorías */
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.category-panel h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.category-panel select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(900px, 1fr)); /* Ajuste del ancho de las tarjetas */
+  gap: 20px;
+}
+
+.product-card {
+  width: 100%; /* Ajuste del ancho de las tarjetas */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  width: 90%; /* Ancho deseado para la imagen */
+  height: 200px;
+  object-fit: cover; /* Ajuste para cubrir la imagen sin recortar */
+  border-radius: 8px 0 0 8px; /* Redondear esquinas de la imagen a la izquierda */
+}
+
+.product-details {
+  padding: 20px;
+  width: 50%;
+}
+
+.contenidoProducto{
+  display: flex;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.imagenProducto{
+  padding: 20px;
+  width: 50%;
+}
+
+.product-details h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.product-details p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.product-details button {
+  background-color: #45a049;
+  margin-top: 165px;
+  color: #FFF;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+  width: 90%;
+}
+
+.product-details button:hover {
+  background-color: #ddb347;
+}
+
+/* Estilos específicos para móviles */
+@media (max-width: 600px) {
+  .product-list-container {
+    flex-direction: column;
+  }
+
+  .category-panel {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .products {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contenidoProducto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .imagenProducto img {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-details {
+    text-align: center;
+  }
+}
+
+/* Estilos específicos para tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .product-list-container {
+    flex-direction: column;
+  }
+
+  .category-panel {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .contenidoProducto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    margin-bottom: 20px;
+  }
+
+  .imagenProducto img {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-details {
+    text-align: center;
+  }
+}
+
+

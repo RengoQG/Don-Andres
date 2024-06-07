@@ -1,54 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../EstilosComponentes/agregarProducto.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../../EstilosComponentes/agregarProducto.css';
 
-const AgregarProducto = ({ setShowTable }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        category_id: '',
-        description: '',
-        price: '',
-        codigo: '',
-        unidad: '',
-        cantidad: '',
-        // Agrega los campos adicionales aquí
-        infinito: 0,
-        precio_compra: '',
-        compra_x_cantidad: '',
-        precio_venta: '',
-        venta_x_cantidad: '',
-        descuento: '',
-        impuesto1: '',
-        impuesto2: '',
-        impuesto3: '',
-        proveedor: '',
-        estante: '',
-        referencia: '',
-        personalizado1: '',
-        personalizado2: '',
-        usuario: '',
-        minimo_stock: '',
-        fecha_vencimiento: '',
-        color: '',
-        usos_recomendados: '',
-        numero_teclas: '',
-        tamano: '',
-        marca: '',
-        compatibilidad: '',
-        tecnologia: '',
-        caracteristicas: ''
-    });
-
-    const [file, setFile] = useState(null);
+const AgregarProducto = ({ setShowTable, setShowAgregarProducto, actualizarProductos, setBotonTexto }) => {
+    const [name, setName] = useState('');
+    const [codigo, setCodigo] = useState('');
+    const [atributos, setAtributos] = useState([]);
+    const [category_id, setCategoryId] = useState('');
+    const [price, setPrice] = useState('');
+    const [stock, setStock] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    const [imagen, setImagen] = useState(null);
     const [error, setError] = useState('');
     const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
         async function fetchCategorias() {
             try {
-                const response = await axios.get('http://localhost:6001/categoria/categorias');
+                const response = await axios.get('http://localhost:3000/categoria/categorias');
                 setCategorias(response.data);
             } catch (error) {
                 console.error('Error al obtener las categorías:', error);
@@ -58,288 +29,165 @@ const AgregarProducto = ({ setShowTable }) => {
         fetchCategorias();
     }, []);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleAtributosChange = (e, index) => {
+        const { name, value } = e.target;
+        const newAtributos = [...atributos];
+        newAtributos[index] = { ...newAtributos[index], [name]: value };
+        setAtributos(newAtributos);
     };
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleAddAtributo = () => {
+        setAtributos([...atributos, { atributo_nombre: '', atributo_valor: '' }]);
+    };
+
+    const handleRemoveAtributo = (index) => {
+        const newAtributos = [...atributos];
+        newAtributos.splice(index, 1);
+        setAtributos(newAtributos);
+    };
+
+    const handleImageChange = (e) => {
+        setImagen(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const formDataWithFile = new FormData();
-            formDataWithFile.append('imagen', file);
-            for (const key in formData) {
-                formDataWithFile.append(key, formData[key]);
-            }
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('codigo', codigo);
+        formData.append('category_id', category_id);
+        formData.append('price', price);
+        formData.append('stock', stock);
+        formData.append('descripcion', descripcion);
+        formData.append('imagen', imagen);
 
-            const response = await axios.post('http://localhost:6001/agregarProducto/agregarProducto', formDataWithFile, {
+        atributos.forEach((atributo, index) => {
+            formData.append(`atributos[${index}][atributo_nombre]`, atributo.atributo_nombre);
+            formData.append(`atributos[${index}][atributo_valor]`, atributo.atributo_valor);
+        });
+
+        try {
+            const response = await axios.post('http://localhost:3000/agregarProducto/agregarProducto', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
-            console.log(response.data); // Maneja la respuesta del servidor según lo necesites
-
-            setShowTable(true); // Mostrar la tabla después de agregar el producto
-
+            setShowTable(true);
+            setShowAgregarProducto(false);
+            actualizarProductos();
+            setBotonTexto('Agregar producto');
+            // Limpiar el formulario después de agregar el producto
+            setName('');
+            setCodigo('');
+            setAtributos([]);
+            setCategoryId('');
+            setPrice('');
+            setStock('');
+            setDescripcion('');
+            setImagen(null);
+            setError('');
         } catch (error) {
-            console.error('Error al agregar el producto:', error);
-            toast.error(error.response.data.error);
-            setError('Error al agregar el producto');
+            toast.error('Error al agregar el producto:', error);
+            setError('Error al agregar el producto. Por favor, revisa los campos y vuelve a intentarlo.');
         }
     };
 
     return (
-        <div class="container">
-            <ToastContainer />
+        <div className="add-product-container">
             <h2>Agregar Producto</h2>
-            <form onSubmit={handleSubmit} className='form-control'>
-                {/* Campos existentes */}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Nombre:</label>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
+            {error && <div className="error">{error}</div>}
+            <form onSubmit={handleSubmit}>
+                <div className="form-row">
+                    <div>
+                        <label className="required-label">
+                            Nombre:
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="required-input" required />
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label>
+                    <div>
+                        <label className="required-label">
+                            Código:
+                            <input type="text" value={codigo} onChange={(e) => setCodigo(e.target.value)} className="required-input" required />
+                        </label>
+                    </div>
+                    <div>
+                        <label className="required-label">
+                            Atributos:
+                            {atributos.map((atributo, index) => (
+                                <div key={index}>
+                                    <input
+                                        type="text"
+                                        name="atributo_nombre"
+                                        placeholder="Nombre del atributo"
+                                        value={atributo.atributo_nombre}
+                                        onChange={(e) => handleAtributosChange(e, index)}
+                                        className="required-input"
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        name="atributo_valor"
+                                        placeholder="Valor del atributo"
+                                        value={atributo.atributo_valor}
+                                        onChange={(e) => handleAtributosChange(e, index)}
+                                        className="required-input"
+                                        required
+                                    />
+                                    <button type="button" onClick={() => handleRemoveAtributo(index)}>Eliminar</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={handleAddAtributo}>Agregar Atributo</button>
+                        </label>
+                    </div>
+                    <div>
+                        <label className="required-label">
                             Categoría:
-                            <select name="category_id" value={formData.category_id} onChange={handleChange}>
+                            <select value={category_id} onChange={(e) => setCategoryId(e.target.value)} className="required-input" required>
+                                <option value="">Selecciona una categoría</option>
                                 {categorias.map((categoria) => (
-                                    <option key={categoria.category_id} value={categoria.category_id}>
-                                        {categoria.name}
-                                    </option>
+                                    <option key={categoria.category_id} value={categoria.category_id}>{categoria.name}</option>
                                 ))}
                             </select>
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label>
-                            Descripción:
-                            <input type="text" name="description" value={formData.description} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
+                    <div>
+                        <label className="required-label">
                             Precio:
-                            <input type="text" name="price" value={formData.price} onChange={handleChange} />
+                            <input type="text" value={price} onChange={(e) => setPrice(e.target.value)} className="required-input" required />
                         </label>
+                    </div>
+                    <div>
+                        <label className="required-label">
+                            Stock:
+                            <input type="text" value={stock} onChange={(e) => setStock(e.target.value)} className="required-input" required />
+                        </label>
+                    </div>
+                    <div>
+                        <label className="required-label">
+                            Descripción:
+                            <textarea
+                                name="descripcion"
+                                value={descripcion}
+                                onChange={(e) => setDescripcion(e.target.value)}
+                                className="required-input"
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div>
+                        <label className="required-label">
+                            Imagen:
+                            <input type="file" accept="image/*" onChange={handleImageChange} className="required-input" required />
+                        </label>
+                    </div>
+                    <div>
+                        <button type="submit">Agregar Producto</button>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Unidad:
-                            <input type="text" name="unidad" value={formData.unidad} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Cantidad:
-                            <input type="text" name="cantidad" value={formData.cantidad} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Infinito:
-                            <select name="infinito" value={formData.infinito} onChange={handleChange}>
-                                <option value="1">Sí</option>
-                                <option value="0">No</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Precio de compra:
-                            <input type="text" name="precio_compra" value={formData.precio_compra} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Compra por cantidad:
-                            <input type="text" name="compra_x_cantidad" value={formData.compra_x_cantidad} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Precio de venta:
-                            <input type="text" name="precio_venta" value={formData.precio_venta} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <label>
-                                Codigo:
-                                <input type="text" name="codigo" value={formData.codigo} onChange={handleChange} />
-                            </label>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Venta por cantidad:
-                            <input type="text" name="venta_x_cantidad" value={formData.venta_x_cantidad} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Descuento:
-                            <input type="text" name="descuento" value={formData.descuento} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Impuesto 1:
-                            <input type="text" name="impuesto1" value={formData.impuesto1} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Impuesto 2:
-                            <input type="text" name="impuesto2" value={formData.impuesto2} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Impuesto 3:
-                            <input type="text" name="impuesto3" value={formData.impuesto3} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Proveedor:
-                            <input type="text" name="proveedor" value={formData.proveedor} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Estante:
-                            <input type="text" name="estante" value={formData.estante} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Referencia:
-                            <input type="text" name="referencia" value={formData.referencia} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Personalizado 1:
-                            <input type="text" name="personalizado1" value={formData.personalizado1} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Personalizado 2:
-                            <input type="text" name="personalizado2" value={formData.personalizado2} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Usuario:
-                            <input type="text" name="usuario" value={formData.usuario} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Mínimo de stock:
-                            <input type="text" name="minimo_stock" value={formData.minimo_stock} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Fecha de vencimiento:
-                            <input type="date" name="fecha_vencimiento" value={formData.fecha_vencimiento} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Color:
-                            <input type="text" name="color" value={formData.color} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Usos recomendados:
-                            <input type="text" name="usos_recomendados" value={formData.usos_recomendados} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Número de teclas:
-                            <input type="text" name="numero_teclas" value={formData.numero_teclas} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Tamaño:
-                            <input type="text" name="tamano" value={formData.tamano} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>
-                            Marca:
-                            <input type="text" name="marca" value={formData.marca} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Compatibilidad:
-                            <input type="text" name="compatibilidad" value={formData.compatibilidad} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Tecnología:
-                            <input type="text" name="tecnologia" value={formData.tecnologia} onChange={handleChange} />
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Características:
-                            <input type="text" name="caracteristicas" value={formData.caracteristicas} onChange={handleChange} />
-                        </label>
-                    </div>
-                </div>
-                {/* Fin de campos adicionales */}
-                <div class="form-group">
-                    <label>
-                        Imagen:
-                        <input type="file" onChange={handleFileChange} />
-                    </label>
-                </div>
-                <button type="submit">Agregar Producto</button>
             </form>
-            <br />
-            <h4>Puedes agregar detalles extra</h4>
-            <div>
-                <form action="">
-                    <label htmlFor="">HOLA</label>
-                </form>
-            </div>
         </div>
-
     );
-
-
-
 };
 
 export default AgregarProducto;

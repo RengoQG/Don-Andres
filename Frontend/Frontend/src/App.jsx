@@ -72,14 +72,7 @@ const Header = () => {
               </div>
               <div className="rd-navbar-main-element">
                 <div className="rd-navbar-nav-wrap">
-                  <div className="rd-navbar-share fl-bigmug-line-share27" data-rd-navbar-toggle=".rd-navbar-share-list">
-                    <ul className="list-inline rd-navbar-share-list">
-                      <li className="rd-navbar-share-list-item"><a className="icon fa fa-facebook" href="#"></a></li>
-                      <li className="rd-navbar-share-list-item"><a className="icon fa fa-twitter" href="#"></a></li>
-                      <li className="rd-navbar-share-list-item"><a className="icon fa fa-google-plus" href="#"></a></li>
-                      <li className="rd-navbar-share-list-item"><a className="icon fa fa-instagram" href="#"></a></li>
-                    </ul>
-                  </div>
+                  {/*  */}
                   <ul className="rd-navbar-nav">
                     {/* <li className="serachMobil"><Search /></li> */}
                     <li className="rd-nav-item active"><a className="rd-nav-link" href="/">Inicio</a></li>
@@ -89,7 +82,7 @@ const Header = () => {
                         <FontAwesomeIcon icon={faSignInAlt} />Iniciar
                       </a>
                     </li>
-                    <li className="rd-nav-item"><a className="rd-nav-link" href="#services">Contactanos</a></li>
+                    <li className="rd-nav-item"><a className="rd-nav-link" href="#contactanos">Contactanos</a></li>
                     <li className="rd-nav-item"><a className="rd-nav-link" href="#projects">Tienda</a></li>
                     {/* <li className="rd-nav-item">
                       <CategoriasComponent onChange={toggleCategorias} />

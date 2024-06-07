@@ -1,28 +1,30 @@
 import React from 'react';
 
 const CtaSection = () => {
-    useEffect(() => {
-        // Cargar los archivos JavaScript necesarios
-        const loadScripts = () => {
-          const script1 = document.createElement("script");
-          script1.src = "../../public/js/script.js";
-          script1.async = true;
-          document.body.appendChild(script1);
-    
-          const script2 = document.createElement("script");
-          script2.src = "../../public/js/core.min.js";
-          script2.async = true;
-          document.body.appendChild(script2);
-        };
-    
-        loadScripts();
-    
-        // Limpiar los scripts cuando el componente se desmonta
-        return () => {
-          const scripts = document.querySelectorAll("script[src^='public/js']");
-          scripts.forEach(script => document.body.removeChild(script));
-        };
-      }, []);
+    // useEffect(() => {
+    //     // Cargar los archivos JavaScript necesarios
+    //     const loadScripts = async () => {
+    //         const script1 = document.createElement('script');
+    //         script1.src = `${import.meta.env.BASE_URL}js/script.js`; // Cargar script.js desde la carpeta public/js
+    //         script1.async = true;
+    //         document.body.appendChild(script1);
+        
+    //         const script2 = document.createElement('script');
+    //         script2.src = `${import.meta.env.BASE_URL}js/core.min.js`; // Cargar core.min.js desde la carpeta public/js
+    //         script2.async = true;
+    //         document.body.appendChild(script2);
+    //     };
+        
+          
+    //       loadScripts();
+          
+    //       // Limpiar los scripts cuando el componente se desmonta
+    //       return () => {
+    //         const scripts = document.querySelectorAll("script[src^='/js/']");
+    //         scripts.forEach((script) => document.body.removeChild(script));
+    //       };
+          
+    //   }, []);
 
       return (
         <section className="section section-sm section-fluid bg-default text-center" id="projects">

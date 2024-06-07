@@ -9,26 +9,9 @@ const Footer = () => {
             <ul className="footer-list-category-2">
               <li>
                 <a href="#">Horizon solutions.</a>
-                <p>Llamanos: 9999999</p>
-                <p>prueba@gmail.com</p>
-                <p>Calle de tu corazon</p>
-                </li>
-              <li>
-                <a href="#">Productos.</a>
-                <p>Teclados</p>
-                <p>Computadores</p>
-                <p>Plays</p>
-                </li>
-              <li>
-                <a href="#">Nuestra empresa.</a>
-                <p>Quienes somos</p>
-                <p>Devoluciones y garantias</p>
-                <p>Terminos y condiciones</p>
-                </li>
-              <li>
-                <a href="#">Su cuenta.</a>
-                <p>Mi cuenta</p>
-                <p>Mis favoritos</p>
+                <p>Llamanos: 3006236655</p>
+                <p>Horizonsolutions.soporte@gmail.com</p>
+                <p>Calle 77ab # 90a 17</p>
                 </li>
             </ul>
           </div>
@@ -37,10 +20,10 @@ const Footer = () => {
               <div className="col-sm-6 col-md-4 text-sm-right text-md-center">
                 <div>
                   <ul className="list-inline list-inline-sm footer-social-list-2">
-                    <li><a className="icon fa fa-facebook" href="#"></a></li>
-                    <li><a className="icon fa fa-twitter" href="#"></a></li>
-                    <li><a className="icon fa fa-google-plus" href="#"></a></li>
-                    <li><a className="icon fa fa-instagram" href="#"></a></li>
+                    <li><a className="icon fa fa-facebook" href="https://www.facebook.com/horizonsolutions0109?mibextid=ZbWKwL"></a></li>
+                    {/* <li><a className="icon fa fa-twitter" href="#"></a></li> */}
+                     <li><a className="icon fa fa-google-plus" href="https://g.co/kgs/Z14u8nz"></a></li> 
+                    <li><a className="icon fa fa-instagram" href="https://www.instagram.com/horizonsolutions0109?igsh=YXV0OGkyZjh6aXY="></a></li>
                   </ul>
                 </div>
               </div>

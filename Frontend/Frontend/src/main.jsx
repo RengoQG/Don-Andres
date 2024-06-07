@@ -25,6 +25,7 @@ import Prueba3 from './components/Productos/agregarProducto.jsx';
 import Buscar from './components/search.jsx';
 import NewProduct from './components/ProductosNuevos.jsx';
 import Contact from './components/Contactanos.jsx';
+import Allproduct from './components/Allproducts.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
@@ -86,6 +87,15 @@ const SesionMain = () => (
   </div>
 );
 
+const AllproductMain = () => (
+  <div>
+    <Prueba2 />
+    <App />
+    <Allproduct />
+    <Footer />
+  </div>
+);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
       <Router>
@@ -102,6 +112,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/prueba" element={<Prueba2 />} />
           <Route path="/prueba2" element={<Prueba3 />} />
           <Route path="/producto" element={<ProductMain />} />
+          <Route path="/Allproducto" element={<AllproductMain />} />
         </Routes>
       </Router>
   </React.StrictMode>

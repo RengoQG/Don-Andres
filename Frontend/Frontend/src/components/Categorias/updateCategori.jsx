@@ -57,7 +57,7 @@ const EditarCategoriaForm = ({ categoria, onCategoriaActualizada, onClose }) => 
 
     try {
       // Enviar una solicitud PUT para actualizar la categoría
-      const response = await axios.put(`http://localhost:6001/editarCategoria/categoria/${categoria.category_id}`, formData);
+      const response = await axios.put(`http://localhost:3000/editarCategoria/categoria/${categoria.category_id}`, formData);
       console.log('Respuesta del servidor:', response.data);
       toast.success('Categoría actualizada correctamente');
 

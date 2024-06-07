@@ -9,8 +9,9 @@ const ProductosFetcher = ({ children }) => {
     const fetchData = async () => {
       try {
         const [categoriasResponse, productosResponse] = await Promise.all([
-          axios.get('http://localhost:6001/categoria/categorias'),
-          axios.get('http://localhost:6001/producto/products')
+          axios.get('http://localhost:3000/categoria/categorias'),
+          axios.get('http://localhost:3000/obtenerProducto/listarProductos')
+          // axios.get('http://localhost:3000/producto/products')
         ]);
 
         setCategorias(categoriasResponse.data);

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import CryptoJS from 'crypto-js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,11 +13,12 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessageShown, setErrorMessageShown] = useState(false);
-  const [fieldsAreNotEmpty, setFieldsAreNotEmpty] = useState(false); // Nuevo estado para controlar si los campos no están vacíos
+  const [fieldsAreNotEmpty, setFieldsAreNotEmpty] = useState(false); 
+
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    // Cuando el componente se monta, comprueba si hay un correo electrónico y contraseña guardados y los prellena
+    // check for saved email and password
     const storedEmail = localStorage.getItem('rememberedEmail');
     const storedPassword = localStorage.getItem('rememberedPassword');
     if (storedEmail && storedPassword) {
@@ -26,12 +27,12 @@ const Login = () => {
       setEmail(decryptedEmail);
       setPassword(decryptedPassword);
       setRememberMe(true);
-      setFieldsAreNotEmpty(true); // Actualizar estado de campos no vacíos
+      setFieldsAreNotEmpty(true);
     }
   }, []);
 
   useEffect(() => {
-    // Actualizar estado de campos no vacíos cada vez que cambien los valores de correo electrónico y contraseña
+    // Update state of fieldsAreNotEmpty whenever email and password change
     setFieldsAreNotEmpty(email.trim() !== '' && password.trim() !== '');
   }, [email, password]);
 
@@ -44,48 +45,51 @@ const Login = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post('http://localhost:6001/users/login', {
+      const response = await axios.post('http://localhost:3000/users/login', {
         email,
         password
       });
 
       localStorage.setItem('token', response.data.token);
 
-      console.log('Usuario autenticado:', response.data.user);
+      console.log('Usuario autenticado:', response.data);
       navigateTo('/inicio', { state: { user: response.data.user } });
 
-      // Si la casilla de verificación "Recordarme" está marcada, guarda el correo electrónico y la contraseña en el almacenamiento local
+      // If "Remember Me" checkbox is checked, save email and password to localStorage
       if (rememberMe) {
         const encryptedEmail = CryptoJS.AES.encrypt(email, 'secret_key').toString();
         const encryptedPassword = CryptoJS.AES.encrypt(password, 'secret_key').toString();
         localStorage.setItem('rememberedEmail', encryptedEmail);
         localStorage.setItem('rememberedPassword', encryptedPassword);
       } else {
-        // Si la casilla de verificación "Recordarme" no está marcada, elimina el correo electrónico y la contraseña guardados
+        // If "Remember Me" checkbox is unchecked, remove saved email and password
         localStorage.removeItem('rememberedEmail');
         localStorage.removeItem('rememberedPassword');
       }
     } catch (error) {
       toast.error('Credenciales inválidas');
       setErrorMessageShown(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleRememberMeChange = () => {
-    // Verificar si los campos de correo electrónico y contraseña están vacíos
+    // Check if email and password fields are empty
     if (!fieldsAreNotEmpty) {
       alert("No puedes recordar credenciales si los campos de correo electrónico y contraseña están vacíos.");
       return;
     }
 
-    // Si los campos no están vacíos, permitir cambiar el estado de "Recordarme"
+    // Toggle "Remember Me" state
     const newRememberMe = !rememberMe;
     setRememberMe(newRememberMe);
 
+    // Show confirmation dialog if unchecking "Remember Me"
     if (!newRememberMe) {
       const confirmation = window.confirm("¿Seguro que deseas desactivar la opción 'Recordarme'? Esto eliminará tus credenciales guardadas.");
       if (!confirmation) {
-        // Si el usuario cancela, vuelve a activar la opción 'Recordarme'
+        // If user cancels, re-enable "Remember Me"
         setRememberMe(true);
         return;
       }
@@ -143,19 +147,18 @@ const Login = () => {
             id="rememberMe"
             checked={rememberMe}
             onChange={handleRememberMeChange}
-            disabled={!fieldsAreNotEmpty} // Deshabilitar la casilla si los campos están vacíos
+            disabled={!fieldsAreNotEmpty}
           />
           <label htmlFor="rememberMe">Recordarme</label>
-          
         </div>
         <div className='mb-3'>
-          <a href="/reset">¿Olvidaste tu contraseña?</a>
+          {/* <a href="/reset">¿Olvidaste tu contraseña?</a> */}
         </div>
         <div className="button__group">
           <button type="submit" className="button__login" disabled={isSubmitting}>
             {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>
-          <button type="button" className="button__register" onClick={() => navigateTo('/register')}>Registrarse</button>
+          {/* <button type="button" className="button__register" onClick={() => navigateTo('/register')}>Registrarse</button> */}
         </div>
       </form>
     </div>

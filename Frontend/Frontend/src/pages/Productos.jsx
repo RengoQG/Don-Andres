@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const ProjectsSection = ({ categorias, productos }) => {
   const [filtroActivo, setFiltroActivo] = useState(false);
-
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState('*');
 
   const toggleFiltro = () => {
     const ulElement = document.getElementById('isotope-3');
@@ -18,6 +17,10 @@ const ProjectsSection = ({ categorias, productos }) => {
 
     // Actualizamos el estado para reflejar el cambio
     setFiltroActivo(!tieneClaseActive);
+  };
+
+  const handleFilter = (filter) => {
+    setFiltroSeleccionado(filter);
   };
 
   const handleOutsideClick = (event) => {
@@ -36,72 +39,49 @@ const ProjectsSection = ({ categorias, productos }) => {
   const listaFiltrosClases = filtroActivo ? 'isotope-filters-list active' : 'isotope-filters-list';
   const botonFiltroClases = filtroActivo ? 'isotope-filters-toggle button button-md button-icon button-icon-right button-default-outline button-wapasha active' : 'isotope-filters-toggle button button-md button-icon button-icon-right button-default-outline button-wapasha';
 
-
   return (
     <section className="section section-sm section-fluid bg-default text-center" id="projects">
       <div className="container-fluid">
         <h2 className="wow fadeInLeft">Nuestras categorias</h2>
+
         <div className="isotope-filters isotope-filters-horizontal">
-          <button className={botonFiltroClases} onClick={toggleFiltro} data-custom-toggle="#isotope-3" data-custom-toggle-hide-on-blur="true" data-custom-toggle-disable-on-blur="true"><span className="icon fa fa-caret-down"></span>Filter</button>
+        {/* <button className={botonFiltroClases} onClick={toggleFiltro} data-custom-toggle="#isotope-3" data-custom-toggle-hide-on-blur="true" data-custom-toggle-disable-on-blur="true"><span className="icon fa fa-caret-down"></span>Filtrar</button> */}
+        {/* <button
+            className="isotope-filters-toggle button button-md button-icon button-icon-right button-default-outline button-wapasha"
+            data-custom-toggle="#isotope-3"
+            data-custom-toggle-hide-on-blur="true"
+            data-custom-toggle-disable-on-blur="true"
+          > */}
+            {/* <span className="icon fa fa-caret-down"></span>Filter
+          </button> */}
+
           <ul className={listaFiltrosClases} id="isotope-3">
-
-            <li><a className="active" href="#" data-isotope-filter="*" data-isotope-group="gallery">Todas</a></li>
             {categorias.map((categoria) => (
-              <li key={categoria.category_id}><a href="#" data-isotope-filter={`Type ${categoria.category_id}`} data-isotope-group="gallery">{categoria.name}</a></li>
-            ))}
-
+              <li key={categoria.category_id}>
+                <a data-isotope-filter={`Type 3`} data-isotope-group="gallery">
+                  {categoria.name}
+                </a>
+              </li>
+            ))}           
           </ul>
+
         </div>
-        <div className="row row-30 isotope" data-isotope-layout="fitRows" data-isotope-group="gallery" data-lightgallery="group">
-          {/* Mapeo de productos */}
-          <div key="1" className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInRight" data-filter={`Type 1`}>
+        <div className="row row-30 isotope m-3" data-isotope-layout="fitRows" data-isotope-group="gallery" data-lightgallery="group">
+          {categorias.map((categoria) => (
+          <div key={categoria.category_id} className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInLeft" data-filter="Type 3" data-wow-delay=".3s">
             <article className="thumbnail thumbnail-classic thumbnail-md">
               <div className="thumbnail-classic-figure">
-                <img src="images/A01.png" alt="" width="420" height="350" />
+                <img src={`../../public/images/CategoriaImagenes/${categoria.url_imagen}`} alt="" width="420" height="350" />
               </div>
-              <h4 className='text-center'>Computadores</h4>
               <div className="thumbnail-classic-caption">
                 <div className="thumbnail-classic-title-wrap">
-                  <a className="icon fl-bigmug-line-zoom60" href="" data-lightgallery="item" data-src="">
-                    <img src="" alt="" width="420" height="350" />
-                  </a>
-                  <h5 className="thumbnail-classic-title"><a href="#">Prueba</a></h5>
+                  <h5 className="thumbnail-classic-title"><a href="Allproducto">{categoria.name}</a></h5>
+                  {/* <p className="thumbnail-classic-title"><a href="Allproducto">Conoce más sobre nuestras categorías y productos.</a></p> */}
                 </div>
               </div>
             </article>
           </div>
-          <div key="2" className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInRight" data-filter={`Type 2`}>
-            <article className="thumbnail thumbnail-classic thumbnail-md">
-              <div className="thumbnail-classic-figure">
-                <img src="images/A01.png" alt="" width="420" height="350" />
-              </div>
-              <h4 className='text-center'>Teclados</h4>
-              <div className="thumbnail-classic-caption">
-                <div className="thumbnail-classic-title-wrap">
-                  <a className="icon fl-bigmug-line-zoom60" href="" data-lightgallery="item" data-src="">
-                    <img src="" alt="" width="420" height="350" />
-                  </a>
-                  <h5 className="thumbnail-classic-title"><a href="#">Prueba</a></h5>
-                </div>
-              </div>
-            </article>
-          </div>
-          <div key="3" className="col-sm-6 col-lg-4 col-xxl-3 isotope-item wow fadeInRight" data-filter={`Type 3`}>
-            <article className="thumbnail thumbnail-classic thumbnail-md">
-              <div className="thumbnail-classic-figure">
-                <img src="images/A01.png" alt="" width="420" height="350" />
-              </div>
-              <h4 className='text-center'>Tarjetas madre</h4>
-              <div className="thumbnail-classic-caption">
-                <div className="thumbnail-classic-title-wrap">
-                  <a className="icon fl-bigmug-line-zoom60" href="" data-lightgallery="item" data-src="">
-                    <img src="" alt="" width="420" height="350" />
-                  </a>
-                  <h5 className="thumbnail-classic-title"><a href="#">Prueba</a></h5>
-                </div>
-              </div>
-            </article>
-          </div>
+          ))}
         </div>
       </div>
     </section>

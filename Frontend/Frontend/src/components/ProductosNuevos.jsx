@@ -7,7 +7,7 @@ const NewProductsSection = () => {
     useEffect(() => {
         const fetchNewProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:6001/nuevosProductos/nuevosProductos');
+                const response = await axios.get('http://localhost:3000/nuevosProductos/nuevosProductos');
                 setNewProducts(response.data);
             } catch (error) {
                 console.error('Error al obtener los productos nuevos:', error);
@@ -25,13 +25,13 @@ const NewProductsSection = () => {
                     {newProducts.map(product => (
                         <div key={product.product_id} className="col-sm-6 col-lg-4 wow fadeInLeft">
                             <article className="post post-modern">
-                                <a className="post-modern-figure" href="#">
-                                    <img src="../../public/images/A01.png" alt={product.name} width="370" height="307" />
+                                <a className="post-modern-figure" href="allproducto">
+                                    <img src={`../../public/images/Productos/${product.image_url}`} alt={product.name} width="370" height="307" />
                                     <div className="post-modern-time">
                                         <time dateTime={product.fecha_creacion}><span className="post-modern-time-month">{product.nombre_categoria}</span></time>
                                     </div>
                                 </a>
-                                <h4 className="post-modern-title"><a href="#">{product.name}</a></h4>
+                                <h4 className="post-modern-title"><a href="allproducto">{product.name}</a></h4>
                                 <p className="post-modern-text">{product.description}</p>
                             </article>
                         </div>
