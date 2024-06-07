@@ -18,10 +18,14 @@ const productoId = require('./Controllers/routes/productoIdRoute.js');
 const nuevosProductos = require('./Controllers/routes/nuevosProductosRoute.js');
 const productoList = require('./Controllers/routes/listProduct.js');
 const agregarProducto = require('./Controllers/routes/agregarProducto.js');
+const agregarInfoProducto = require('./Controllers/routes/agregarInfoProducto.js');
 const agregarDestalleProducto = require('./Controllers/routes/agregarDestalleProducto.js');
 const actualizarProducto = require('./Controllers/routes/actualizarProducto.js');
+const actualizarDestalleProducto = require('./Controllers/routes/actualizarProductoDetalle.js');
+const actualizarProductoInfo = require('./Controllers/routes/actualizarInfoProducto.js');
 const obtenerProducto = require('./Controllers/routes/obtenerProducto.js');
 const eliminarProducto = require('./Controllers/routes/eliminarProducto.js');
+const upload = require('./Controllers/routes/upload.js');
 const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
 const cors = require('cors'); 
@@ -29,6 +33,7 @@ const helmet = require('helmet');
 
 
 const app = express();
+const port = 6001; // Puerto donde quieres que escuche tu servidor
 
 // Middleware para analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
@@ -47,6 +52,16 @@ app.use(helmet({
       }
     }
   }));
+  // Middleware para configurar CORS manualmente
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+  );
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 // Ruta para obtener datos desde la base de datos
 app.get('/', async(req, res) => {
     try {
@@ -104,18 +119,33 @@ app.use('/eliminarCategoria', eliminarCategoria);
 app.use('/obtenerProducto', productoList);
 //Agregar producto
 app.use('/agregarProducto', agregarProducto);
+//Agregar info a un producto
+app.use('/agregarInfoProducto', agregarInfoProducto);
 //Agregar detalles del producto
 app.use('/agregarDestalleProducto', agregarDestalleProducto);
 //Actualizar producto
 app.use('/actualizarProducto', actualizarProducto);
+//Actualizar detalles del producto
+app.use('/actualizarDestalleProducto', actualizarDestalleProducto);
+//Actualizar info del producto
+app.use('/actualizarInfoProducto', actualizarProductoInfo);
 //obtener producto por id
 app.use('/obtenerProductoId', obtenerProducto);
 //Eliminar producto
 app.use('/eliminarProducto', eliminarProducto);
+//Para actualizar las imagenes
+app.use('/upload', upload);
+
+// // Iniciar el servidor
+// const PORT = process.env.PORT || 6001;
+// app.listen(PORT,'0.0.0.0', () => {
+//     console.log('Servidor Express escuchando en el puerto ' + PORT);
+// });
 
 
-// Iniciar el servidor
-const PORT = process.env.PORT || 6001;
-app.listen(PORT, () => {
-    console.log('Servidor Express escuchando en el puerto ' + PORT);
+
+// Iniciar servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor iniciado en http://localhost:${PORT}`);
 });

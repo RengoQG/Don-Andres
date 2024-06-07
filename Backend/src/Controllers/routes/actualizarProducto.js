@@ -7,16 +7,18 @@ const productos = require('../productsController.js');
 
 // Configurar Multer para el almacenamiento de archivos
 // Configurar Multer para el almacenamiento de archivos
+// Actualiza la función filename en la configuración de Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Especifica el directorio de destino donde se guardarán las imágenes
     cb(null, path.join(__dirname, '../../../../Frontend/Frontend/public/images/Productos'));
   },
   filename: function (req, file, cb) {
-    // Utiliza el nombre de archivo proporcionado por Multer
-    cb(null, file.originalname);
+    // Genera un nombre de archivo único usando un timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
+
   
   const upload = multer({ 
     storage: storage,

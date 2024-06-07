@@ -12,7 +12,7 @@ exports.SimiAll = async (req, res) => {
         // Consulta SQL con consulta preparada para obtener la categoría del producto actual
         const categoryQuery = `
             SELECT category_id 
-            FROM productos 
+            FROM producto 
             WHERE product_id = ?
         `;
         // Ejecutar la consulta SQL para obtener la categoría del producto actual
@@ -29,7 +29,7 @@ exports.SimiAll = async (req, res) => {
         // Consulta SQL con consulta preparada para obtener los productos relacionados por categoría
         const query = `
             SELECT p.* 
-            FROM productos p
+            FROM producto p
             INNER JOIN categorias c ON p.category_id = c.category_id
             WHERE p.category_id = ? AND p.product_id != ?
             ORDER BY p.price ASC

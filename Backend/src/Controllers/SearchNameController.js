@@ -10,14 +10,69 @@ exports.buscarProductosPorNombre = async (req, res) => {
             return res.status(400).json({ error: 'Por favor, ingrese un parámetro de búsqueda válido' });
         }
 
-        // Consulta SQL para buscar productos por nombre, precio o código
+        // Consulta SQL para buscar productos por nombre, precio o código con información extendida
         let querySQL = `
-            SELECT *
-            FROM productos
-            WHERE 
-                LOWER(name) LIKE ? OR
-                price LIKE ? OR
-                codigo LIKE ?
+        SELECT 
+        filtered_p.product_id,
+        filtered_p.name,
+        filtered_p.codigo,
+        filtered_p.image_url,
+        filtered_p.category_id,
+        filtered_p.price,
+        filtered_p.creado,
+        filtered_p.stock,
+        filtered_p.descripcion,
+        filtered_p.nombre_categoria,
+        (
+            SELECT JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'nombre', pi.atributo_nombre,
+                    'valor', pi.atributo_valor
+                )
+            )
+            FROM producto_info pi
+            WHERE pi.product_id = filtered_p.product_id
+        ) AS atributos,
+        (
+            SELECT JSON_ARRAYAGG(pd.detalle_texto)
+            FROM producto_detalle pd
+            WHERE pd.product_id = filtered_p.product_id
+        ) AS detalles
+    FROM (
+        SELECT 
+            p.product_id,
+            p.name,
+            p.codigo,
+            p.image_url,
+            p.category_id,
+            p.price,
+            p.creado,
+            p.stock,
+            p.descripcion,
+            c.name AS nombre_categoria
+        FROM 
+            producto p
+            JOIN categorias c ON p.category_id = c.category_id
+            LEFT JOIN producto_info pi ON p.product_id = pi.product_id
+            LEFT JOIN producto_detalle pd ON p.product_id = pd.product_id
+        WHERE 
+            LOWER(p.name) LIKE ? OR
+            p.price LIKE ? OR
+            p.codigo LIKE ?
+        GROUP BY 
+            p.product_id,
+            p.name,
+            p.codigo,
+            p.image_url,
+            p.category_id,
+            p.price,
+            p.creado,
+            p.stock,
+            c.name
+    ) AS filtered_p
+    ORDER BY 
+        filtered_p.product_id ASC;
+    
         `;
         const queryParams = [`%${query.toLowerCase()}%`, `%${query}%`, `%${query}%`];
 
@@ -35,3 +90,4 @@ exports.buscarProductosPorNombre = async (req, res) => {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
