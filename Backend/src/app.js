@@ -1,3 +1,5 @@
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const db = require('./db.js'); // Importar la configuración de la base de datos
 const userRoutes = require('./Controllers/routes/userRuts.js');
@@ -28,12 +30,16 @@ const eliminarProducto = require('./Controllers/routes/eliminarProducto.js');
 const upload = require('./Controllers/routes/upload.js');
 const similares = require('./Controllers/routes/similaresRoute.js');
 const authMiddleware = require('./middlewares/validarToken.js');
-const cors = require('cors'); 
+const cors = require('cors');
 const helmet = require('helmet');
 
-
 const app = express();
-const port = 6001; // Puerto donde quieres que escuche tu servidor
+const port = 3000; // Puerto donde quieres que escuche tu servidor HTTPS
+
+const httpsOptions = {
+  key: fs.readFileSync('/etc/letsencrypt/live/horizonsolutions.com.co/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/horizonsolutions.com.co/fullchain.pem')
+};
 
 // Middleware para analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
@@ -42,7 +48,8 @@ app.use(express.json());
 app.use(cors());
 
 // Usar el middleware helmet para configurar encabezados de seguridad
-app.use(helmet({
+app.use(
+  helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -51,8 +58,10 @@ app.use(helmet({
         upgradeInsecureRequests: [] // Aquí se especifican los orígenes permitidos cuando se usa HTTPS
       }
     }
-  }));
-  // Middleware para configurar CORS manualmente
+  })
+);
+
+// Middleware para configurar CORS manualmente
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -62,90 +71,111 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
 // Ruta para obtener datos desde la base de datos
-app.get('/', async(req, res) => {
-    try {
-        const connection = await db.getConnection();
-        const [rows] = await connection.query('SELECT * FROM categorias');
-        connection.release();
-        res.json(rows);
-    } catch (error) {
-        console.error('Error al ejecutar la consulta: ' + error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
+app.get('/', async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+    const [rows] = await connection.query('SELECT * FROM categorias');
+    connection.release();
+    res.json(rows);
+  } catch (error) {
+    console.error('Error al ejecutar la consulta: ' + error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 });
+
 // Montar las rutas de usuario
 app.use('/users', userRoutes);
-//Ruta para recuperar contraseña
+
+// Ruta para recuperar contraseña
 app.use('/reset', resetPassword);
-//Valida token y actualiza la contraseña
+
+// Valida token y actualiza la contraseña
 app.use('/validate', validateToken);
-//Inicio de sesión
+
+// Inicio de sesión
 app.use('/users', auth);
-//Protegue las rutas
+
 // Rutas protegidas (requieren token de acceso)
 app.get('/profile', authMiddleware, (req, res) => {
   // Esta es una ruta protegida, el usuario ha iniciado sesión correctamente
   // Puedes acceder a la información del usuario a través de req.user
   res.json({ message: '¡Bienvenido a tu perfil!' });
 });
-//ObtenerCategorias
+
+// ObtenerCategorias
 app.use('/categoria', categoria);
-//ObtenerProductos
+
+// ObtenerProductos
 app.use('/producto', producto);
-//Buscar producto por nombre
+
+// Buscar producto por nombre
 app.use('/searchName', search);
-//Sugerencias de productos
+
+// Sugerencias de productos
 app.use('/sugerencias', sugerencias);
-//Productos relacionados
+
+// Productos relacionados
 app.use('/relacionados', relacionados);
-//Contactenos
+
+// Contactenos
 app.use('/contactenos', contactenos);
-//Productos similares
+
+// Productos similares
 app.use('/similares', similares);
-//Producto por id
+
+// Producto por id
 app.use('/producto', productoId);
-//Nuevos productos
+
+// Nuevos productos
 app.use('/nuevosProductos', nuevosProductos);
-//Registrar una categoria
+
+// Registrar una categoria
 app.use('/agregarCategoria', agregarCategoria);
-//Editar una categoria
+
+// Editar una categoria
 app.use('/editarCategoria', editarCategoria);
-//Obtener una categoria por id
+
+// Obtener una categoria por id
 app.use('/traerCategoria', traerCategoria);
-//Eliminar una categoria
+
+// Eliminar una categoria
 app.use('/eliminarCategoria', eliminarCategoria);
-//listar producto
+
+// Listar producto
 app.use('/obtenerProducto', productoList);
-//Agregar producto
+
+// Agregar producto
 app.use('/agregarProducto', agregarProducto);
-//Agregar info a un producto
+
+// Agregar info a un producto
 app.use('/agregarInfoProducto', agregarInfoProducto);
-//Agregar detalles del producto
+
+// Agregar detalles del producto
 app.use('/agregarDestalleProducto', agregarDestalleProducto);
-//Actualizar producto
+
+// Actualizar producto
 app.use('/actualizarProducto', actualizarProducto);
-//Actualizar detalles del producto
+
+// Actualizar detalles del producto
 app.use('/actualizarDestalleProducto', actualizarDestalleProducto);
-//Actualizar info del producto
+
+// Actualizar info del producto
 app.use('/actualizarInfoProducto', actualizarProductoInfo);
-//obtener producto por id
+
+// Obtener producto por id
 app.use('/obtenerProductoId', obtenerProducto);
-//Eliminar producto
+
+// Eliminar producto
 app.use('/eliminarProducto', eliminarProducto);
-//Para actualizar las imagenes
+
+// Para actualizar las imágenes
 app.use('/upload', upload);
 
-// // Iniciar el servidor
-// const PORT = process.env.PORT || 6001;
-// app.listen(PORT,'0.0.0.0', () => {
-//     console.log('Servidor Express escuchando en el puerto ' + PORT);
-// });
+// Iniciar servidor HTTPS
+const server = https.createServer(httpsOptions, app);
 
-
-
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor HTTPS iniciado en https://localhost:${port}`);
 });
