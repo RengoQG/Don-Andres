@@ -45,7 +45,7 @@ const Login = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post('http://localhost:3000/users/login', {
+      const response = await axios.post('https://horizonsolutions.com.co:3000/users/login', {
         email,
         password
       });

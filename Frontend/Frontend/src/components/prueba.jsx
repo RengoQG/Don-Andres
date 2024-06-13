@@ -92,7 +92,7 @@ const BuscadorProductos = () => {
     if (inputValue.trim().length >= 3) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/sugerencias/sugerencias",
+          "https://horizonsolutions.com.co:3000/sugerencias/sugerencias",
           {
             query: inputValue,
           }
@@ -129,7 +129,7 @@ const BuscadorProductos = () => {
   const handleMostrarTodosLosProductos = async (inputValue) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/sugerencias/sugerencias",
+        "https://horizonsolutions.com.co:3000/sugerencias/sugerencias",
         {
           query: inputValue,
         }
@@ -156,7 +156,7 @@ const BuscadorProductos = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:3000/searchName/search', {
+      const response = await axios.post('https://horizonsolutions.com.co:3000/searchName/search', {
         query: query
       });
       if (response.data.error) {
@@ -201,7 +201,7 @@ const BuscadorProductos = () => {
     setMostrarSugerencias(false);
     try {
       const response = await axios.post(
-        "http://localhost:3000/searchName/search",
+        "https://horizonsolutions.com.co:3000/searchName/search",
         {
           query: sugerencia,
         }
@@ -342,13 +342,13 @@ const BuscadorProductos = () => {
       {(mostrarSugerencias || mostrarHistorial) && <div className="overlay" />}
       <form
         onSubmit={handleSubmit}
-        className={`buscador-formSearch ${mostrarSugerencias ? "sugerencias-activas" : ""}`}
+        className={`buscador-formSearch ${mostrarSugerencias ? "sugerencias-activas" : ""} buscadorContainerInput`}
       >
-        <div className="input-container">
+        <div className="input-container ">
           <FaSearch className="search-iconSe" />
           <input
             type="text"
-            placeholder="Buscar producto por nombre, precio o código..."
+            placeholder="Buscar producto..."
             value={query}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}

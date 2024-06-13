@@ -34,7 +34,7 @@ const ResetPassword = () => {
     setIsLoading(true);
 
     try {
-      await axios.post('http://localhost:3000/validate/validate', { token, newPassword });
+      await axios.post('https://horizonsolutions.com.co:3000/validate/validate', { token, newPassword });
       toast.success('Contraseña restablecida exitosamente');
       setTimeout(() => {
         navigate('/login');

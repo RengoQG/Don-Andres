@@ -186,6 +186,17 @@
     color: #52b788;
   }
 
+  .buscadorContainerInput{
+    background-color: #fff;
+    width: 400px;
+    margin-top: -150px;
+  }
+
+  .inputLateral{
+    margin-top: 150px;
+    /* margin-left: 3000px; */
+  }
+
   @media screen and (max-width: 768px) {
     .buscador-formSearch {
       position: fixed;

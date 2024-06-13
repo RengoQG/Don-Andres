@@ -7,7 +7,7 @@ const NewProductsSection = () => {
     useEffect(() => {
         const fetchNewProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/nuevosProductos/nuevosProductos');
+                const response = await axios.get('https://horizonsolutions.com.co:3000/nuevosProductos/nuevosProductos');
                 setNewProducts(response.data);
             } catch (error) {
                 console.error('Error al obtener los productos nuevos:', error);
@@ -20,7 +20,7 @@ const NewProductsSection = () => {
     return (
         <section className="section section-sm bg-default" id="news">
             <div className="m-3">
-                <h2>Productos nuevos</h2>
+                <h2>Nuevos productos</h2>
                 <div className="row row-45">
                     {newProducts.map(product => (
                         <div key={product.product_id} className="col-sm-6 col-lg-4 wow fadeInLeft">

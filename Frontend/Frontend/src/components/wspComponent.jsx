@@ -4,7 +4,7 @@ import '../EstilosComponentes/wspStyles.css';
 
 const WhatsAppButton = () => {
   const phoneNumber = "573006236655"; // Aquí colocas el número de teléfono que deseas utilizar
-  const baseUrl = "http://localhost:5173/";
+  const baseUrl = "https://horizonsolutions.com.co/";
 
   const handleClick = () => {
     const message = "Hola, deseo más información sobre tus productos: " + baseUrl;

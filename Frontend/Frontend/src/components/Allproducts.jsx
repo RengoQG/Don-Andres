@@ -3,6 +3,8 @@ import axios from 'axios';
 import '../EstilosComponentes/allProducts.css';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
+import { FaWhatsapp } from 'react-icons/fa';
+
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +14,18 @@ const ProductList = () => {
   const [perPage] = useState(5); // Productos por página
   const navigate = useNavigate();
 
+  // Función para generar el mensaje de WhatsApp
+  const generarMensajeWhatsapp = (product) => {
+    let mensaje = `¡Hola! Estoy interesado en el producto "${product.name}". Aquí están los detalles:\n\n`;
+    mensaje += `Descripción: ${product.descripcion ?? 'No disponible'}\n`;
+    mensaje += `Precio: $${product.price ?? 'No disponible'}\n`;
+    mensaje += `Categoría: ${product.nombre_categoria ?? 'No disponible'}\n`;
+    mensaje += `Código: ${product.product_id ?? 'No disponible'}\n`;
+
+    const url = `https://wa.me/573006236655?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -19,7 +33,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/obtenerProducto/listarProductos');
+      const response = await axios.get('https://horizonsolutions.com.co:3000/obtenerProducto/listarProductos');
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -28,7 +42,7 @@ const ProductList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/categoria/categorias');
+      const response = await axios.get('https://horizonsolutions.com.co:3000/categoria/categorias');
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -66,7 +80,7 @@ const ProductList = () => {
       <h2>Lista de Productos</h2>
       <div className="product-list-container">
         {/* Panel de filtro de categorías */}
-        <div className="category-panel">
+        <div className="category-panel w-100">
           <h3>Filtrar por categoría</h3>
           <select value={selectedCategory} onChange={handleCategoryChange}>
             <option value="">Todas las categorías</option>
@@ -83,20 +97,25 @@ const ProductList = () => {
           {currentProducts.map((product) => (
             <div className='contenidoProducto' key={product.product_id}>
               <div className='imagenProducto'>
-                <img src='../../public/images/A01.png' alt={product.name} />
+                <img src={`../../public/images/Productos/${product.image_url}`} alt={product.name} />
               </div>
               <div className='product-details'>
                 <h3>{product.name}</h3>
                 <p>Precio: ${product.price}</p>
                 <p>Categoría: {product.nombre_categoria}</p>
-                <p>Detalle: {product.detalle_texto}</p>
+                <p>Detalle: {product.descripcion}</p>
                 {/* Mostrar si el producto está agotado */}
                 {product.stock === 0 ? (
                   <p style={{ color: 'red' }}>Agotado</p>
                 ) : (
-                  <p>Stock: {product.stock}</p>
+                  <p></p>
                 )}
-                <button onClick={() => handleViewProduct(product)}>Ver producto</button>
+                <div className="d-flex flex-column flex-sm-row justify-content-between contenido-botones">
+                  <button className=" mb-2 mb-sm-0 mr-sm-1 w-100 w-sm-50" onClick={() => handleViewProduct(product)}>Ver producto</button>
+                  <button className=" w-100 w-sm-50" onClick={() => generarMensajeWhatsapp(product)}>
+                    <FaWhatsapp className="icono-whatsapp" /> WhatsApp
+                  </button>
+                </div>
               </div>
             </div>
           ))}

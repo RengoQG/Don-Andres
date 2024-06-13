@@ -18,7 +18,7 @@ import UpdatePassword from './components/updatePassword.jsx';
 import Wsp from './components/wspComponent.jsx';
 import Producto from './components/Producto.jsx';
 import Categories from './components/Categories.jsx';
-import Productos from './pages/Productos.jsx';
+import ProductosCta from './pages/Productos.jsx';
 import ProductosFetch from './components/Products.jsx';
 import Prueba2 from './components/prueba.jsx';
 import Prueba3 from './components/Productos/agregarProducto.jsx';
@@ -31,12 +31,10 @@ import './index.css';
 // Componente que contiene los tres componentes juntos
 const MainContent = () => (
   <div>
-    <Prueba2 />
+    {/* <Prueba2 /> */}
     <App />
     <Slider />
-    <ProductosFetch>
-      <Productos />
-    </ProductosFetch>
+    <ProductosCta />
     <Wsp />
     <Services />
     {/* <Dream /> */}

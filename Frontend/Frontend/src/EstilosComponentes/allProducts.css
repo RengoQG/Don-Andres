@@ -82,9 +82,12 @@
   margin-bottom: 8px;
 }
 
+.contenido-botones{
+  margin-top: 100px;
+}
+
 .product-details button {
   background-color: #45a049;
-  margin-top: 165px;
   color: #FFF;
   border: none;
   padding: 8px 12px;
@@ -94,7 +97,7 @@
 }
 
 .product-details button:hover {
-  background-color: #ddb347;
+  background-color: #40b646;
 }
 
 /* Estilos específicos para móviles */

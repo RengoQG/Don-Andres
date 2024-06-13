@@ -88,7 +88,7 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/users/register', formData);
+      const response = await axios.post('https://horizonsolutions.com.co:3000/users/register', formData);
       toast.success(response.data.message);
       setFormData({
         name: '',

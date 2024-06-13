@@ -32,7 +32,7 @@ const RegisterCategori = ({ onClose, onCategoriaAgregada }) => {
     formData.append('imagen', imagenCategoria);
 
     try {
-      const response = await axios.post('http://localhost:3000/agregarCategoria/categorias', formData);
+      const response = await axios.post('https://horizonsolutions.com.co:3000/agregarCategoria/categorias', formData);
       console.log('Respuesta del servidor:', response.data);
       toast.success('Categoría agregada correctamente');
 

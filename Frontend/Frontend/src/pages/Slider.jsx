@@ -27,7 +27,7 @@ const SwiperSlider = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:3000/profile', {
+        const response = await fetch('https://horizonsolutions.com.co:3000/profile', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const SwiperSlider = () => {
     formData.append('oldImage', selectedImage);
   
     try {
-      const response = await axios.post('http://localhost:3000/upload/upload', formData, {
+      const response = await axios.post('https://horizonsolutions.com.co/upload/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -99,9 +99,9 @@ const SwiperSlider = () => {
 
   return (
     <>
-      <section className="section swiper-container swiper-slider swiper-slider-classic" data-loop="true" data-autoplay="4859" data-simulate-touch="true" data-direction="vertical" data-nav="false">
+    <section className="section swiper-container swiper-slider swiper-slider-classic" style={{ maxHeight:'250px', margin: '0 auto'}} data-loop="true" data-autoplay="4859" data-simulate-touch="true" data-direction="vertical" data-nav="false">
         <div className="swiper-wrapper text-center">
-          <div className="swiper-slide" style={{ backgroundImage: `url(images/SwiperSlider/${images.Foto1})`, backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} >
+          <div className="swiper-slide sliderImagen" style={{ backgroundImage: `url(images/SwiperSlider/${images.Foto1})`, backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
             <div className="swiper-slide-caption section-md">
               <div className="container">
                 <h1 className="editH2" data-caption-animate="fadeInLeft" data-caption-delay="0"></h1>
@@ -148,7 +148,7 @@ const SwiperSlider = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Subir nueva imagen</Modal.Title>
+          <Modal.Title>Subir nueva imagen | lA RESOLUCIÓN DE LA IMAGEN ES DE 1770 x 742</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>

@@ -4,7 +4,7 @@ const TestimonialsSection = () => {
     return (
         <section className="section section-sm section-bottom-70 section-fluid bg-default">
             <div className="container-fluid">
-                <h2>Que dice la gente</h2>
+                <h2>Lo que opinan nuestros clientes</h2>
                 <div className="row row-50 row-sm">
                     {/* Testimonio 1 */}
                     <div className="col-md-6 col-xl-4 wow fadeInRight">

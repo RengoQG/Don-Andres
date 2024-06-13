@@ -19,7 +19,7 @@ const AgregarProducto = ({ setShowTable, setShowAgregarProducto, actualizarProdu
     useEffect(() => {
         async function fetchCategorias() {
             try {
-                const response = await axios.get('http://localhost:3000/categoria/categorias');
+                const response = await axios.get('https://horizonsolutions.com.co:3000/categoria/categorias');
                 setCategorias(response.data);
             } catch (error) {
                 console.error('Error al obtener las categorías:', error);
@@ -68,7 +68,7 @@ const AgregarProducto = ({ setShowTable, setShowAgregarProducto, actualizarProdu
         });
 
         try {
-            const response = await axios.post('http://localhost:3000/agregarProducto/agregarProducto', formData, {
+            const response = await axios.post('https://horizonsolutions.com.co:3000/agregarProducto/agregarProducto', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

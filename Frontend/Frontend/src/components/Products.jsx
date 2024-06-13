@@ -9,8 +9,8 @@ const ProductosFetcher = ({ children }) => {
     const fetchData = async () => {
       try {
         const [categoriasResponse, productosResponse] = await Promise.all([
-          axios.get('http://localhost:3000/categoria/categorias'),
-          axios.get('http://localhost:3000/obtenerProducto/listarProductos')
+          axios.get('https://horizonsolutions.com.co:3000/categoria/categorias'),
+          axios.get('https://horizonsolutions.com.co:3000/obtenerProducto/listarProductos')
           // axios.get('http://localhost:3000/producto/products')
         ]);
 

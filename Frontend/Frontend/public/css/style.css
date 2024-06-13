@@ -15264,17 +15264,19 @@ html.rd-navbar-fixed-linked .page-header {
 	margin: 0 10px;
 }
 
+/*A ver si toma los estilos de acá*/
 .swiper-slide {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	width: 100%;
-	height: 100%;
-	white-space: nowrap;
-	background-position: 50% 50%;
-
+	background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+	
 }
 
 
@@ -15290,8 +15292,20 @@ html.rd-navbar-fixed-linked .page-header {
 }
 
 .swiper-slider-classic {
-	max-height: 450px;
+	/* max-height: 450px;
 	min-height: 350px;
+	background-color: red; */
+
+	background-size: contain; /* Contiene la imagen completa dentro del div sin distorsionarla */
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .swiper-slider-classic.swiper-container-horizontal {
@@ -19604,7 +19618,9 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .parallax-container {
 	position: relative;
 	overflow: hidden;	
+	padding: 150px !important;
 }
+
 
 .material-parallax {
 	position: absolute;
@@ -20401,6 +20417,10 @@ input[type="checkbox"] {
 	display: none;
 }
 
+.tituloProductosList{
+	font-size: 18px;
+}
+
 @media (max-width: 768px) { 
 	.button__meInteresa {
 		transform: translate3d(-50%, -35px, 0); /* Mueve el botón 35px hacia arriba y lo centra horizontalmente */
@@ -20607,6 +20627,31 @@ height: 110px !important;
 }
 
 
+.productosContenedorList {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+	cursor: pointer;
+}
+
+.buscadorInput{
+	width: 100%;
+	margin-left: 300px;
+}
+
+.productosContenedorList:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.productosContenedorList .card-img-top {
+    transition: transform 0.2s ease;
+}
+
+.productosContenedorList:hover .card-img-top {
+    transform: scale(1.1);
+}
+
+
+
 
   @media (max-width: 992px) {
 	.isotope-item {
@@ -20626,6 +20671,18 @@ height: 110px !important;
 	}
   }
   
+
+  @media screen and (max-width: 768px) {
+	.footerMainMovil{
+		width: 100%;
+		font-size: 13px
+	}
+  }
+
+  @media (max-width: 768px) {
+	.parallax-container img{
+	}
+  }
   
   
   

@@ -25,7 +25,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/obtenerProducto/listarProductos');
+                const response = await axios.get('https://horizonsolutions.com.co:3000/obtenerProducto/listarProductos');
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -36,7 +36,7 @@ const ProductList = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/obtenerProducto/listarProductos');
+            const response = await axios.get('https://horizonsolutions.com.co:3000/obtenerProducto/listarProductos');
             setProducts(response.data);
         } catch (error) {
             console.error('Error al obtener productos:', error);
@@ -46,7 +46,7 @@ const ProductList = () => {
     const handleEliminarProductoClick = async (productId) => {
         try {
           console.log(productId);
-          const response = await axios.delete(`http://localhost:3000/eliminarProducto/eliminarProducto/${productId}`);
+          const response = await axios.delete(`https://horizonsolutions.com.co:3000/eliminarProducto/eliminarProducto/${productId}`);
           if (response.data.error) {
             return toast.error(response.data.error);
           } else {
@@ -108,7 +108,7 @@ const ProductList = () => {
             if (detalle_texto) {
                 try {
                     // Realizar la solicitud al servidor para agregar el detalle
-                    const response = await axios.post('http://localhost:3000/agregarDestalleProducto/agregarDetalleProducto', {
+                    const response = await axios.post('https://horizonsolutions.com.co:3000/agregarDestalleProducto/agregarDetalleProducto', {
                         product_id: productId,
                         detalle_texto
                     });
@@ -151,7 +151,7 @@ const ProductList = () => {
             if (atributo_nombre && atributo_valor) {
                 try {
                     // Realizar la solicitud al servidor para agregar la información del producto
-                    const response = await axios.post('http://localhost:3000/agregarInfoProducto/agregarInfoProducto', {
+                    const response = await axios.post('https://horizonsolutions.com.co:3000/agregarInfoProducto/agregarInfoProducto', {
                         product_id: productId,
                         atributo_nombre,
                         atributo_valor

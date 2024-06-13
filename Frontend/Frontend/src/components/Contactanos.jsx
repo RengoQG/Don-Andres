@@ -35,7 +35,7 @@ const ContactSection = () => {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/contactenos/contactenos', {
+            const response = await fetch('https://horizonsolutions.com.co:3000/contactenos/contactenos', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ const ContactSection = () => {
                 <div className="ml-3">
                     <article className="title-classic">
                         <div className="title-classic-title">
-                            <h3>Contactanos</h3>
+                            <h3>Contáctanos</h3>
                         </div>
                         <div className="title-classic-text">
                             <p></p>

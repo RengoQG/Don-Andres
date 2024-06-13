@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../EstilosComponentes/productos.css"; // Importar estilos CSS para el componente
 import { FaWhatsapp } from 'react-icons/fa';
@@ -19,7 +19,7 @@ const Producto = () => {
     useEffect(() => {
         const fetchDetallesProducto = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/relacionados/products/${productoInicial.product_id}`);
+                const response = await axios.get(`https://horizonsolutions.com.co:3000/relacionados/products/${productoInicial.product_id}`);
                 setDetallesProducto(response.data);
                 setLoading(false);
             } catch (error) {
@@ -34,7 +34,7 @@ const Producto = () => {
     useEffect(() => {
         const fetchRelatedProducts = async () => {
             try {
-                const response = await axios.post(`http://localhost:3000/similares/similares/${productoInicial.product_id}`);
+                const response = await axios.post(`https://horizonsolutions.com.co:3000/similares/similares/${productoInicial.product_id}`);
                 const uniqueProducts = removeDuplicates(response.data);
                 setRelatedProducts(uniqueProducts);
                 console.log(uniqueProducts)
@@ -64,7 +64,7 @@ const Producto = () => {
 
     const handleClickProductoRelacionado = async (productoRelacionado) => {
         try {
-            const response = await axios.get(`http://localhost:3000/obtenerProductoId/obtenerProductoId/${productoRelacionado.product_id}`);
+            const response = await axios.get(`https://horizonsolutions.com.co:3000/obtenerProductoId/obtenerProductoId/${productoRelacionado.product_id}`);
 
             if (response.status === 200) {
                 const productoRelacionadoInfo = response.data;

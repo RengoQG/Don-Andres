@@ -91,6 +91,11 @@ const Dashboard = ({ isUpdateMode }) => {
             </a>
           </li>
           <li>
+            <a href="/">
+              <FontAwesomeIcon icon={faSignOutAlt} /> Página principal
+            </a>
+          </li>
+          <li>
             <a href="#" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Cerrar Sesión
             </a>

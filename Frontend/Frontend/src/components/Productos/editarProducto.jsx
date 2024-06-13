@@ -24,7 +24,7 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await axios.get('http://localhost:3000/categoria/categorias');
+        const response = await axios.get('https://horizonsolutions.com.co:3000/categoria/categorias');
         setCategorias(response.data);
       } catch (error) {
         console.error('Error al obtener las categorías:', error);
@@ -45,7 +45,7 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
   useEffect(() => {
     const obtenerProducto = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/obtenerProductoId/obtenerProductoId/${productId}`);
+        const response = await axios.get(`https://horizonsolutions.com.co:3000/obtenerProductoId/obtenerProductoId/${productId}`);
         setProduct({
           name: response.data.name ?? '',
           category_id: response.data.category_id ?? '',
@@ -84,7 +84,7 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
       formData.append('stock', product.stock);
       formData.append('descripcion', product.descripcion);
 
-      const response = await axios.put(`http://localhost:3000/actualizarProducto/actualizarProducto/${productId}`, formData, {
+      const response = await axios.put(`https://horizonsolutions.com.co:3000/actualizarProducto/actualizarProducto/${productId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
