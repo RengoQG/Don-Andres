@@ -20,7 +20,50 @@ const ProductList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(3); // Cantidad de filas por página
     const [productoId, setProductoId] = useState(null);
     const [botonTexto, setBotonTexto] = useState("Agregar producto");
+    const [expandedRows, setExpandedRows] = useState([]);
 
+    // Función para manejar la expansión de filas
+    const toggleRowExpansion = (productId) => {
+        if (expandedRows.includes(productId)) {
+            setExpandedRows(expandedRows.filter((id) => id !== productId));
+        } else {
+            setExpandedRows([...expandedRows, productId]);
+        }
+    };
+
+     // Función para renderizar el contenido del detalle con expansión
+    const renderDetalle = (product) => {
+        const detalles = product.detalles || [];
+
+        if (expandedRows.includes(product.product_id)) {
+            return (
+                <div>
+                    {detalles.map((detalle, index) => (
+                        <div key={index}>
+                            {detalle}
+                        </div>
+                    ))}
+                    <button className="btn btn-link" onClick={() => toggleRowExpansion(product.product_id)}>
+                        Ver menos
+                    </button>
+                </div>
+            );
+        } else {
+            // Mostrar solo la primera línea y el botón 'Ver más'
+            return (
+                <div>
+                    <div className="text-truncate" style={{ maxWidth: '100px' }}>
+                        {detalles.length > 0 ? detalles[0] : 'No hay detalles disponibles'}
+                    </div>
+                    {detalles.length > 1 && (
+                        <button className="btn btn-link" onClick={() => toggleRowExpansion(product.product_id)}>
+                            Ver más
+                        </button>
+                    )}
+                </div>
+            );
+        }
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -45,23 +88,23 @@ const ProductList = () => {
 
     const handleEliminarProductoClick = async (productId) => {
         try {
-          console.log(productId);
-          const response = await axios.delete(`https://horizonsolutions.com.co:3000/eliminarProducto/eliminarProducto/${productId}`);
-          if (response.data.error) {
-            return toast.error(response.data.error);
-          } else {
-            toast.success('Producto eliminado exitosamente');
-            // Actualizar la lista de productos después de eliminar el producto
-            await fetchProducts();
-            // Establecer la página actual en 0 para mostrar desde el primer registro
-            setPage(0);
-            fetchProducts();
-          }
+            console.log(productId);
+            const response = await axios.delete(`https://horizonsolutions.com.co:3000/eliminarProducto/eliminarProducto/${productId}`);
+            if (response.data.error) {
+                return toast.error(response.data.error);
+            } else {
+                toast.success('Producto eliminado exitosamente');
+                // Actualizar la lista de productos después de eliminar el producto
+                await fetchProducts();
+                // Establecer la página actual en 0 para mostrar desde el primer registro
+                setPage(0);
+                fetchProducts();
+            }
         } catch (error) {
-          console.error("Error al eliminar el producto:", error);
+            console.error("Error al eliminar el producto:", error);
         }
-      };
-      
+    };
+
 
     const handleEditarProductoClick = (productId) => {
         setShowEditarProducto(!showEditarProducto);
@@ -88,7 +131,7 @@ const ProductList = () => {
                 }
             }
         });
-    
+
         if (option === 'detalle') {
             const { value: detalle_texto } = await Swal.fire({
                 title: 'Agregar detalle de producto',
@@ -104,7 +147,7 @@ const ProductList = () => {
                     }
                 }
             });
-    
+
             if (detalle_texto) {
                 try {
                     // Realizar la solicitud al servidor para agregar el detalle
@@ -112,7 +155,7 @@ const ProductList = () => {
                         product_id: productId,
                         detalle_texto
                     });
-    
+
                     // Mostrar un mensaje de éxito si se agregó correctamente
                     Swal.fire({
                         icon: 'success',
@@ -120,10 +163,10 @@ const ProductList = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
-    
+
                     // Actualizar la lista de productos después de agregar el detalle
                     fetchProducts();
-    
+
                 } catch (error) {
                     // Mostrar un mensaje de error si ocurrió un problema al agregar el detalle
                     Swal.fire({
@@ -147,7 +190,7 @@ const ProductList = () => {
                     };
                 }
             });
-    
+
             if (atributo_nombre && atributo_valor) {
                 try {
                     // Realizar la solicitud al servidor para agregar la información del producto
@@ -156,7 +199,7 @@ const ProductList = () => {
                         atributo_nombre,
                         atributo_valor
                     });
-    
+
                     // Mostrar un mensaje de éxito si se agregó correctamente
                     Swal.fire({
                         icon: 'success',
@@ -164,10 +207,10 @@ const ProductList = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
-    
+
                     // Actualizar la lista de productos después de agregar la información del producto
                     fetchProducts();
-    
+
                 } catch (error) {
                     // Mostrar un mensaje de error si ocurrió un problema al agregar la información del producto
                     Swal.fire({
@@ -179,7 +222,7 @@ const ProductList = () => {
             }
         }
     };
-    
+
     // Función auxiliar para mostrar el valor o el guion
     const renderCellValue = (value) => {
         return value || '-';
@@ -238,45 +281,44 @@ const ProductList = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <TableContainer component={Paper} >
+                    <TableContainer component={Paper}>
                         <h4 className='title__product'>Lista de Productos</h4>
-                        <Table className='container__table'>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Nombre</TableCell>
-                                    <TableCell>Descripción</TableCell>
-                                    <TableCell>Precio</TableCell>
-                                    <TableCell>stock</TableCell>
-                                    <TableCell>ID de Categoría</TableCell>
-                                    <TableCell>URL de Imagen</TableCell>
-                                    <TableCell>Código</TableCell>
-                                    <TableCell>Nombre de Categoría</TableCell>
-                                    <TableCell>Atributos</TableCell>
-                                    <TableCell>Detalles</TableCell>
-                                    <TableCell className='container__btn'>Acciones</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
+                        <Table className='table table-striped table-bordered small'>
+                            <thead>
+                                <tr>
+                                    {/* <th>ID</th> */}
+                                    <th className="align-middle">Nombre</th>
+                                    {/* <th style={{ width: '5px' }} className="align-middle">Descripción</th> */}
+                                    <th className="align-middle">Precio</th>
+                                    <th className="align-middle">Stock</th>
+                                    {/* <th>ID de Categoría</th> */}
+                                    <th className="align-middle">Imagen</th>
+                                    <th className="align-middle">Código</th>
+                                    <th className="align-middle">Categoría</th>
+                                    <th className="align-middle">Atributos</th>
+                                    {/* <th style={{ maxWidth: '150px' }} className="align-middle">Detalles</th> */}
+                                    <th className="align-middle">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
-                                    <TableRow key={product.product_id}>
-                                        <TableCell>{product.product_id}</TableCell>
-                                        <TableCell>{product.name}</TableCell>
-                                        <TableCell>{product.descripcion}</TableCell>
-                                        <TableCell>{product.price}</TableCell>
-                                        <TableCell>{product.stock}</TableCell>
-                                        <TableCell>{product.category_id}</TableCell>
-                                        <TableCell>
+                                    <tr key={product.product_id}>
+                                        {/* <td>{product.product_id}</td> */}
+                                        <td>{product.name}</td>
+                                        {/* <td className="text-truncate" style={{ maxWidth: '100px' }}>{product.descripcion}</td> */}
+                                        <td>{product.price}</td>
+                                        <td>{product.stock}</td>
+                                        {/* <td>{product.category_id}</td> */}
+                                        <td>
                                             <img
-                                                src={'../../../public/images/Productos/' + product.image_url}
+                                                src={`../../../public/images/Productos/${product.image_url}`}
                                                 alt="Imagen del producto"
                                                 style={{ maxWidth: '100px', maxHeight: '100px' }}
                                             />
-                                        </TableCell>
-                                        <TableCell>{product.codigo}</TableCell>
-                                        <TableCell>{product.nombre_categoria}</TableCell>
-                                        <TableCell>
-                                            {/* Renderizar atributos */}
+                                        </td>
+                                        <td>{product.codigo}</td>
+                                        <td>{product.nombre_categoria}</td>
+                                        <td>
                                             {product.atributos && product.atributos.length > 0 ? (
                                                 product.atributos.map((atributo, index) => (
                                                     <div key={index}>
@@ -287,20 +329,11 @@ const ProductList = () => {
                                             ) : (
                                                 <div>No hay atributos disponibles</div>
                                             )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {/* Renderizar detalles */}
-                                            {product.detalles ? (
-                                                product.detalles.map((detalle, index) => (
-                                                    <div key={index}>
-                                                        {detalle}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <div>No hay detalles disponibles</div>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className='icon__containerP'>
+                                        </td>
+                                        {/* <td>
+                                            {renderDetalle(product)}
+                                        </td> */}
+                                        <td className='icon__containerP'>
                                             <button className='iconEditP' onClick={() => handleEditarProductoClick(product.product_id)}>
                                                 <FontAwesomeIcon icon={faEdit} />
                                             </button>
@@ -310,16 +343,16 @@ const ProductList = () => {
                                             <button className='iconPlus' onClick={() => handleAgregarDetalleProductoClick(product.product_id)}>
                                                 <FontAwesomeIcon icon={faPlus} />
                                             </button>
-                                        </TableCell>
-                                    </TableRow>
+                                        </td>
+                                    </tr>
                                 ))}
-                            </TableBody>
+                            </tbody>
                         </Table>
                         <TablePagination
                             className='paginatorProduct'
-                            rowsPerPageOptions={[5, 10, 25]} // Opciones para seleccionar cantidad de filas por página
+                            rowsPerPageOptions={[5, 10, 25]}
                             component="div"
-                            count={filteredProducts.length} // Cantidad total de productos
+                            count={filteredProducts.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
@@ -328,13 +361,16 @@ const ProductList = () => {
                     </TableContainer>
                 </div>
             )}
-
-            {showEditarProducto && <Editar setShowTable={setShowTable} showEditarProducto={showEditarProducto} productId={productoId} actualizarProductos={fetchProducts} />}
+    
+            {showEditarProducto && <Editar setShowTable={setShowTable} setShowEditarProducto={setShowEditarProducto} setBotonTexto={setBotonTexto} productId={productoId} actualizarProductos={fetchProducts} />}
             {showAgregarProducto && <AgregarProducto setShowTable={setShowTable} setBotonTexto={setBotonTexto} setShowAgregarProducto={setShowAgregarProducto} actualizarProductos={fetchProducts} />}
         </div>
     );
-
-
+    
+    
+    
+    
+    
 };
 
 export default ProductList;

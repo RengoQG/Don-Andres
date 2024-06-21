@@ -92,17 +92,17 @@ const Header = () => {
               <ul className="inputLateral">
                 <li><Prueba2 /></li>
               </ul>
-              <div className="rd-navbar-main-element">
+              <div className="rd-navbar-main-element ">
                 <div className="rd-navbar-nav-wrap">
-                  <ul className="rd-navbar-nav" style={{ marginTop: '-10px', width: '650px', marginLeft:'48px' }}>
+                  <ul className="rd-navbar-nav pruebadeestilos" style={{ marginTop: '-10px', width: '650px', marginLeft:'48px' }}>
                     <li className="rd-nav-item active">
                       <a className="rd-nav-link" href="/">
                         <FontAwesomeIcon icon={faHome} /> Inicio
                       </a>
                     </li>
                     <li className="rd-nav-item">
-                      <a className="rd-nav-link" href="/">
-                        <FontAwesomeIcon icon={faUsers} /> Nosotros
+                      <a className="rd-nav-link" href="allproducto">
+                        <FontAwesomeIcon icon={faStore} /> Nuestro catálogo
                       </a>
                     </li>
                     <li className="rd-nav-item">
@@ -112,14 +112,14 @@ const Header = () => {
                     </li>
                     <li className="rd-nav-item">
                       <a className="rd-nav-link" href="#contactanos">
-                        <FontAwesomeIcon icon={faEnvelope} /> Contáctanos
+                      <FontAwesomeIcon icon={faUsers} /> Contáctanos
                       </a>
                     </li>
-                    <li className="rd-nav-item">
+                    {/* <li className="rd-nav-item">
                       <a className="rd-nav-link" href="#projects">
-                        <FontAwesomeIcon icon={faStore} /> Tienda
+                         Tienda
                       </a>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </div>

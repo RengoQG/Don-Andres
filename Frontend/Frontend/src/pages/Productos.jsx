@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation  } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-const productoCta = () => {
+const ProductoCta = () => {
     const navigateTo = useNavigate();
     const [newProducts, setNewProducts] = useState([]);
 
@@ -19,22 +19,41 @@ const productoCta = () => {
         fetchNewProducts();
     }, []);
 
-    const handleProductClick = () => {
-        navigateTo('/allproducto');
+    const handleProductClick = (categoriaId) => {
+        navigateTo(`/allproducto?categoria=${categoriaId}`);
     };
 
     return (
         <section className="section section-sm bg-default" id="news">
             <div className="container">
-                <h2 className="text-center mb-5">Nuestras categorías</h2>
-                <div className="row" >
+                <div className="text-center mb-5">
+                    <a href='allproducto' className='tituloCatalogo'>Nuestro catálogo</a>
+                </div>
+                <div className="row">
                     {newProducts.map(categoria => (
-                        <div key={categoria.category_id} className="col-md-6 col-lg-4 mb-4 productosContenedorList" onClick={handleProductClick} >
+                        <div
+                            key={categoria.category_id}
+                            className="col-md-6 col-lg-4 mb-4 productosContenedorList"
+                            onClick={() => handleProductClick(categoria.category_id)}
+                        >
                             <div className="card h-100 border-0 shadow">
-                                <img src={`../../public/images/CategoriaImagenes/${categoria.url_imagen}`} className="card-img-top" alt={categoria.name} />
-                                <div className="card-body d-flex flex-column justify-content-between">
+                                <img
+                                    src={`../../public/images/CategoriaImagenes/${categoria.url_imagen}`}
+                                    className="card-img-top"
+                                    alt={categoria.name}
+                                />
+                                <div className="card-body d-flex flex-column justify-content-between"
+                                    onClick={() => handleProductClick(categoria.category_id)}
+                                >
                                     <h4 className="card-title"></h4>
-                                    <a href="allproducto" className="card-title tituloProductosList text-center">{categoria.name}</a>
+                                    <a href="#" className="card-title tituloProductosList text-center"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleProductClick(categoria.category_id);
+                                        }}
+                                    >
+                                        {categoria.name}
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -45,4 +64,4 @@ const productoCta = () => {
     );
 };
 
-export default productoCta;
+export default ProductoCta;

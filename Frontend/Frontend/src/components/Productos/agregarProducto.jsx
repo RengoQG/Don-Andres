@@ -170,14 +170,16 @@ const AgregarProducto = ({ setShowTable, setShowAgregarProducto, actualizarProdu
                                 name="descripcion"
                                 value={descripcion}
                                 onChange={(e) => setDescripcion(e.target.value)}
-                                className="required-input"
+                                className="form-control required-input"
+                                style={{ height: "200px" }}  // Ajusta la altura según tus necesidades
                                 required
                             />
                         </label>
+
                     </div>
                     <div>
                         <label className="required-label">
-                            Imagen:
+                            Imagen: Resolución de la imagen 420x350
                             <input type="file" accept="image/*" onChange={handleImageChange} className="required-input" required />
                         </label>
                     </div>

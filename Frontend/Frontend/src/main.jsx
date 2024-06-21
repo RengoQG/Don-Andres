@@ -26,6 +26,7 @@ import Buscar from './components/search.jsx';
 import NewProduct from './components/ProductosNuevos.jsx';
 import Contact from './components/Contactanos.jsx';
 import Allproduct from './components/Allproducts.jsx';
+import TotalResultadoo from './components/todosResultado.jsx';
 import './index.css';
 
 // Componente que contiene los tres componentes juntos
@@ -38,9 +39,9 @@ const MainContent = () => (
     <Wsp />
     <Services />
     {/* <Dream /> */}
-    <People />
+    {/* <People /> */}
     <NewProduct />
-    <Contact />
+    {/* <Contact /> */}
     <Footer />
   </div>
 );
@@ -72,6 +73,16 @@ const ProductMain = () => (
     <Prueba2 />
     <App />
     <Producto />
+
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
     <Footer />
   </div>
 );
@@ -111,6 +122,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/prueba2" element={<Prueba3 />} />
           <Route path="/producto" element={<ProductMain />} />
           <Route path="/Allproducto" element={<AllproductMain />} />
+          <Route path="/total-resultados" element={<TotalResultadoo />} />
         </Routes>
       </Router>
   </React.StrictMode>

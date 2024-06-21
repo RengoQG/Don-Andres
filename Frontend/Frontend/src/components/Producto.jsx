@@ -102,23 +102,23 @@ const Producto = () => {
         mensaje += `Código: ${producto.codigo ?? 'No disponible'}\n`;
         mensaje += `Stock: ${producto.stock ?? 'No disponible'}\n`;
         mensaje += `Atributos:\n`;
-      
+
         if (producto.atributos.length > 0) {
-          producto.atributos.forEach((atributo, index) => {
-            mensaje += `  - ${atributo.nombre}: ${atributo.valor}\n`;
-          });
+            producto.atributos.forEach((atributo, index) => {
+                mensaje += `  - ${atributo.nombre}: ${atributo.valor}\n`;
+            });
         } else {
-          mensaje += "  No hay atributos disponibles.\n";
+            mensaje += "  No hay atributos disponibles.\n";
         }
-      
+
         if (producto.detalles && producto.detalles.length > 0) {
             mensaje += `\nDetalles adicionales:\n`;
             producto.detalles.forEach((detalle) => {
-              mensaje += `  - ${detalle}\n`;
+                mensaje += `  - ${detalle}\n`;
             });
-          } else {
+        } else {
             mensaje += "\nNo hay detalles adicionales disponibles.\n";
-          }
+        }
 
         const url = `https://wa.me/573006236655?text=${encodeURIComponent(mensaje)}`;
         window.open(url, '_blank');
@@ -127,7 +127,7 @@ const Producto = () => {
     return (
         <div className="producto-container">
             <div className="prueba">
-                {producto && (
+                {productoInicial && (
                     <div
                         className="producto-imagen"
                         onMouseMove={handleMouseMove}
@@ -136,22 +136,26 @@ const Producto = () => {
                     >
                         <img
                             ref={imageRef}
-                            src="../../public/images/A01hd.png"
-                            alt={producto.name}
+                            src={`../../public/images/Productos/${productoInicial.image_url}`}
+                            alt={productoInicial.name}
                         />
                     </div>
                 )}
                 <div className="ml-3">
-                    <div className="related-products-container">
-                        <h3 className="related-products-title">Productos Relacionados</h3>
+                    <div className="related-products-container" >
+                        <h5 className="related-products-title">Productos Relacionados</h5>
                         {relatedProducts.length > 0 ? (
                             <Carousel showThumbs={false} infiniteLoop={true} showStatus={false} showIndicators={false}>
                                 {relatedProducts.map((relate) => (
                                     <div className="related-product" key={relate.product_id} onClick={() => handleClickProductoRelacionado(relate)}>
-                                        <img src={relate.imageURL || "../../public/images/A01.png"} alt={relate.name} />
-                                        <h3 className="related-product-title">{relate.name}</h3>
-                                        <p className="related-product-description">{relate.descripcion}</p>
-                                        <span className="related-product-price">{relate.price}</span>
+                                        <img
+                                            src={`../../public/images/Productos/${relate.image_url}`}
+                                            alt={relate.name}
+                                            className="img-thumbnail" // Clase de Bootstrap para hacer la imagen más pequeña
+                                        />
+                                        <h3 className="related-product-title p-2">{relate.name}</h3>
+                                        <p className="related-product-description pb-5">{relate.descripcion}</p>
+                                        <span className="related-product-price mt-5">{relate.price}</span>
                                     </div>
                                 ))}
                             </Carousel>
@@ -160,72 +164,115 @@ const Producto = () => {
                         )}
                     </div>
                 </div>
+
             </div>
 
             <div className="producto-info">
-    {productoInicial ? (
-        <>
-            <h1 className="producto-nombre">{productoInicial.name}</h1>
-            <hr className="separador" />
-            <p className="producto-descripcion">{productoInicial.descripcion}</p>
-            <div className="producto-detalles">
-                <div className="detalles__infor">
-                    <h4 className="detalles-titulo">Detalles</h4>
-                    <ul className="detalles-lista">
-                        <li className="detalles-item">
-                            <span className="detalles-tipo">Precio:</span>
-                            <span className="detalles-valor">${productoInicial.price}</span>
-                        </li>
-                        <li className="detalles-item">
-                            <span className="detalles-tipo">Categoría:</span>
-                            <span className="detalles-valor">{productoInicial.nombre_categoria}</span>
-                        </li>
-                        <li className="detalles-item">
-                            <span className="detalles-tipo">Codigo:</span>
-                            <span className="detalles-valor">{productoInicial.codigo}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div className="detalles__prod">
-                    <h4 className="detalles-titulo">Especificaciones</h4>
-                    <ul className="detalles-lista">
-                        {productoInicial.atributos && productoInicial.atributos.map((atributo, index) => (
-                            <li key={index} className="detalles-item">
-                                <span className="detalles-tipo">{atributo.nombre}:</span>
-                                <span className="detalles-valor">{atributo.valor}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-            <hr className="separador" />
-            <div className="info__envio">
-                <h4>Sobre este artículo</h4>
-                {productoInicial.detalles && productoInicial.detalles.length > 0 ? (
-                    <ul className="sobre-articulo-lista">
-                        {productoInicial.detalles.map((detalle, index) => (
-                            <li key={index} className="sobre-articulo-item">
-                                <span className="sobre-articulo-icon">&#10003;</span>
-                                <span className="sobre-articulo-texto">{detalle}</span>
-                            </li>
-                        ))}
-                    </ul>
+                {productoInicial ? (
+                    <>
+                        <h1 className="producto-nombre">{productoInicial.name}</h1>
+                        <hr className="separador" />
+                        <p className="producto-descripcion mb-2">¡Atención Técnicos!👨🏼‍🔧 <br></br>
+
+                            Obtén descuentos exclusivos en todas nuestras partes para portátiles, incluyendo teclados, baterías, cargadores y pantallas. ⌨🪫💻 </p>
+                        <div className="producto-detalles">
+                            <div className="detalles__infor">
+                                <h4 className="detalles-titulo">Detalles</h4>
+                                <ul className="detalles-lista">
+                                    <li className="detalles-item">
+                                        <span className="detalles-tipo">Precio:</span>
+                                        <span className="detalles-valor">${productoInicial.price}</span>
+                                    </li>
+                                    <li className="detalles-item">
+                                        <span className="detalles-tipo">Categoría:</span>
+                                        <span className="detalles-valor">{productoInicial.nombre_categoria}</span>
+                                    </li>
+                                    <li className="detalles-item">
+                                        <span className="detalles-tipo">Codigo:</span>
+                                        <span className="detalles-valor">{productoInicial.codigo}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="detalles__prod">
+                                <h4 className="detalles-titulo">Especificaciones</h4>
+                                <ul className="detalles-lista">
+                                    {productoInicial.atributos && productoInicial.atributos.map((atributo, index) => (
+                                        <li key={index} className="detalles-item mt-2">
+                                            <span className="detalles-icono">&#10003;</span>
+                                            <span className="detalles-tipo">{atributo.nombre}:</span>
+                                            <span className="detalles-valor">{atributo.valor}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                        </div>
+                        <hr className="separador" />
+                        <div className="info__envio">
+                            <ul className="sobre-articulo-lista">
+
+                                <li className="sobre-articulo-item mb-2 d-flex align-items-start">
+                                    <span className="sobre-articulo-icon" style={{ fontSize: '1.5rem', color: 'green', marginRight: '0.5rem' }}>&#10003;</span>
+                                    <span className="sobre-articulo-texto">
+                                        <strong style={{ textTransform: 'uppercase', display: 'block', fontSize: '1rem', marginBottom: '0.5rem' }}>
+                                            ⌨️ CONÓCENOS Y APROVECHA NUESTRA VARIEDAD DE REFERENCIAS DISPONIBLES 💻
+                                        </strong>
+                                        <span style={{ fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>
+                                            ¡Bienvenido a tu tienda de confianza para partes de portátiles!
+                                        </span>
+                                        <span style={{ textTransform: 'uppercase', fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>
+                                            DESCUBRE UNA AMPLIA GAMA DE PRODUCTOS:
+                                        </span>
+                                        <ul style={{ listStyleType: 'none', padding: 0, margin: '0.5rem 0 0 1.5rem', fontSize: '0.8rem' }}>
+                                            <li>Teclados: Modelos compatibles internos y externos para las principales marcas de portátiles.</li>
+                                            <li>Baterías: Duración y rendimiento garantizados.</li>
+                                            <li>Cargadores: Compatibles y de alta calidad.</li>
+                                            <li>Pantallas: Resolución perfecta para cualquier necesidad.</li>
+                                        </ul>
+                                        <span style={{ textTransform: 'uppercase', fontSize: '0.8rem', display: 'block', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                                            ¿POR QUÉ ELEGIRNOS?
+                                        </span>
+                                        <ul style={{ listStyleType: 'none', padding: 0, margin: '0.5rem 0 0 1.5rem', fontSize: '0.8rem' }}>
+                                            <li>Calidad y Garantía: Solo vendemos productos de alta calidad con garantía.</li>
+                                            <li>Envío Rápido: Recibe tus productos en tiempo récord.</li>
+                                            <li>Atención Personalizada: Nuestro equipo está listo para ayudarte.</li>
+                                            <li>Descuentos Exclusivos para Técnicos: ¡Regístrate y aprovecha precios especiales!</li>
+                                        </ul>
+                                        <span style={{ textTransform: 'uppercase', fontSize: '0.8rem', display: 'block', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                                            OFERTAS ESPECIALES:
+                                        </span>
+                                        <ul style={{ listStyleType: 'none', padding: 0, margin: '0.5rem 0 0 1.5rem', fontSize: '0.8rem' }}>
+                                            <li>Envío Gratis: Por compras de 3 o más unidades. Ver términos y condiciones.</li>
+                                            <li>Descuentos por Volumen: Cuantas más compras, más ahorras.</li>
+                                        </ul>
+                                        <span style={{ fontSize: '0.8rem', display: 'block', marginTop: '0.5rem' }}>
+                                            ¡Visítanos y encuentra todo lo que necesitas para tu portátil!
+                                        </span>
+                                    </span>
+                                </li>
+
+
+
+
+                            </ul>
+
+                        </div>
+                        <div className="contactar-asesor ml-0 mt-3 text-center">
+                            <button className="contactar-asesor-btn" onClick={generarMensaje}>
+                                <FaWhatsapp className="icono-whatsapp" />
+                                Finalizar pedido
+                            </button>
+                        </div>
+                        <p className="politica-envio">¡Aprovecha nuestra Oferta Especial!
+                            Recuerda que por compras de 3 o más unidades, te obsequiamos el costo del envío.
+
+                            ¡No dejes pasar esta oportunidad para ahorrar más!
+                            Aplica términos y condiciones.</p>
+                    </>
                 ) : (
-                    <p>No se encontraron detalles para este producto.</p>
+                    <p>Cargando producto...</p>
                 )}
             </div>
-            <div className="contactar-asesor ml-0 mt-3 text-center">
-                <button className="contactar-asesor-btn" onClick={generarMensaje}>
-                    <FaWhatsapp className="icono-whatsapp" />
-                    Finalizar pedido
-                </button>
-            </div>
-            <p className="politica-envio">Envío gratis en pedidos superiores a $50 | Política de devolución de 30 días</p>
-        </>
-    ) : (
-        <p>Cargando producto...</p>
-    )}
-</div>
 
 
         </div>

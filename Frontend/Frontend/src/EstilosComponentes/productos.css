@@ -38,6 +38,7 @@
     flex-direction: column;
     justify-content: space-between; /* Espaciar uniformemente los elementos */
     width: 100%;
+    height: 10%;
   }
 
   .producto-nombre-titulo {
@@ -53,7 +54,7 @@
   .producto-detalles {
     display: flex;
     margin-bottom: 20px;
-    background-color: rgb(228, 226, 226);;
+    background-color: rgb(228, 226, 226);
     padding: 10px;
     height: 100%;
     border-radius: 10px;    
@@ -215,7 +216,7 @@
 }
 
 .related-product {
-  background-color: #f9f9f9;
+  background-color: #FFF;
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -223,7 +224,7 @@
   width: 100%;
   height: 100%;
   max-width: 600px; /* Ancho máximo de cada producto */
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   cursor: pointer;
 }
 
@@ -249,6 +250,7 @@
 .related-products-container {
   margin: 0px auto;
   text-align: center;
+  margin-top: -110px;
 }
 
 .related-products-title {
@@ -275,8 +277,8 @@
 .related-product {
   flex: 0 0 auto;
   margin: 0 1px; /* Espacio entre productos */
-  background-color: rgb(189, 186, 186, 0.8);
-  border-radius: 15px;
+  /* background-color: rgba(231, 229, 229, 0.8); */
+  /* border-radius: 15px; */
 }
 
 .related-product.active {
@@ -295,7 +297,7 @@
 .related-product-title {
   font-size: 15px;
   width: 100%;
-  color: #fff;
+  color: black;
   margin-top: 10px;
   overflow: hidden; /* Evita que el texto se desborde */
   white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
@@ -305,7 +307,7 @@
 .related-product-description {
   font-size: 14px;
   color: #666;
-  color: #fff;
+  color: black;
   margin-top: 5px;
   max-height: 40px; /* Limitamos la altura máxima del texto */
   overflow: hidden; /* Evita que el texto se desborde */
@@ -314,7 +316,7 @@
 .related-product-price {
   font-size: 16px;
   font-weight: bold;
-  color: #fff;
+  color: black;
   margin-top: 10px;
 }
 
@@ -347,7 +349,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
-    background-color: rgba(189, 186, 186, 0.8); /* Color de fondo */
+    /* background-color: rgba(189, 186, 186, 0.8);  */
     width: 40px; /* Ancho de las flechas */
     height: 40px; /* Altura de las flechas */
     border-radius: 50%; /* Hace que las flechas sean redondas */
@@ -360,7 +362,7 @@
 .related-products-container .carousel-root .carousel .control-prev:hover,
 .related-products-container .carousel-root .carousel .control-next:hover {
     opacity: 1;
-    background-color: rgba(150, 146, 146, 0.9); /* Color de fondo al pasar el mouse */
+    /* background-color: rgba(150, 146, 146, 0.9); */
 }
 
 /* Ajusta la posición de la flecha izquierda */
@@ -397,7 +399,7 @@
 .carousel{
   border-radius: 15px;
   padding: 50px;
-  background-color: rgb(238, 238, 238);
+  /* background-color: rgb(238, 238, 238); */
 }
 
 /* Estilos para dispositivos móviles */
@@ -430,7 +432,7 @@
 }
 
   .related-products-container{
-      margin-top: -800px;
+      margin-top: -100px;
       margin-bottom: 300px;
       height: 50%;
   }

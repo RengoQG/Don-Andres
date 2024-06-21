@@ -20421,6 +20421,20 @@ input[type="checkbox"] {
 	font-size: 18px;
 }
 
+/* Por defecto, oculta el elemento en pantallas grandes */
+/* .ocultarPc {
+	display: none !important;
+  } */
+  
+  /* En pantallas pequeñas (máximo 768px), muestra el elemento */
+  /* @media (max-width: 768px) {
+	.ocultarPc {
+	  display: block !important;
+	  background-color: red;
+	}
+  } */
+  
+
 @media (max-width: 768px) { 
 	.button__meInteresa {
 		transform: translate3d(-50%, -35px, 0); /* Mueve el botón 35px hacia arriba y lo centra horizontalmente */
@@ -20684,9 +20698,16 @@ height: 110px !important;
 	}
   }
   
+  .tituloCatalogo{
+	font-size: 35px;
+  }
   
-  
-  
+/* .pruebadeestilos{
+	background-color: red;
+	font-size: 2px;
+	width: 20000px;
+}  
+   */
   
 
 

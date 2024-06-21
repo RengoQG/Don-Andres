@@ -99,7 +99,7 @@ const SwiperSlider = () => {
 
   return (
     <>
-    <section className="section swiper-container swiper-slider swiper-slider-classic" style={{ maxHeight:'250px', margin: '0 auto'}} data-loop="true" data-autoplay="4859" data-simulate-touch="true" data-direction="vertical" data-nav="false">
+    <section className="section swiper-container swiper-slider swiper-slider-classic" style={{ maxHeight:'450px', maxWidth:'1300px', margin: '0 auto'}} data-loop="true" data-autoplay="4859" data-simulate-touch="true" data-direction="vertical" data-nav="false">
         <div className="swiper-wrapper text-center">
           <div className="swiper-slide sliderImagen" style={{ backgroundImage: `url(images/SwiperSlider/${images.Foto1})`, backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
             <div className="swiper-slide-caption section-md">

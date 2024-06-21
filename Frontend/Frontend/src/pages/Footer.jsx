@@ -9,9 +9,9 @@ const Footer = () => {
             <ul className="footer-list-category-2">
               <li className='footerMainMovil'>
                 <a href="/">Horizon solutions.</a>
-                <p>Llamanos: 3006236655</p>
+                <p>Contáctanos: 3006236655</p>
                 <p>Horizonsolutions.soporte@gmail.com</p>
-                <p>Calle 77ab # 90a 17</p>
+                <p>Calle 77ab # 90a 17 Medellín | Antioquia.</p>
               </li>
             </ul>
           </div>
@@ -29,7 +29,7 @@ const Footer = () => {
               </div>
               <div className="col-sm-6 col-md-4 order-sm-first">
                 {/* Rights*/}
-                <p className="rights"><span>&copy;&nbsp;</span><span className="copyright-year"></span> <span>Horizon solutions</span>
+                <p className="rights"><span>&copy;&nbsp;</span><span className="copyright-year"></span> <span>Horizon Solutions. Todos los derechos reservados.</span>
                 </p>
               </div>
               {/* <div className="col-sm-6 col-md-4 text-md-right"><span>All rights reserved.</span> <span>Design&nbsp;by&nbsp;<a href="https://www.templatemonster.com">TemplateMonster</a></span>

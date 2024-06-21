@@ -139,6 +139,7 @@ const BuscadorProductos = () => {
         setProductos([]); // Utiliza setProductos en lugar de productos
       } else {
         setProductos(response.data.productos); // Utiliza setProductos en lugar de productos
+        navigateTo('/total-resultados', { state: { productos: response.data.productos } });
       }
     } catch (error) {
       setError("Error al obtener todos los productos.");
@@ -223,7 +224,8 @@ const BuscadorProductos = () => {
           id: producto.product_id, // Usar el id como identificador único
           nombre: producto.name,
           precio: producto.price,
-          codigo: producto.codigo
+          codigo: producto.codigo,
+          image_url:producto.image_url
         }));
   
         // Filtrar productos duplicados en la lista de sugerencias
@@ -337,6 +339,8 @@ const BuscadorProductos = () => {
     }
   }, [mostrarSugerencias, sugerencias]);
 
+  console.log(historial);
+
   return (
     <div className={`buscador-container ${mostrarSugerencias || mostrarHistorial ? "expanded" : ""}`} onMouseLeave={handleMouseLeave}>
       {(mostrarSugerencias || mostrarHistorial) && <div className="overlay" />}
@@ -374,7 +378,7 @@ const BuscadorProductos = () => {
                   {/* Contenido de la sugerencia */}
                   <div className={`sugerencia-content ${seleccionConFlecha && index === sugerenciaSeleccionada ? "sugerencia-seleccionada" : ""}`}>
                     <img
-                      src="../../public/images/A01.jpg"
+                      src={`../../public/images/Productos/${sugerencia.image_url}`}
                       alt="Producto"
                       className="sugerencia-imagen"
                     />
@@ -395,9 +399,9 @@ const BuscadorProductos = () => {
               </li>
             )}
             {/* Elemento de la lista para mostrar todos los productos */}
-            {/* <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
+            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
               Ver todos los productos: {totalResultados}
-            </li> */}
+            </li>
           </ul>
         )}
 
@@ -416,8 +420,8 @@ const BuscadorProductos = () => {
                 {/* Contenido del historial */}
                 <div className="sugerencia-content">
                   <img
-                    src="../../public/images/A01.jpg"
-                    alt="Producto"
+                    src={`../../public/images/Productos/${item.image_url}`}
+                    alt={`${item.imagen}`}
                     className="sugerencia-imagen"
                   />
                   <div className="sugerencia-info">

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualizarProductos }) => {
+const EditarProducto = ({ setShowTable, setBotonTexto, setShowEditarProducto, productId, actualizarProductos }) => {
   const { id } = useParams();
   const [product, setProduct] = useState({
     name: '',
@@ -14,12 +14,12 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
     imagen: null,
     stock: '',
     descripcion: '',
-    atributos: [],
-    detalles: []
+    atributos: []
   });
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [detalles, setDetalles] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [error, setError] = useState('');
+  const [productDetails, setProductDetails] = useState([]);
 
   useEffect(() => {
     async function fetchCategorias() {
@@ -34,14 +34,6 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
     fetchCategorias();
   }, []);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setProduct({
-      ...product,
-      imagen: file
-    });
-  };
-
   useEffect(() => {
     const obtenerProducto = async () => {
       try {
@@ -54,15 +46,34 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
           imagen: response.data.image_url ?? '',
           stock: response.data.stock ?? '',
           descripcion: response.data.descripcion ?? '',
-          atributos: response.data.atributos ?? [],
-          detalles: response.data.detalles ?? []
+          atributos: response.data.atributos ?? []
         });
       } catch (error) {
         setError(error.response?.data?.error || 'Error al obtener el producto');
       }
     };
     obtenerProducto();
-  }, [id]);
+
+    const obtenerDetalles = async () => {
+      try {
+        const response = await axios.get(`https://horizonsolutions.com.co:3000/listDetals/listDetals/${productId}`);
+        setDetalles(response.data);
+      } catch (error) {
+        console.error('Error al obtener los detalles del producto:', error);
+      }
+    };
+    obtenerDetalles();
+
+    const obtenerProductDetails = async () => {
+      try {
+        const response = await axios.get(`https://horizonsolutions.com.co:3000/listProductDetails/listProductDetails/${productId}`);
+        setProductDetails(response.data);
+      } catch (error) {
+        console.error('Error al obtener la información adicional del producto:', error);
+      }
+    };
+    obtenerProductDetails();
+  }, [id, productId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +81,28 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
       ...product,
       [name]: value
     });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProduct({
+      ...product,
+      imagen: file
+    });
+  };
+
+  const handleDetailChange = (index, e) => {
+    const { name, value } = e.target;
+    const newDetalles = [...detalles];
+    newDetalles[index][name] = value;
+    setDetalles(newDetalles);
+  };
+
+  const handleProductDetailChange = (index, e) => {
+    const { name, value } = e.target;
+    const newProductDetails = [...productDetails];
+    newProductDetails[index][name] = value;
+    setProductDetails(newProductDetails);
   };
 
   const handleSubmit = async (e) => {
@@ -84,17 +117,46 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
       formData.append('stock', product.stock);
       formData.append('descripcion', product.descripcion);
 
-      const response = await axios.put(`https://horizonsolutions.com.co:3000/actualizarProducto/actualizarProducto/${productId}`, formData, {
+      await axios.put(`https://horizonsolutions.com.co:3000/actualizarProducto/actualizarProducto/${productId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setMessage(response.data.message);
-      setError('');
+
+      // Actualizar los detalles del producto
+      await Promise.all(
+        detalles.map(async (detalle) => {
+          await axios.put(`https://horizonsolutions.com.co:3000/actualizarInfoProducto/actualizarProductoInfo/${productId}/${detalle.id}`, {
+            atributo_nombre: detalle.atributo_nombre,
+            atributo_valor: detalle.atributo_valor
+          });
+        })
+      );
+
+      // Actualizar la información adicional del producto
+      await Promise.all(
+        productDetails.map(async (detail) => {
+          await axios.put(`https://horizonsolutions.com.co:3000/actualizarDestalleProducto/actualizarProductoDetalle/${productId}/${detail.detalle_id}`, {
+            detalle_texto: detail.detalle_texto
+          });
+        })
+      );
+
+
+
+
+
+
+      setBotonTexto('Agregar producto');
+      // toast.success('Producto y detalles actualizados exitosamente');
+      setShowTable(true);
+      setShowEditarProducto(false);
       actualizarProductos();
+
+
+
     } catch (error) {
       setError(error.response?.data?.error || 'Error al actualizar el producto');
-      setMessage('');
       toast.error('Error al actualizar el producto');
     }
   };
@@ -102,8 +164,6 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
   return (
     <div>
       <h2>Actualizar Producto</h2>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Nombre:</label>
@@ -157,6 +217,7 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
         </div>
         {product.imagen && (
           <div>
+            <p>Esta imagen tiene la resolución de 420x350</p>
             <label>Imagen del Producto:</label>
             <img
               src={`../../../public/images/Productos/${product.imagen}`}
@@ -180,7 +241,53 @@ const EditarProducto = ({ setShowTable, productId, showEditarProducto, actualiza
             name="descripcion"
             value={product.descripcion}
             onChange={handleChange}
+            style={{ width: '100%', height: '150px' }}
           />
+        </div>
+        <div>
+          <h3>Detalles del Producto:</h3>
+          {detalles.map((detalle, index) => (
+            <div key={index}>
+              <label>Atributo Nombre:</label>
+              <input
+                type="text"
+                name="atributo_nombre"
+                value={detalle.atributo_nombre}
+                onChange={(e) => handleDetailChange(index, e)}
+              />
+              <label>Atributo Valor:</label>
+              <input
+                type="text"
+                name="atributo_valor"
+                value={detalle.atributo_valor}
+                onChange={(e) => handleDetailChange(index, e)}
+              />
+            </div>
+          ))}
+        </div>
+        <div>
+          <h3>Información Adicional del Producto:</h3>
+          {productDetails.map((detail, index) => (
+            detail.detalle_texto.trim() !== '' && ( // Verifica que detalle_texto no esté vacío
+              <div key={detail.detalle_id}>
+                {/* <label>Detalle ID:</label>
+                <input
+                    type="text"
+                    name="detalle_id"
+                    value={detail.detalle_id}
+                    readOnly
+                /> */}
+                <label>Texto del Detalle:</label>
+                <textarea
+                  name="detalle_texto"
+                  value={detail.detalle_texto}
+                  onChange={(e) => handleProductDetailChange(index, e)}
+                  rows={4} // Ajusta el número de filas según sea necesario
+                  style={{ width: '100%' }} // Establece el ancho al 100%
+                />
+              </div>
+            )
+          ))}
         </div>
         <button type="submit">Actualizar Producto</button>
       </form>
