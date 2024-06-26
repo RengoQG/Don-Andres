@@ -399,9 +399,9 @@ const BuscadorProductos = () => {
               </li>
             )}
             {/* Elemento de la lista para mostrar todos los productos */}
-            <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
+            {/* <li className={`total-resultados ${mostrarSugerencias ? "sugerencia-item" : ""}`} onClick={() =>  handleMostrarTodosLosProductos(query)}>
               Ver todos los productos: {totalResultados}
-            </li>
+            </li> */}
           </ul>
         )}
 

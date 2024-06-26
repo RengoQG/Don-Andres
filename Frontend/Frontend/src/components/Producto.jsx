@@ -127,6 +127,12 @@ const Producto = () => {
     return (
         <div className="producto-container">
             <div className="prueba">
+                <div className="contactar-asesor movil ml-0 mt-3 text-center">
+                    <button className="contactar-asesor-btn" onClick={generarMensaje}>
+                        <FaWhatsapp className="icono-whatsapp" />
+                        Contactanos.
+                    </button>
+                </div>
                 {productoInicial && (
                     <div
                         className="producto-imagen"
@@ -141,7 +147,7 @@ const Producto = () => {
                         />
                     </div>
                 )}
-                <div className="ml-3">
+                <div className="ml-3 pcRelacionados">
                     <div className="related-products-container" >
                         <h5 className="related-products-title">Productos Relacionados</h5>
                         {relatedProducts.length > 0 ? (
@@ -175,6 +181,12 @@ const Producto = () => {
                         <p className="producto-descripcion mb-2">¡Atención Técnicos!👨🏼‍🔧 <br></br>
 
                             Obtén descuentos exclusivos en todas nuestras partes para portátiles, incluyendo teclados, baterías, cargadores y pantallas. ⌨🪫💻 </p>
+                        <div className="contactar-asesor ml-0 mt-3 text-center">
+                            <button className="contactar-asesor-btn pc" onClick={generarMensaje}>
+                                <FaWhatsapp className="icono-whatsapp" />
+                                Contactanos.
+                            </button>
+                        </div>
                         <div className="producto-detalles">
                             <div className="detalles__infor">
                                 <h4 className="detalles-titulo">Detalles</h4>
@@ -257,12 +269,31 @@ const Producto = () => {
                             </ul>
 
                         </div>
-                        <div className="contactar-asesor ml-0 mt-3 text-center">
-                            <button className="contactar-asesor-btn" onClick={generarMensaje}>
-                                <FaWhatsapp className="icono-whatsapp" />
-                                Finalizar pedido
-                            </button>
+
+                        <div className="ml-3 movilRelacionados">
+                            <div className="related-products-container" >
+                                <h5 className="related-products-title">Productos Relacionados</h5>
+                                {relatedProducts.length > 0 ? (
+                                    <Carousel showThumbs={false} infiniteLoop={true} showStatus={false} showIndicators={false}>
+                                        {relatedProducts.map((relate) => (
+                                            <div className="related-product" key={relate.product_id} onClick={() => handleClickProductoRelacionado(relate)}>
+                                                <img
+                                                    src={`../../public/images/Productos/${relate.image_url}`}
+                                                    alt={relate.name}
+                                                    className="img-thumbnail" // Clase de Bootstrap para hacer la imagen más pequeña
+                                                />
+                                                <h3 className="related-product-title p-2">{relate.name}</h3>
+                                                <p className="related-product-description pb-5">{relate.descripcion}</p>
+                                                <span className="related-product-price mt-5">{relate.price}</span>
+                                            </div>
+                                        ))}
+                                    </Carousel>
+                                ) : (
+                                    <p>No hay productos relacionados.</p>
+                                )}
+                            </div>
                         </div>
+
                         <p className="politica-envio">¡Aprovecha nuestra Oferta Especial!
                             Recuerda que por compras de 3 o más unidades, te obsequiamos el costo del envío.
 

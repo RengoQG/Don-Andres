@@ -395,6 +395,13 @@
     transform: rotate(45deg); /* Rotación para la flecha derecha */
 }
 
+.movil{
+  display: none;
+}
+
+.movilRelacionados{
+  display: none;
+}
 
 .carousel{
   border-radius: 15px;
@@ -415,7 +422,7 @@
 }
 
 /* Media query para dispositivos móviles */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .producto-container {
       flex-direction: column;
       margin-top: -100px;
@@ -432,6 +439,7 @@
 }
 
   .related-products-container{
+      position: relative;
       margin-top: -100px;
       margin-bottom: 300px;
       height: 50%;
@@ -459,5 +467,41 @@
 
   .contactar-asesor-btn{
     width: 250px;
+    margin-top: 1000px;
   }
-}
+} */
+
+@media (max-width: 500px) {
+  .prueba{
+    width: 100%;
+  }
+
+  .movil{
+    display: block;
+    width: 100%;
+  }
+
+  .movil button{
+    width: 95%;
+    margin-top: -100px;
+  }
+
+  .pcRelacionados{
+    display: none;
+  }
+
+  .pc{
+    display: none;
+  }
+
+  .producto-container {
+    flex-direction: column;
+  }
+
+  .movilRelacionados{
+    display: block;
+    margin-top: 150px;
+  }
+
+  
+};
