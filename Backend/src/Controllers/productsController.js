@@ -183,11 +183,20 @@ exports.agregarProducto = async (req, res) => {
     return res.status(400).json({ error: error.details[0].message });
   }
 
-  let { name, codigo, atributos, category_id, price, stock,descripcion } = value;
+  let { name, codigo, atributos, category_id, price, stock, descripcion } = value;
 
-  if (!Array.isArray(atributos)) {
-    atributos = [atributos]; // Convertir a un array si es un único valor
+  // Eliminar espacios en blanco de los campos
+  name = name.trim();
+  codigo = codigo.trim();
+  if (Array.isArray(atributos)) {
+    atributos = atributos.map(atributo => ({
+      atributo_nombre: atributo.atributo_nombre.trim(),
+      atributo_valor: atributo.atributo_valor.trim()
+    }));
+  } else {
+    atributos = [atributos.trim()]; // Convertir a un array si es un único valor y eliminar espacios
   }
+  descripcion = descripcion.trim();
 
   let imageName;
   if (req.file) {
@@ -317,8 +326,14 @@ exports.actualizarProducto = async (req, res) => {
       category_id,
       codigo,
       price,
+      descripcion,
       stock
     } = req.body;
+
+    // Eliminar espacios en blanco de los campos
+    const finalName = name !== undefined ? name.trim() : undefined;
+    const finalCodigo = codigo !== undefined ? codigo.trim() : undefined;
+    const finalDescripcion = descripcion !== undefined ? descripcion.trim() : undefined;
 
     let finalImageUrl = null;
     // Verificar si se proporcionó una nueva imagen
@@ -344,10 +359,11 @@ exports.actualizarProducto = async (req, res) => {
     }
 
     // Verificar y asignar valores por defecto si no se proporcionan
-    const finalName = name !== undefined ? name : existingProduct[0].name;
-    const finalCodigo = codigo !== undefined ? codigo : existingProduct[0].codigo;
-    const finalPrice = price !== undefined ? price : existingProduct[0].price;
-    const finalStock = stock !== undefined ? stock : existingProduct[0].stock;
+    const finalFinalName = finalName !== undefined ? finalName : existingProduct[0].name;
+    const finalFinalCodigo = finalCodigo !== undefined ? finalCodigo : existingProduct[0].codigo;
+    const finalFinalPrice = price !== undefined ? price : existingProduct[0].price;
+    const finalFinalStock = stock !== undefined ? stock : existingProduct[0].stock;
+    const finalFinalDescripcion = finalDescripcion !== undefined ? finalDescripcion : existingProduct[0].descripcion;
 
     // Actualizar el producto en la base de datos
     const updateQuery = `
@@ -358,16 +374,18 @@ exports.actualizarProducto = async (req, res) => {
         codigo = ?, 
         price = ?,
         image_url = ?,
+        descripcion = ?,
         stock = ?
       WHERE product_id = ?
     `;
     const [updateResults] = await connection.execute(updateQuery, [
-      finalName,
+      finalFinalName,
       categoryId,
-      finalCodigo,
-      finalPrice,
+      finalFinalCodigo,
+      finalFinalPrice,
       finalImageUrl || existingProduct[0].image_url, // Usamos la imagen existente si no se proporcionó una nueva
-      finalStock,
+      finalFinalDescripcion,
+      finalFinalStock,
       id
     ]);
 
@@ -601,6 +619,60 @@ exports.eliminarProducto = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+//Listar productos info de los productos
+exports.listDetals = async (req, res) => {
+  try {
+    // Extraer el ID del producto de los parámetros de la solicitud
+    const { id } = req.params;
+
+    // Consulta SQL para obtener todos los registros de producto_info con ese product_id
+    const query = `
+      SELECT * FROM producto_info WHERE product_id = ?;
+    `;
+
+    // Ejecutar la consulta SQL
+    const [result] = await connection.execute(query, [id]);
+
+    // Verificar si se encontró algún detalle de producto
+    if (result.length > 0) {
+      return res.status(200).json(result); // Devolver todos los resultados encontrados
+    } else {
+      return res.status(404).json({ error: 'Detalle del producto no encontrado' });
+    }
+    
+  } catch (error) {
+    console.error('Error al obtener el detalle del producto:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+//Listar productos detalles
+exports.listProductDetails = async (req, res) => {
+  try {
+    // Extraer el ID del producto de los parámetros de la solicitud
+    const { id } = req.params;
+
+    // Consulta SQL para obtener todos los registros de producto_detalle con ese product_id
+    const query = `
+      SELECT * FROM producto_detalle WHERE product_id = ?;
+    `;
+
+    // Ejecutar la consulta SQL
+    const [result] = await connection.execute(query, [id]);
+
+    // Verificar si se encontró algún detalle de producto
+    if (result.length > 0) {
+      return res.status(200).json(result); // Devolver todos los resultados encontrados
+    } else {
+      return res.status(404).json({ error: 'Detalle del producto no encontrado' });
+    }
+    
+  } catch (error) {
+    console.error('Error al obtener el detalle del producto:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
 
 
 

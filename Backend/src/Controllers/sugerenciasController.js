@@ -10,22 +10,22 @@ exports.sugerenciasProductos = async (req, res) => {
 
     // Consulta SQL para obtener las primeras 5 sugerencias de productos basadas en la consulta actual del usuario
     const sugerenciasQuery = await connection.execute(
-      'SELECT name, price, image_url, codigo FROM producto WHERE name LIKE ? OR price LIKE ? OR codigo LIKE ? LIMIT 5',
-      [`%${query}%`, `%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
+      'SELECT name, price, image_url, codigo FROM producto WHERE name LIKE ? OR price LIKE ?  LIMIT 5',
+      [`%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
     );
 
     // Consulta SQL para contar el número total de resultados que coinciden con la búsqueda
     const totalResultsQuery = await connection.execute(
-      'SELECT COUNT(*) AS total_results FROM producto WHERE name LIKE ? OR price LIKE ? OR codigo LIKE ?',
-      [`%${query}%`, `%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
+      'SELECT COUNT(*) AS total_results FROM producto WHERE name LIKE ? OR price LIKE ?',
+      [`%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
     );
 
     const totalResults = totalResultsQuery[0][0].total_results;
 
     // Consulta SQL para obtener los detalles de todos los productos que coinciden con la búsqueda
     const productosQuery = await connection.execute(
-      'SELECT name, price, image_url, codigo FROM producto WHERE name LIKE ? OR price LIKE ? OR codigo LIKE ?',
-      [`%${query}%`, `%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
+      'SELECT name, price, image_url, codigo FROM producto WHERE name LIKE ? OR price LIKE ?',
+      [`%${query}%`, `%${query}%`] // Término de búsqueda en cualquier parte del nombre, precio o código
     );
 
     // Verificar si se encontraron productos
