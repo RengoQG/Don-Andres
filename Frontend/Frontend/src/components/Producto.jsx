@@ -9,17 +9,39 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 const Producto = () => {
     const navigateTo = useNavigate();
     const location = useLocation();
-    const productoInicial = Array.isArray(location.state.producto) ? location.state.producto[0] : location.state.producto;
-    const [producto, setProducto] = useState(productoInicial); // Estado para el producto actual
+    //const productoInicial = Array.isArray(location.state.producto) ? location.state.producto[0] : location.state.producto;
+    //const [producto, setProducto] = useState(productoInicial); // Estado para el producto actual
     const imageRef = useRef(null);
+    // Obtener el valor del parámetro 'id' de la URL
+    const id = new URLSearchParams(location.search).get("id");
     const [loading, setLoading] = useState(true);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [detallesProducto, setDetallesProducto] = useState([]);
+    const [producto, setProducto] = useState([]);
+
+    useEffect(() => {
+        console.log(id);
+        const fetchDetallesProducto = async () => {
+            try {
+                const response = await axios.get(`https://horizonsolutions.com.co:3000/obtenerProductoId/obtenerProductoId/${id}`);
+                // console.log(response.data);
+                setProducto(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error al obtener los detalles del producto:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchDetallesProducto();
+    }, [id]);
+
 
     useEffect(() => {
         const fetchDetallesProducto = async () => {
             try {
-                const response = await axios.get(`https://horizonsolutions.com.co:3000/relacionados/products/${productoInicial.product_id}`);
+                console.log(id)
+                const response = await axios.get(`https://horizonsolutions.com.co:3000/relacionados/products/${id}`);
                 setDetallesProducto(response.data);
                 setLoading(false);
             } catch (error) {
@@ -29,12 +51,13 @@ const Producto = () => {
         };
 
         fetchDetallesProducto();
-    }, [productoInicial.product_id]);
-    console.log(productoInicial.detalles);
+    }, [id]);
+
+
     useEffect(() => {
         const fetchRelatedProducts = async () => {
             try {
-                const response = await axios.post(`https://horizonsolutions.com.co:3000/similares/similares/${productoInicial.product_id}`);
+                const response = await axios.post(`https://horizonsolutions.com.co:3000/similares/similares/${id}`);
                 const uniqueProducts = removeDuplicates(response.data);
                 setRelatedProducts(uniqueProducts);
                 console.log(uniqueProducts)
@@ -46,31 +69,37 @@ const Producto = () => {
         };
 
         fetchRelatedProducts();
-    }, [productoInicial.product_id]);
+    }, [id]);
 
     const removeDuplicates = (products) => {
+        const seen = new Set();
         const uniqueProducts = [];
-        const productIds = new Set();
 
         for (const product of products) {
-            if (!productIds.has(product.product_id)) {
+            // Si el product_id no ha sido visto antes, lo agregamos a la lista de productos únicos
+            if (!seen.has(product.product_id)) {
                 uniqueProducts.push(product);
-                productIds.add(product.product_id);
+                seen.add(product.product_id); // Marcamos el product_id como visto
             }
         }
 
         return uniqueProducts;
     };
 
+
     const handleClickProductoRelacionado = async (productoRelacionado) => {
         try {
+            // console.log(productoRelacionado.product_id)
             const response = await axios.get(`https://horizonsolutions.com.co:3000/obtenerProductoId/obtenerProductoId/${productoRelacionado.product_id}`);
 
             if (response.status === 200) {
                 const productoRelacionadoInfo = response.data;
-
+                // console.log(response.data);
                 setProducto(productoRelacionadoInfo);
-                navigateTo(`/producto`, { state: { producto: productoRelacionadoInfo } });
+                // navigateTo(`/producto`, { state: { producto: productoRelacionadoInfo } });
+                const slug = productoRelacionadoInfo.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+                navigateTo(`/producto?id=${productoRelacionado.product_id}&name=${slug}`);
+
                 console.log('es este', productoRelacionadoInfo)
             } else {
                 console.error('Error al obtener el producto relacionado:', response.statusText);
@@ -94,31 +123,23 @@ const Producto = () => {
     };
 
     const generarMensaje = () => {
-        let mensaje = `¡Hola! Estoy interesado en el producto "${producto.name}". Aquí están los detalles:\n\n`;
+        let mensaje = `¡Hola buen día! \nEstoy interesado en el producto "${producto.name}."  Me gustaría saber más detalles sobre sus características, disponibilidad y el precio. Quedo atento a su respuesta. ¡Gracias!`;
+        // if (producto.atributos.length > 0) {
+        //     producto.atributos.forEach((atributo, index) => {
+        //         mensaje += `  - ${atributo.nombre}: ${atributo.valor}\n`;
+        //     });
+        // } else {
+        //     mensaje += "  No hay atributos disponibles.\n";
+        // }
 
-        mensaje += `Descripción: ${producto.descripcion ?? 'No disponible'}\n`;
-        mensaje += `Precio: $${producto.price ?? 'No disponible'}\n`;
-        mensaje += `Categoría: ${producto.nombre_categoria ?? 'No disponible'}\n`;
-        mensaje += `Código: ${producto.codigo ?? 'No disponible'}\n`;
-        mensaje += `Stock: ${producto.stock ?? 'No disponible'}\n`;
-        mensaje += `Atributos:\n`;
-
-        if (producto.atributos.length > 0) {
-            producto.atributos.forEach((atributo, index) => {
-                mensaje += `  - ${atributo.nombre}: ${atributo.valor}\n`;
-            });
-        } else {
-            mensaje += "  No hay atributos disponibles.\n";
-        }
-
-        if (producto.detalles && producto.detalles.length > 0) {
-            mensaje += `\nDetalles adicionales:\n`;
-            producto.detalles.forEach((detalle) => {
-                mensaje += `  - ${detalle}\n`;
-            });
-        } else {
-            mensaje += "\nNo hay detalles adicionales disponibles.\n";
-        }
+        // if (producto.detalles && producto.detalles.length > 0) {
+        //     mensaje += `\nDetalles adicionales:\n`;
+        //     producto.detalles.forEach((detalle) => {
+        //         mensaje += `  - ${detalle}\n`;
+        //     });
+        // } else {
+        //     mensaje += "\nNo hay detalles adicionales disponibles.\n";
+        // }
 
         const url = `https://wa.me/573006236655?text=${encodeURIComponent(mensaje)}`;
         window.open(url, '_blank');
@@ -133,7 +154,7 @@ const Producto = () => {
                         Contactanos.
                     </button>
                 </div>
-                {productoInicial && (
+                {producto && (
                     <div
                         className="producto-imagen"
                         onMouseMove={handleMouseMove}
@@ -142,8 +163,8 @@ const Producto = () => {
                     >
                         <img
                             ref={imageRef}
-                            src={`../../public/images/Productos/${productoInicial.image_url}`}
-                            alt={productoInicial.name}
+                            src={`../../public/images/Productos/${producto.image_url}`}
+                            alt={producto.name}
                         />
                     </div>
                 )}
@@ -174,9 +195,9 @@ const Producto = () => {
             </div>
 
             <div className="producto-info">
-                {productoInicial ? (
+                {producto ? (
                     <>
-                        <h1 className="producto-nombre">{productoInicial.name}</h1>
+                        <h1 className="producto-nombre">{producto.name}</h1>
                         <hr className="separador" />
                         <p className="producto-descripcion mb-2">¡Atención Técnicos!👨🏼‍🔧 <br></br>
 
@@ -193,22 +214,22 @@ const Producto = () => {
                                 <ul className="detalles-lista">
                                     <li className="detalles-item">
                                         <span className="detalles-tipo">Precio:</span>
-                                        <span className="detalles-valor">${productoInicial.price}</span>
+                                        <span className="detalles-valor">${producto.price}</span>
                                     </li>
                                     <li className="detalles-item">
                                         <span className="detalles-tipo">Categoría:</span>
-                                        <span className="detalles-valor">{productoInicial.nombre_categoria}</span>
+                                        <span className="detalles-valor">{producto.nombre_categoria}</span>
                                     </li>
                                     <li className="detalles-item">
                                         <span className="detalles-tipo">Codigo:</span>
-                                        <span className="detalles-valor">{productoInicial.codigo}</span>
+                                        <span className="detalles-valor">{producto.codigo}</span>
                                     </li>
                                 </ul>
                             </div>
                             <div className="detalles__prod">
                                 <h4 className="detalles-titulo">Especificaciones</h4>
                                 <ul className="detalles-lista">
-                                    {productoInicial.atributos && productoInicial.atributos.map((atributo, index) => (
+                                    {producto.atributos && producto.atributos.map((atributo, index) => (
                                         <li key={index} className="detalles-item mt-2">
                                             <span className="detalles-icono">&#10003;</span>
                                             <span className="detalles-tipo">{atributo.nombre}:</span>

@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import CategoriasComponent from "./components/Categories.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-import { faHome, faUsers, faSignInAlt, faEnvelope, faStore } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUsers, faSignInAlt, faStore } from '@fortawesome/free-solid-svg-icons';
 import Prueba2 from './components/prueba.jsx';
+import './EstilosComponentes/appNav.css'; // Importar estilos CSS
 
 const Header = () => {
   const [categorias, setCategorias] = useState([]);
   const [mostrarCategorias, setMostrarCategorias] = useState(false);
+  const [mostrarOpciones, setMostrarOpciones] = useState(false);
 
-  const toggleCategorias = () => {
-    setMostrarCategorias(!mostrarCategorias);
+  const opcionesRef = useRef(null);  // Ref para las opciones
+  const contactoRef = useRef(null);  // Ref para el botón "Contáctanos"
+
+  const toggleOpciones = () => {
+    setMostrarOpciones(!mostrarOpciones);
   };
 
   useEffect(() => {
@@ -25,6 +29,24 @@ const Header = () => {
     };
 
     fetchCategorias();
+  }, []);
+
+  // Cierra las opciones si el clic está fuera del área del menú
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        opcionesRef.current && !opcionesRef.current.contains(event.target) &&
+        contactoRef.current && !contactoRef.current.contains(event.target)
+      ) {
+        setMostrarOpciones(false);  // Cierra las opciones si clic fuera
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -81,20 +103,16 @@ const Header = () => {
                 <button className="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <div className="rd-navbar-brand">
                   <a className="brand" href="/">
-                    <img
-                      src="images/logoWEB-.png"
-                      alt=""
-                      style={{ maxWidth: '150px', height: 'auto' }}
-                    />
+                    <img src="images/logoWEB-.png" alt="" style={{ maxWidth: '150px', height: 'auto' }} />
                   </a>
                 </div>
               </div>
               <ul className="inputLateral">
                 <li><Prueba2 /></li>
               </ul>
-              <div className="rd-navbar-main-element ">
+              <div className="rd-navbar-main-element">
                 <div className="rd-navbar-nav-wrap">
-                  <ul className="rd-navbar-nav pruebadeestilos" style={{ marginTop: '-10px', width: '650px', marginLeft:'48px' }}>
+                  <ul className="rd-navbar-nav pruebadeestilos" style={{ marginTop: '-10px', width: '650px', marginLeft: '48px' }}>
                     <li className="rd-nav-item active">
                       <a className="rd-nav-link" href="/">
                         <FontAwesomeIcon icon={faHome} /> Inicio
@@ -105,32 +123,32 @@ const Header = () => {
                         <FontAwesomeIcon icon={faStore} /> Nuestro catálogo
                       </a>
                     </li>
-                    <li className="rd-nav-item">
+                    <li className="rd-nav-item disabled">
                       <a className="rd-nav-link" href="/inicio">
                         <FontAwesomeIcon icon={faSignInAlt} /> Iniciar sesión
                       </a>
                     </li>
-                    <li className="rd-nav-item">
-                      <a className="rd-nav-link" href="#contactanos">
-                      <FontAwesomeIcon icon={faUsers} /> Contáctanos
+                    {/* Contáctanos con las opciones debajo */}
+                    <li className="rd-nav-item" ref={contactoRef} onClick={toggleOpciones}>
+                      <a className="rd-nav-link">
+                        <FontAwesomeIcon icon={faUsers} /> Contáctanos
                       </a>
+                      {mostrarOpciones && (
+                        <ul ref={opcionesRef} className="opciones-contacto">
+                          <li><a href="https://g.co/kgs/z2gVWJT" target="_blank">Google</a></li>
+                          <li><a href="mailto:contacto@tudominio.com">Email</a></li>
+                        </ul>
+                      )}
                     </li>
-                    {/* <li className="rd-nav-item">
-                      <a className="rd-nav-link" href="#projects">
-                         Tienda
-                      </a>
-                    </li> */}
                   </ul>
                 </div>
               </div>
             </div>
-
           </div>
         </nav>
       </div>
     </header>
   );
-
 };
 
 export default Header;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../EstilosComponentes/nuevosProductos.css';
 
 const NewProductsSection = () => {
     const [newProducts, setNewProducts] = useState([]);
@@ -24,7 +25,15 @@ const NewProductsSection = () => {
             const response = await axios.get(`https://horizonsolutions.com.co:3000/obtenerProductoId/obtenerProductoId/${product_id}`);
             if (response.status === 200) {
                 const productInfo = response.data;
-                navigate(`/producto`, { state: { producto: productInfo } });
+    
+                // Generar el slug basado en el nombre del producto
+                const slug = productInfo.name
+                    .toLowerCase()
+                    .replace(/ /g, '-') // Reemplaza espacios con guiones
+                    .replace(/[^\w-]+/g, ''); // Elimina caracteres no válidos
+    
+                // Navegar usando el slug y el ID
+                navigate(`/producto?id=${product_id}&name=${slug}`, { state: { producto: productInfo } });
             } else {
                 console.error('Error al obtener el producto:', response.statusText);
             }
@@ -32,6 +41,9 @@ const NewProductsSection = () => {
             console.error('Error al obtener el producto:', error.message);
         }
     };
+    
+
+    
 
     return (
         <section className="section section-sm bg-default" id="news">
@@ -46,9 +58,15 @@ const NewProductsSection = () => {
                                     href="#"
                                     onClick={() => handleProductClick(product.product_id)}
                                 >
-                                    <img src={`../../public/images/Productos/${product.image_url}`} alt={product.name} width="370" height="307" />
+                                    <img 
+                                        src={`../../public/images/Productos/${product.image_url}`} 
+                                        alt={product.name} 
+                                        className="product-image"
+                                    />
                                     <div className="post-modern-time">
-                                        <time dateTime={product.fecha_creacion}><span className="post-modern-time-month">{product.nombre_categoria}</span></time>
+                                        <time dateTime={product.fecha_creacion}>
+                                            <span className="post-modern-time-month">{product.nombre_categoria}</span>
+                                        </time>
                                     </div>
                                 </a>
                                 <h4 className="post-modern-title">
@@ -62,6 +80,7 @@ const NewProductsSection = () => {
             </div>
         </section>
     );
+    
 };
 
 export default NewProductsSection;

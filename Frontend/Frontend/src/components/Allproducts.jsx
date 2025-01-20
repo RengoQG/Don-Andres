@@ -11,7 +11,7 @@ const ProductList = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(''); // Estado para la categoría seleccionada
     const [currentPage, setCurrentPage] = useState(0); // Página actual
-    const [perPage] = useState(5); // Productos por página
+    const [perPage] = useState(6); // Productos por página (modificado para mostrar 6 productos por página)
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -33,9 +33,13 @@ const ProductList = () => {
         const searchParams = new URLSearchParams(location.search);
         const categoria = searchParams.get('categoria');
         if (categoria) {
-            setSelectedCategory(categoria);
+            // Convertir nombre de categoría a ID
+            const category = categories.find(c => c.name === categoria);
+            if (category) {
+                setSelectedCategory(category.category_id);
+            }
         }
-    }, [location.search]);
+    }, [location.search, categories]);
 
     const fetchProducts = async () => {
         try {
@@ -55,14 +59,28 @@ const ProductList = () => {
         }
     };
 
-    const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value);
+    // Cambiar la categoría seleccionada
+    const handleCategoryChange = (categoryId) => {
+        const selectedCategoryName = categories.find(category => category.category_id === parseInt(categoryId))?.name;
+
+        setSelectedCategory(categoryId);
         setCurrentPage(0); // Reiniciar a la primera página al cambiar la categoría
-        navigate(`/allproducto?categoria=${e.target.value}`);
+
+        // Actualiza la URL con el nombre de la categoría
+        navigate(`/allproducto?categoria=${selectedCategoryName}`);
     };
 
+    // Limpia la URL al recargar la página
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.has('categoria')) {
+            navigate('/allproducto', { replace: true }); // Elimina el parámetro de la URL
+        }
+    }, [navigate]);
+
     const handleViewProduct = (product) => {
-        navigate(`/producto`, { state: { producto: product } });
+        const slug = product.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        navigate(`/producto?id=${product.product_id}&name=${slug}`, { state: { producto: product } });
     };
 
     // Filtrar productos por categoría
@@ -85,49 +103,61 @@ const ProductList = () => {
         <div className="product-list">
             <h2>Lista de Productos</h2>
             <div className="product-list-container">
-                {/* Panel de filtro de categorías */}
-                <div className="category-panel w-100">
-                    <h3>Filtrar por categoría</h3>
-                    <select value={selectedCategory} onChange={handleCategoryChange}>
-                        <option value="">Todas las categorías</option>
+                <div className="category-panel">
+                    <h5>Filtrar por categoría</h5>
+                    <ul className="list-group">
+                        <li
+                            key="all"
+                            onClick={() => handleCategoryChange('')}
+                            className="list-group-item list-group-item-action"
+                            style={{ cursor: 'pointer' }}
+                        >
+                            Todas las categorías
+                        </li>
                         {categories.map((category) => (
-                            <option key={category.category_id} value={category.category_id}>
+                            <li
+                                key={category.category_id}
+                                onClick={() => handleCategoryChange(category.category_id)}
+                                className="list-group-item list-group-item-action"
+                                style={{ cursor: 'pointer' }}
+                            >
                                 {category.name}
-                            </option>
+                            </li>
                         ))}
-                    </select>
+                    </ul>
                 </div>
 
-                {/* Listado de productos */}
                 <div className="products">
-                    {currentProducts.map((product) => (
-                        <div className='contenidoProducto' key={product.product_id}>
-                            <div className='imagenProducto'>
-                                <img src={`../../public/images/Productos/${product.image_url}`} alt={product.name} />
-                            </div>
-                            <div className='product-details'>
-                                <h3>{product.name}</h3>
-                                <p>Precio: ${product.price}</p>
-                                <p>Categoría: {product.nombre_categoria}</p>
-                                <p>Detalle: {product.descripcion}</p>
-                                {/* Mostrar si el producto está agotado */}
-                                {product.stock === 0 ? (
-                                    <p style={{ color: 'red' }}>Agotado</p>
-                                ) : (
-                                    <p></p>
-                                )}
-                                <div className="d-flex flex-column flex-sm-row justify-content-between contenido-botones">
-                                    <button className=" mb-2 mb-sm-0 mr-sm-1 w-100 w-sm-50" onClick={() => handleViewProduct(product)}>Ver producto</button>
-                                    <button className=" w-100 w-sm-50" onClick={() => generarMensajeWhatsapp(product)}>
-                                        <FaWhatsapp className="icono-whatsapp" /> WhatsApp
-                                    </button>
+                    {currentProducts.length === 0 ? (
+                        <p>No hay productos disponibles en esta categoría.</p>
+                    ) : (
+                        currentProducts.map((product) => (
+                            <div className="contenidoProducto" key={product.product_id}>
+                                <div className="imagenProducto">
+                                    <img src={`../../public/images/Productos/${product.image_url}`} alt={product.name} />
+                                </div>
+                                <div className="product-details">
+                                    <h3>{product.name}</h3>
+                                    <p>Precio: ${product.price}</p>
+                                    <p>Categoría: {product.nombre_categoria}</p>
+                                    {/* <p>Detalle: {product.descripcion}</p> */}
+                                    {product.stock === 0 ? (
+                                        <p style={{ color: 'red' }}>Agotado</p>
+                                    ) : (
+                                        <p></p>
+                                    )}
+                                    <div className="d-flex flex-column flex-sm-row justify-content-between contenido-botones">
+                                        <button className="mb-2 mb-sm-0 mr-sm-1 w-100 w-sm-50" onClick={() => handleViewProduct(product)}>Ver producto</button>
+                                        <button className="w-100 w-sm-50 btn-whatsapp" onClick={() => generarMensajeWhatsapp(product)}>
+                                            <FaWhatsapp className="icono-whatsapp" /> WhatsApp
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
             </div>
-            {/* Paginación */}
             <ReactPaginate
                 previousLabel={'Página anterior'}
                 nextLabel={'Página siguiente'}
@@ -136,7 +166,7 @@ const ProductList = () => {
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
                 onPageChange={handlePageClick}
-                containerClassName={'pagination justify-content-center'} // Clase de Bootstrap para centrar la paginación
+                containerClassName={'pagination justify-content-center'}
                 activeClassName={'active'}
                 previousClassName={'page-item'}
                 nextClassName={'page-item'}

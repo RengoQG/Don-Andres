@@ -1,0 +1,56 @@
+/* Contenedor de la opción "Contáctanos" */
+.rd-nav-item {
+    position: relative; /* Necesario para que las opciones se posicionen en relación a este contenedor */
+  }
+  
+  /* Estilo para las opciones de contacto */
+  .opciones-contacto {
+    position: absolute; /* Las opciones se posicionan de forma independiente al flujo normal */
+    top: 100%; /* Colocamos las opciones justo debajo del botón */
+    left: 0; /* Colocamos el cuadro alineado a la izquierda del botón */
+    right: 0; /* Esto asegura que el cuadro no se salga de la página */
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Agregamos sombra para hacerlas más visibles */
+    z-index: 10; /* Aseguramos que el menú aparezca encima de otros elementos */
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+    max-width: 300px; /* Limita el ancho máximo del cuadro */
+    width: 100%; /* Asegura que el cuadro ocupe el espacio disponible dentro de los límites */
+    word-wrap: break-word; /* Evita que el texto largo se desborde */
+    overflow-wrap: break-word; /* Asegura que el texto largo se ajuste */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+  }
+  
+  /* Estilo de los elementos de la lista de opciones */
+  .opciones-contacto li {
+    font-size: small;
+    margin-left: 20px;
+    white-space: nowrap; /* Evita que el texto se desborde hacia varias líneas */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+    overflow: hidden; /* Oculta el contenido fuera de los límites */
+    max-width: 100%; /* Asegura que los elementos de la lista no se salgan */
+  }
+  
+  /* Estilo para los enlaces */
+  .opciones-contacto li a {
+    text-decoration: none;
+    color: #333;
+    white-space: normal; /* Permite que el texto se ajuste */
+  }
+
+  /* Estilo para deshabilitar el enlace */
+.rd-nav-item.disabled .rd-nav-link {
+    pointer-events: none; /* Deshabilita el clic en el enlace */
+    color: #ccc; /* Cambia el color del texto a un gris claro */
+    cursor: not-allowed; /* Cambia el cursor para mostrar que no es interactivo */
+    text-decoration: none; /* Elimina el subrayado */
+  }
+  
+  .rd-nav-item.disabled .rd-nav-link:hover {
+    background-color: transparent; /* Desactiva cualquier efecto hover */
+    cursor: crosshair;
+    background-color: #333;
+  }
+  
+  

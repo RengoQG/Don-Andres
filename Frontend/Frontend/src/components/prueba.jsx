@@ -147,37 +147,74 @@ const BuscadorProductos = () => {
       setProductos([]); // Utiliza setProductos en lugar de productos
     }
     setQuery("");
-  };
+  };  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
     if (!query.trim()) {
       setError('Por favor, ingrese un término de búsqueda.');
       setProductos([]);
       setTotalResultados(0);
       return;
     }
+  
     try {
       const response = await axios.post('https://horizonsolutions.com.co:3000/searchName/search', {
         query: query
       });
+  
       if (response.data.error) {
         setError(response.data.error);
         setProductos([]);
         setTotalResultados(0);
       } else {
         setProductos(response.data);
-        setMostrarSugerencias(false);
-        setQuery('');
+  
         if (response.data.length === 0) {
           setError('No se encontraron productos relacionados con la búsqueda.');
+          setTotalResultados(0);
         } else {
           setError('');
+          setTotalResultados(0);
+  
+          // Obtener el producto relacionado con la búsqueda
+          const productoRelacionadoInfo = response.data[0]; // Accede al primer producto
+  
+          // Crear el objeto del producto a agregar
+          const productoNuevo = {
+            id: productoRelacionadoInfo.product_id,
+            nombre: productoRelacionadoInfo.name,
+            precio: productoRelacionadoInfo.price,
+            codigo: productoRelacionadoInfo.codigo,
+            image_url: productoRelacionadoInfo.image_url,
+          };
+  
+          // Solo agregar el producto seleccionado al historial
+          setHistorial((prevHistorial) => {
+            // Filtrar productos duplicados
+            const historialSinDuplicados = prevHistorial.filter(item => item.id !== productoNuevo.id);
+  
+            // Crear el nuevo historial y agregar el nuevo producto
+            const nuevoHistorial = [productoNuevo, ...historialSinDuplicados];
+  
+            // Limitar el tamaño del historial a 5 elementos
+            if (nuevoHistorial.length > 5) {
+              nuevoHistorial.pop(); // Elimina el último elemento si hay más de 5
+            }
+  
+            return nuevoHistorial;
+          });
+  
+          // Redireccionar al producto
+          const slug = productoRelacionadoInfo.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+          setTimeout(() => {
+            navigateTo(`/producto?id=${productoRelacionadoInfo.product_id}&name=${slug}`);
+          }, 1); // Retraso de 1 milisegundo
+  
+          setQuery('');
+          setMostrarSugerencias(false);
         }
-        setTotalResultados(0);
-        // Add search to history
-        // setHistorial(prevHistorial => [...prevHistorial, query]); // Save the query instead of item.nombre
-        // Redirect user after adding to history
-        navigateTo(`/producto`, { state: { producto: response.data } });
       }
     } catch (error) {
       setError('Error al buscar productos.');
@@ -186,6 +223,9 @@ const BuscadorProductos = () => {
       setSugerenciaSeleccionada(null); // Reset suggestion after search
     }
   };
+  
+  
+  
   const handleMouseEnter = (index) => {
     setSugerenciaBajoCursor(index);
     setSugerenciaSeleccionada(index);
@@ -207,11 +247,15 @@ const BuscadorProductos = () => {
           query: sugerencia,
         }
       );
+  
       if (response.data.error) {
         setError(response.data.error);
         setProductos([]);
       } else {
+        // Filtrar elementos repetidos antes de agregar al historial
+        const productoRelacionadoInfo = response.data[0]; // Producto relacionado con la búsqueda
         setProductos(response.data);
+  
         if (response.data.length === 0) {
           setError("No se encontraron productos relacionados con la búsqueda.");
         } else {
@@ -219,21 +263,21 @@ const BuscadorProductos = () => {
         }
         setTotalResultados(0);
   
-        // Filtrar elementos repetidos antes de agregar al historial
-        const productosEnHistorial = response.data.map(producto => ({
-          id: producto.product_id, // Usar el id como identificador único
+        // Filtrar productos duplicados y asegurarse de que solo se guarde el producto seleccionado
+        const productosEnHistorial = response.data.map((producto) => ({
+          id: producto.product_id,
           nombre: producto.name,
           precio: producto.price,
           codigo: producto.codigo,
-          image_url:producto.image_url
+          image_url: producto.image_url,
         }));
   
-        // Filtrar productos duplicados en la lista de sugerencias
+        // Filtrar productos duplicados
         const productosUnicos = [];
         const idsVistos = new Set();
         const nombresVistos = new Set();
   
-        productosEnHistorial.forEach(producto => {
+        productosEnHistorial.forEach((producto) => {
           if (!idsVistos.has(producto.id) && !nombresVistos.has(producto.nombre)) {
             idsVistos.add(producto.id);
             nombresVistos.add(producto.nombre);
@@ -241,27 +285,48 @@ const BuscadorProductos = () => {
           }
         });
   
-        const historialNombres = historial.map(producto => producto.nombre);
-        const productosNuevos = productosUnicos.filter(producto => !historialNombres.includes(producto.nombre));
-        setHistorial(prevHistorial => [...prevHistorial, ...productosNuevos]);
+        // Filtrar productos que no estén en el historial
+        const historialNombres = historial.map((producto) => producto.nombre);
+        const productosNuevos = productosUnicos.filter(
+          (producto) => !historialNombres.includes(producto.nombre)
+        );
   
-        // Redireccionar al usuario después de agregar al historial
-        setTimeout(() => {
-          navigateTo(`/producto`, { state: { producto: response.data } });
-        }, 1); // Retraso de 1 segundo (1000 milisegundos)
+        // Solo agregar el producto seleccionado al historial
+        const productoSeleccionado = productosUnicos.find((producto) => producto.nombre === sugerencia);
+  
+        if (productoSeleccionado) {
+          setHistorial((prevHistorial) => {
+            const nuevoHistorial = [productoSeleccionado, ...prevHistorial.filter(item => item.id !== productoSeleccionado.id)];
+            
+            // Limitar el tamaño del historial a 5 elementos
+            if (nuevoHistorial.length > 5) {
+              nuevoHistorial.pop(); // Elimina el último elemento
+            }
+  
+            return nuevoHistorial;
+          });
+  
+          // Redireccionar al producto seleccionado
+          const slug = productoSeleccionado.nombre.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+          setTimeout(() => {
+            navigateTo(`/producto?id=${productoSeleccionado.id}&name=${slug}`);
+          }, 1); // Retraso de 1 milisegundo
+        }
+        
         setQuery("");
         setMostrarSugerencias(false);
       }
     } catch (error) {
       setError("Error al buscar productos.");
       console.error(error);
+    } finally {
+      setSugerenciaSeleccionada(null);
+      setSugerenciaBajoCursor(null);
+      setSeleccionConFlecha(false);
     }
-    setSugerenciaSeleccionada(null);
-    setSugerenciaBajoCursor(null);
-    setSeleccionConFlecha(false);
   };
   
-  
+
   const handleClearInput = () => {
     setQuery("");
     setSugerencias([]);
@@ -352,7 +417,7 @@ const BuscadorProductos = () => {
           <FaSearch className="search-iconSe" />
           <input
             type="text"
-            placeholder="Buscar producto..."
+            placeholder="Buscar productos..."
             value={query}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}

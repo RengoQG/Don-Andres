@@ -69,21 +69,11 @@ const RegisterMain = () => (
   </div>
 );
 const ProductMain = () => (
+  
   <div>
-    <Prueba2 />
     <App />
     <Producto />
-
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <Footer />
+    <Footer /> 
   </div>
 );
 
@@ -98,7 +88,7 @@ const SesionMain = () => (
 
 const AllproductMain = () => (
   <div>
-    <Prueba2 />
+    {/* <Prueba2 /> */}
     <App />
     <Allproduct />
     <Footer />
@@ -120,7 +110,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           {/* <Route path="/prueba" element={<Prueba />} /> */}
           <Route path="/prueba" element={<Prueba2 />} />
           <Route path="/prueba2" element={<Prueba3 />} />
-          <Route path="/producto" element={<ProductMain />} />
+          <Route path="/producto/" element={<ProductMain />} />
           <Route path="/Allproducto" element={<AllproductMain />} />
           <Route path="/total-resultados" element={<TotalResultadoo />} />
         </Routes>

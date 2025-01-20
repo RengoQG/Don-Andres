@@ -13,6 +13,10 @@ const ServicesSection = () => {
   const [selectedImage, setSelectedImage] = useState('Blue.png');
   const [image, setImage] = useState(localStorage.getItem('ServicesImage') || 'Blue.png');
   const [parallaxImage, setParallaxImage] = useState(localStorage.getItem('ParallaxImage') || 'GreenModern.png');
+  const [isOpen, setIsOpen] = useState(false); // Estado para manejar la apertura y cierre del dropdown
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
 
   useEffect(() => {
     const checkAuth = async () => {
